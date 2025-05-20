@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="/image/CampusPulseIcon.png" alt="Campus Pulse Logo" width="120" />
+</p>
+
 # Campus Pulse
 
 Campus Pulse is a modern alumni management system designed to help university communities connect, collaborate, and stay engaged. 
