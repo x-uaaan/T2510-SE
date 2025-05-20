@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/image/CampusPulseLogo.png" alt="Campus Pulse Logo" width="120" />
+  <img src="public/image/CampusPulse.png" alt="Campus Pulse Logo"/>
 </p>
 
 # Campus Pulse
