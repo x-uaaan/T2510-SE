@@ -10,6 +10,10 @@ import NavBar from './Components/NavBar.vue';
 import HeroSection from './Components/HeroSection.vue';
 import FeaturesSection from './Components/FeaturesSection.vue';
 import FooterSection from './Components/FooterSection.vue';
+import axios from 'axios';
+
+axios.defaults.baseURL = '/api';
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -36,5 +40,3 @@ createInertiaApp({
         color: '#4B5563',
     },
 });
-
-createApp(Landing).mount('#app')

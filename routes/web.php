@@ -1,31 +1,23 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\ForumController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\AuthController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Landing', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    return Inertia::render('Landing');
 });
 
 Route::get('/about', function () {
     return view('about');
 });
 
-require __DIR__.'/auth.php';
+Route::resource('events', EventController::class);
+Route::resource('forums', ForumController::class);
+Route::resource('posts', PostController::class);
+
+Route::get('/auth/microsoft', [AuthController::class, 'redirectToMicrosoft']);
+Route::get('/auth/microsoft/callback', [AuthController::class, 'handleMicrosoftCallback']);

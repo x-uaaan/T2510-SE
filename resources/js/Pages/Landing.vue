@@ -5,8 +5,8 @@
       class="w-full flex justify-end items-center px-8 py-6 bg-[#18191A] fixed top-0 left-0 z-50 shadow transition-transform duration-300"
       :style="{ transform: showBar ? 'translateY(0)' : 'translateY(-100%)' }"
     >
-      <a href="/login" class="text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2D9CDB] mr-2">Login</a>
-      <a href="/register" class="bg-[#2D9CDB] text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2386b7]">Sign Up</a>
+      <a href="/login/microsoft" class="text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2D9CDB] mr-2">Login with Microsoft</a>
+      <a href="/login/microsoft" class="bg-[#2D9CDB] text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2386b7]">Sign Up with Microsoft</a>
     </div>
     <div class="pt-28"> <!-- Add padding top to offset fixed bar -->
       <!-- Hero Section -->
@@ -51,7 +51,7 @@
       <section class="py-32 px-4 text-center bg-[#232323]">
         <h2 class="text-4xl font-bold text-white mb-6">Ready to Connect?</h2>
         <p class="text-xl text-gray-300 mb-10">Sign up now and become part of the vibrant Campus Pulse alumni community.</p>
-        <a href="/register" class="bg-[#2D9CDB] text-white px-12 py-5 rounded shadow hover:bg-[#2386b7] text-xl font-semibold transition">Get Started</a>
+        <a href="/login/microsoft" class="bg-[#2D9CDB] text-white px-12 py-5 rounded shadow hover:bg-[#2386b7] text-xl font-semibold transition">Get Started with Microsoft</a>
       </section>
 
       <!-- Footer -->

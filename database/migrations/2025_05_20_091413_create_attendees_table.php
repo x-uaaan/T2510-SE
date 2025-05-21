@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('attendees', function (Blueprint $table) {
-            $table->id('attendeesID');
+            $table->id('attendeesID')->primary();
             $table->foreignId('eventID')->constrained('events')->onDelete('cascade');
             $table->foreignId('alumniID')->constrained('alumni')->onDelete('cascade');
             $table->timestamps();
