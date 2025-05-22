@@ -5,6 +5,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -21,3 +22,4 @@ Route::resource('posts', PostController::class);
 
 Route::get('/auth/microsoft', [AuthController::class, 'redirectToMicrosoft']);
 Route::get('/auth/microsoft/callback', [AuthController::class, 'handleMicrosoftCallback']);
+Route::match(['get', 'post'], '/complete-profile', [ProfileController::class, 'complete'])->name('complete-profile');

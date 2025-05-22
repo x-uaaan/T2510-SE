@@ -60,4 +60,22 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function complete(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            return Inertia::render('CompleteProfile');
+        }
+
+        $validated = $request->validate([
+            'username' => ['required', 'regex:/^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{5,}$/'],
+            'phone' => ['required'],
+            'faculty' => ['required'],
+            'resume' => ['nullable', 'file', 'max:2048'],
+        ]);
+
+        // Save user profile logic here...
+
+        return redirect()->route('events');
+    }
 }

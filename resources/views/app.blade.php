@@ -12,9 +12,6 @@
 <body class="bg-[#232323] text-white font-['Inter']">
     @inertia
     <div id="app">
-        <div class="w-full flex justify-end items-center px-8 py-6 bg-[#18191A] fixed top-0 left-0 z-50 shadow">
-            <a href="{{ route('login.microsoft') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow transition">Login / Register with Microsoft</a>
-        </div>
         <div class="pt-28">
         </div>
     </div>

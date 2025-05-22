@@ -5,8 +5,8 @@
       class="w-full flex justify-end items-center px-8 py-6 bg-[#18191A] fixed top-0 left-0 z-50 shadow transition-transform duration-300"
       :style="{ transform: showBar ? 'translateY(0)' : 'translateY(-100%)' }"
     >
-      <a href="/login/microsoft" class="text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2D9CDB] mr-2">Login with Microsoft</a>
-      <a href="/login/microsoft" class="bg-[#2D9CDB] text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2386b7]">Sign Up with Microsoft</a>
+      <!--<a href="/login/microsoft" class="text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2D9CDB] mr-2">Login / Register</a>-->
+      <a href="/login/microsoft" class="bg-[#2D9CDB] text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2386b7]">Login / Register</a>
     </div>
     <div class="pt-28"> <!-- Add padding top to offset fixed bar -->
       <!-- Hero Section -->
