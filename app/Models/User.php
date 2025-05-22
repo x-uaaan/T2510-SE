@@ -20,10 +20,14 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
+        'phone',
+        'faculty',
         'password',
         'microsoft_id',
         'avatar',
+        'resume_path',
         'profile_completed',
     ];
 

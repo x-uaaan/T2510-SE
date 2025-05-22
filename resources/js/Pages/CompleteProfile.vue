@@ -103,6 +103,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useForm, usePage, router } from '@inertiajs/vue3'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 
 const faculties = [
   'Faculty of Engineering', 'Faculty of Engineering & Technology', 
@@ -131,7 +133,7 @@ const phoneRules = {
   '+86': { min: 11, max: 11 }, // China
 }
 
-const form = ref({
+const form = useForm({
   username: '',
   countryCode: countries[0].dial,
   phone: '',
@@ -143,57 +145,77 @@ const form = ref({
 const errors = ref({})
 
 const currentPhonePlaceholder = computed(() => {
-  const country = countries.find(c => c.dial === form.value.countryCode)
+  const country = countries.find(c => c.dial === form.countryCode)
   return country ? country.placeholder : ''
 })
 
 const resumeSize = computed(() => {
-  if (!form.value.resume) return ''
-  const size = form.value.resume.size / (1024 * 1024)
+  if (!form.resume) return ''
+  const size = form.resume.size / (1024 * 1024)
   return `${size.toFixed(1)}MB`
 })
 
 function validate() {
   errors.value = {}
-  if (!form.value.username) {
+  
+  // Username validation - only check length
+  if (!form.username) {
     errors.value.username = 'Username is required'
-  } else if (!/^(?=.*[A-Za-z]).{5,}$/.test(form.value.username)) {
-    errors.value.username = 'Must be at least 5 characters and include a letter'
+  } else if (form.username.length < 5) {
+    errors.value.username = 'Username must be at least 5 characters'
   }
-  if (!form.value.phone) {
+
+  // Phone validation
+  if (!form.phone) {
     errors.value.phone = 'Phone number is required'
   } else {
-    const rule = phoneRules[form.value.countryCode]
-    const digits = form.value.phone.replace(/\D/g, '').length
+    const rule = phoneRules[form.countryCode]
+    const digits = form.phone.replace(/\D/g, '').length
     if (digits < rule.min || digits > rule.max) {
       errors.value.phone = `Phone number must be ${rule.min}${rule.min !== rule.max ? '-' + rule.max : ''} digits for this country`
     }
   }
-  if (!form.value.faculty) {
+
+  // Faculty validation
+  if (!form.faculty) {
     errors.value.faculty = 'Faculty is required'
   }
-  // Resume is optional
+
+  // Resume validation (optional)
+  if (form.resume) {
+    if (form.resume.size > 2 * 1024 * 1024) {
+      errors.value.resume = 'Resume must be 2MB or less'
+    }
+  }
+
   return Object.keys(errors.value).length === 0
 }
 
 const canSubmit = computed(() => {
-  const rule = phoneRules[form.value.countryCode]
-  const digits = form.value.phone.replace(/\D/g, '').length
-  return (
-    form.value.username &&
-    /^(?=.*[A-Za-z])(?=.*\d).{5,}$/.test(form.value.username) &&
-    form.value.phone &&
-    digits >= rule.min && digits <= rule.max &&
-    form.value.faculty &&
-    Object.keys(errors.value).length === 0
-  )
+  if (!form.username || !form.phone || !form.faculty) {
+    return false
+  }
+
+  // Username check - only length
+  if (form.username.length < 5) {
+    return false
+  }
+
+  // Phone check
+  const rule = phoneRules[form.countryCode]
+  const digits = form.phone.replace(/\D/g, '').length
+  if (digits < rule.min || digits > rule.max) {
+    return false
+  }
+
+  return true
 })
 
-// Live username alert
+// Live username alert - only length
 const usernameAlert = computed(() => {
-  if (!form.value.username) return ''
-  if (!/^(?=.*[A-Za-z]).{5,}$/.test(form.value.username)) {
-    return 'Must be at least 5 characters, include a letter'
+  if (!form.username) return ''
+  if (form.username.length < 5) {
+    return 'Username must be at least 5 characters'
   }
   return ''
 })
@@ -202,19 +224,19 @@ function onFileChange(e) {
   const file = e.target.files[0]
   if (file) {
     if (file.type !== 'application/pdf') {
-      form.value.resume = null
-      form.value.resumeName = ''
+      form.resume = null
+      form.resumeName = ''
       errors.value.resume = 'Only PDF files are allowed'
       return
     }
     if (file.size > 2 * 1024 * 1024) {
-      form.value.resume = null
-      form.value.resumeName = ''
+      form.resume = null
+      form.resumeName = ''
       errors.value.resume = 'File size must be 2MB or less'
       return
     }
-    form.value.resume = file
-    form.value.resumeName = file.name
+    form.resume = file
+    form.resumeName = file.name
     errors.value.resume = ''
   }
 }
@@ -223,38 +245,38 @@ function onDrop(e) {
   const file = e.dataTransfer.files[0]
   if (file) {
     if (file.type !== 'application/pdf') {
-      form.value.resume = null
-      form.value.resumeName = ''
+      form.resume = null
+      form.resumeName = ''
       errors.value.resume = 'Only PDF files are allowed'
       return
     }
     if (file.size > 2 * 1024 * 1024) {
-      form.value.resume = null
-      form.value.resumeName = ''
+      form.resume = null
+      form.resumeName = ''
       errors.value.resume = 'File size must be 2MB or less'
       return
     }
-    form.value.resume = file
-    form.value.resumeName = file.name
+    form.resume = file
+    form.resumeName = file.name
     errors.value.resume = ''
   }
 }
 
 const fileInput = ref(null)
 function removeResume() {
-  form.value.resume = null
-  form.value.resumeName = ''
+  form.resume = null
+  form.resumeName = ''
 }
 
 function onPhoneInput(e) {
   // Remove all non-digits
   let digits = e.target.value.replace(/\D/g, '');
   // Get max digits for current country
-  const rule = phoneRules[form.value.countryCode];
+  const rule = phoneRules[form.countryCode];
   if (digits.length > rule.max) {
     digits = digits.slice(0, rule.max);
   }
-  form.value.phone = digits;
+  form.phone = digits;
 }
 
 function onPhoneKeyPress(e) {
@@ -264,15 +286,49 @@ function onPhoneKeyPress(e) {
   }
 }
 
-function submit() {
-  if (!validate()) return
-  const data = new FormData()
-  data.append('username', form.value.username)
-  data.append('countryCode', form.value.countryCode)
-  data.append('phone', form.value.phone)
-  data.append('faculty', form.value.faculty)
-  if (form.value.resume) data.append('resume', form.value.resume)
-  router.post('/complete-profile', data)
+async function submit() {
+  if (!validate()) {
+    // Show validation errors
+    Object.keys(errors.value).forEach(key => {
+      toast.error(errors.value[key], {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      })
+    })
+    return
+  }
+
+  const formData = new FormData()
+  formData.append('username', form.username)
+  formData.append('phone', form.countryCode + form.phone)
+  formData.append('faculty', form.faculty)
+  if (form.resume) {
+    formData.append('resume', form.resume)
+  }
+
+  try {
+    await router.post('/complete-profile', formData, {
+      onSuccess: () => {
+        toast.success('Profile completed successfully!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        })
+      },
+      onError: (errors) => {
+        Object.keys(errors).forEach(key => {
+          toast.error(errors[key], {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          })
+        })
+      }
+    })
+  } catch (error) {
+    toast.error('An error occurred while saving your profile', {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000,
+    })
+  }
 }
 </script>
 

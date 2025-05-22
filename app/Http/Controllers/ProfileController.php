@@ -75,14 +75,32 @@ class ProfileController extends Controller
         }
 
         $validated = $request->validate([
-            'username' => ['required', 'regex:/^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{5,}$/'],
+            'username' => ['required', 'min:5'],
             'phone' => ['required'],
             'faculty' => ['required'],
             'resume' => ['nullable', 'file', 'max:2048'],
         ]);
 
-        // Save user profile logic here...
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login');
+        }
+        
+        // Update user profile with validated data
+        $user->username = $validated['username'];
+        $user->phone = $validated['phone'];
+        $user->faculty = $validated['faculty'];
+        
+        // Handle resume upload if provided
+        if ($request->hasFile('resume')) {
+            $path = $request->file('resume')->store('resumes', 'public');
+            $user->resume_path = $path;
+        }
+        
+        // Mark profile as completed
+        $user->profile_completed = true;
+        $user->save();
 
-        return redirect()->route('events');
+        return redirect()->route('events.index')->with('success', 'Profile completed successfully!');
     }
 }
