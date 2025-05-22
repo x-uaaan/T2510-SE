@@ -29,13 +29,20 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // The issue is that Request doesn't have a user() method by default
+        // We need to use Auth facade to get the authenticated user
+        $user = Auth::user();
+        if (!$user) {
+            return Redirect::route('login');
         }
 
-        $request->user()->save();
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
 
         return Redirect::route('profile.edit');
     }

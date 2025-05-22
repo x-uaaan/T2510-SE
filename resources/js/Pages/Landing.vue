@@ -6,7 +6,7 @@
       :style="{ transform: showBar ? 'translateY(0)' : 'translateY(-100%)' }"
     >
       <!--<a href="/login/microsoft" class="text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2D9CDB] mr-2">Login / Register</a>-->
-      <a href="/login/microsoft" class="bg-[#2D9CDB] text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2386b7]">Login / Register</a>
+      <a href="/auth/microsoft" class="bg-[#2D9CDB] text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2386b7]">Login / Register</a>
     </div>
     <div class="pt-28"> <!-- Add padding top to offset fixed bar -->
       <!-- Hero Section -->
@@ -51,7 +51,7 @@
       <section class="py-32 px-4 text-center bg-[#232323]">
         <h2 class="text-4xl font-bold text-white mb-6">Ready to Connect?</h2>
         <p class="text-xl text-gray-300 mb-10">Sign up now and become part of the vibrant Campus Pulse alumni community.</p>
-        <a href="/login/microsoft" class="bg-[#2D9CDB] text-white px-12 py-5 rounded shadow hover:bg-[#2386b7] text-xl font-semibold transition">Get Started with Microsoft</a>
+        <a href="/auth/microsoft" class="bg-[#2D9CDB] text-white px-12 py-5 rounded shadow hover:bg-[#2386b7] text-xl font-semibold transition">Get Started with Microsoft</a>
       </section>
 
       <!-- Footer -->
