@@ -1,103 +1,105 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-[#18191A]">
-    <form @submit.prevent="submit" class="bg-[#232323] p-6 rounded-2xl shadow-xl w-full max-w-md border border-[#292929] flex flex-col justify-between h-[650px]">
-      <div>
-        <img src="/image/CampusPulse.png" alt="Campus Pulse Logo" class="mx-auto mb-2 h-12" />
-        <h2 class="text-base font-bold mb-4 text-center text-white">Complete Your Profile</h2>
-      </div>
-      <div class="flex-1 flex flex-col justify-center">
-        <!-- Username -->
-        <div class="mb-4">
-          <label class="block text-gray-300 mb-1 text-sm"><span class="text-red-500">*</span> Username</label>
-          <input v-model="form.username" type="text" class="w-full px-3 py-2 rounded-xl bg-[#18191A] text-white border border-[#353535] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition outline-none text-sm" />
-          <div v-if="errors.username" class="text-red-400 text-xs mt-1">{{ errors.username }}</div>
-          <div v-if="usernameAlert" class="text-yellow-400 text-xs mt-1">{{ usernameAlert }}</div>
+  <BaseLayout>
+    <div class="min-h-screen flex items-center justify-center bg-[#18191A]">
+      <form @submit.prevent="submit" class="bg-[#232323] p-6 rounded-2xl shadow-xl w-full max-w-md border border-[#292929] flex flex-col justify-between h-[650px]">
+        <div>
+          <img src="/image/CampusPulse.png" alt="Campus Pulse Logo" class="mx-auto mb-2 h-12" />
+          <h2 class="text-base font-bold mb-4 text-center text-white">Complete Your Profile</h2>
         </div>
-        <!-- Phone Number -->
-        <div class="mb-4">
-          <label class="block text-gray-300 mb-1 text-sm"><span class="text-red-500">*</span> Phone Number</label>
-          <div class="flex">
-            <select
-              v-model="form.countryCode"
-              class="rounded-l-xl px-3 py-2 bg-[#18191A] text-white border border-[#353535] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition outline-none custom-no-arrow text-sm"
-            >
-              <option v-for="c in countries" :key="c.code" :value="c.dial">
-                ({{ c.dial }})
-              </option>
-            </select>
-            <input
-              v-model="form.phone"
-              :placeholder="currentPhonePlaceholder"
-              type="text"
-              class="w-full px-3 py-2 rounded-r-xl bg-[#18191A] text-white border-t border-b border-r border-[#353535] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition outline-none text-sm"
-              @input="onPhoneInput"
-              @keypress="onPhoneKeyPress"
-            />
+        <div class="flex-1 flex flex-col justify-center">
+          <!-- Username -->
+          <div class="mb-4">
+            <label class="block text-gray-300 mb-1 text-sm"><span class="text-red-500">*</span> Username</label>
+            <input v-model="form.username" type="text" class="w-full px-3 py-2 rounded-xl bg-[#18191A] text-white border border-[#353535] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition outline-none text-sm" />
+            <div v-if="errors.username" class="text-red-400 text-xs mt-1">{{ errors.username }}</div>
+            <div v-if="usernameAlert" class="text-yellow-400 text-xs mt-1">{{ usernameAlert }}</div>
           </div>
-          <div v-if="errors.phone" class="text-red-400 text-xs mt-1">{{ errors.phone }}</div>
-        </div>
-        <!-- Faculty -->
-        <div class="mb-4">
-          <label class="block text-gray-300 mb-1 text-sm"><span class="text-red-500">*</span> Faculty</label>
-          <select v-model="form.faculty" class="w-full px-3 py-2 rounded-xl bg-[#18191A] text-white border border-[#353535] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition outline-none text-sm">
-            <option value="" disabled>Select faculty</option>
-            <option v-for="faculty in faculties" :key="faculty" :value="faculty">{{ faculty }}</option>
-          </select>
-          <div v-if="errors.faculty" class="text-red-400 text-xs mt-1">{{ errors.faculty }}</div>
-        </div>
-        <!-- Resume -->
-        <div class="mb-5">
-          <label class="block text-gray-300 mb-1 text-sm">Resume</label>
-          <div v-if="!form.resume">
-            <div
-              class="border-2 border-dashed border-[#bdbdbd33] rounded-xl p-4 text-center cursor-pointer bg-[#23232b] hover:bg-[#23233b] transition"
-              @dragover.prevent
-              @drop.prevent="onDrop"
-              @click="fileInput.click()"
-            >
+          <!-- Phone Number -->
+          <div class="mb-4">
+            <label class="block text-gray-300 mb-1 text-sm"><span class="text-red-500">*</span> Phone Number</label>
+            <div class="flex">
+              <select
+                v-model="form.countryCode"
+                class="rounded-l-xl px-3 py-2 bg-[#18191A] text-white border border-[#353535] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition outline-none custom-no-arrow text-sm"
+              >
+                <option v-for="c in countries" :key="c.code" :value="c.dial">
+                  ({{ c.dial }})
+                </option>
+              </select>
               <input
-                type="file"
-                ref="fileInput"
-                class="hidden"
-                accept=".pdf"
-                @change="onFileChange"
+                v-model="form.phone"
+                :placeholder="currentPhonePlaceholder"
+                type="text"
+                class="w-full px-3 py-2 rounded-r-xl bg-[#18191A] text-white border-t border-b border-r border-[#353535] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition outline-none text-sm"
+                @input="onPhoneInput"
+                @keypress="onPhoneKeyPress"
               />
-              <div>
-                <svg class="mx-auto mb-2" width="32" height="32" fill="none" stroke="currentColor"><path d="M20 30V10M10 20h20" /></svg>
-                <span class="block font-semibold text-[#6c5ce7] text-sm">Click to upload</span>
-                <span class="block text-xs text-gray-500">or drag and drop<br>PDF only (max 2MB)</span>
+            </div>
+            <div v-if="errors.phone" class="text-red-400 text-xs mt-1">{{ errors.phone }}</div>
+          </div>
+          <!-- Faculty -->
+          <div class="mb-4">
+            <label class="block text-gray-300 mb-1 text-sm"><span class="text-red-500">*</span> Faculty</label>
+            <select v-model="form.faculty" class="w-full px-3 py-2 rounded-xl bg-[#18191A] text-white border border-[#353535] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition outline-none text-sm">
+              <option value="" disabled>Select faculty</option>
+              <option v-for="faculty in faculties" :key="faculty" :value="faculty">{{ faculty }}</option>
+            </select>
+            <div v-if="errors.faculty" class="text-red-400 text-xs mt-1">{{ errors.faculty }}</div>
+          </div>
+          <!-- Resume -->
+          <div class="mb-5">
+            <label class="block text-gray-300 mb-1 text-sm">Resume</label>
+            <div v-if="!form.resume">
+              <div
+                class="border-2 border-dashed border-[#bdbdbd33] rounded-xl p-4 text-center cursor-pointer bg-[#23232b] hover:bg-[#23233b] transition"
+                @dragover.prevent
+                @drop.prevent="onDrop"
+                @click="fileInput.click()"
+              >
+                <input
+                  type="file"
+                  ref="fileInput"
+                  class="hidden"
+                  accept=".pdf"
+                  @change="onFileChange"
+                />
+                <div>
+                  <svg class="mx-auto mb-2" width="32" height="32" fill="none" stroke="currentColor"><path d="M20 30V10M10 20h20" /></svg>
+                  <span class="block font-semibold text-[#6c5ce7] text-sm">Click to upload</span>
+                  <span class="block text-xs text-gray-500">or drag and drop<br>PDF only (max 2MB)</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div v-else class="flex items-center justify-between bg-[#e9e6f7] rounded-xl px-3 py-2 mt-1">
-            <div class="flex items-center gap-2">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="3" width="18" height="18" rx="4" fill="#e0e7ff"/>
-                <text x="12" y="17" text-anchor="middle" font-size="10" fill="#6366f1" font-family="Arial">PDF</text>
-              </svg>
-              <div>
-                <div class="font-semibold text-[#6366f1] text-xs">{{ form.resumeName }}</div>
-                <div class="text-xs text-gray-500">{{ resumeSize }}</div>
+            <div v-else class="flex items-center justify-between bg-[#e9e6f7] rounded-xl px-3 py-2 mt-1">
+              <div class="flex items-center gap-2">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="3" width="18" height="18" rx="4" fill="#e0e7ff"/>
+                  <text x="12" y="17" text-anchor="middle" font-size="10" fill="#6366f1" font-family="Arial">PDF</text>
+                </svg>
+                <div>
+                  <div class="font-semibold text-[#6366f1] text-xs">{{ form.resumeName }}</div>
+                  <div class="text-xs text-gray-500">{{ resumeSize }}</div>
+                </div>
               </div>
+              <button type="button" @click="removeResume" class="ml-2 text-red-500 hover:text-red-700">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
             </div>
-            <button type="button" @click="removeResume" class="ml-2 text-red-500 hover:text-red-700">
-              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
+            <div v-if="errors.resume" class="text-red-400 text-xs mt-1">{{ errors.resume }}</div>
           </div>
-          <div v-if="errors.resume" class="text-red-400 text-xs mt-1">{{ errors.resume }}</div>
         </div>
-      </div>
-      <div>
-        <button type="submit" :disabled="!canSubmit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl shadow transition disabled:opacity-50 text-base">
-          Register
-        </button>
-        <div class="text-center mt-2 text-sm text-gray-400">
-          Already have an account?
-          <a href="/login" class="text-blue-400 hover:underline ml-1">Log in!</a>
+        <div>
+          <button type="submit" :disabled="!canSubmit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl shadow transition disabled:opacity-50 text-base">
+            Register
+          </button>
+          <div class="text-center mt-2 text-sm text-gray-400">
+            Already have an account?
+            <a href="/login" class="text-blue-400 hover:underline ml-1">Log in!</a>
+          </div>
         </div>
-      </div>
-    </form>
-  </div>
+      </form>
+    </div>
+  </BaseLayout>
 </template>
 
 <script setup>
@@ -105,6 +107,7 @@ import { ref, computed } from 'vue'
 import { useForm, usePage, router } from '@inertiajs/vue3'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
+import BaseLayout from '@/Layouts/BaseLayout.vue'
 
 const faculties = [
   'Faculty of Engineering', 'Faculty of Engineering & Technology', 

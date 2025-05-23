@@ -11,9 +11,6 @@
 </head>
 <body class="bg-[#232323] text-white font-['Inter']">
     @inertia
-    <div id="app">
-        <div class="pt-28">
-        </div>
-    </div>
+    <div id="app"></div>
 </body>
 </html>
