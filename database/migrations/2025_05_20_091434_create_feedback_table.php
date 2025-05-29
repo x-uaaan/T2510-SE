@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('feedback', function (Blueprint $table) {
-            $table->id('feedbackID')->primary();
+            $table->increments('feedbackID');
             $table->text('description');
             $table->timestamp('timestamp');
             $table->foreignId('alumniID')->constrained('alumni')->onDelete('cascade');

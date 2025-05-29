@@ -23,3 +23,7 @@ Route::resource('posts', PostController::class);
 Route::get('/auth/microsoft', [MicrosoftController::class, 'redirectToMicrosoft']);
 Route::get('/auth/microsoft/callback', [MicrosoftController::class, 'handleMicrosoftCallback']);
 Route::match(['get', 'post'], '/complete-profile', [ProfileController::class, 'complete'])->name('complete-profile');
+
+Route::get('/events', function () {
+    return view('events.index'); // Make sure this points to 'resources/views/events/index.blade.php'
+});

@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('forums', function (Blueprint $table) {
-            $table->id('forumID')->primary();
+            $table->increments('forumID');
             $table->string('forumTitle');
             $table->text('forumDesc');
             $table->foreignId('adminID')->constrained('admins')->onDelete('cascade');

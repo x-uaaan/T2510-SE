@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->id('postID')->primary();
+            $table->increments('postID');
             $table->string('postTitle');
             $table->text('postDesc');
             $table->text('comment')->nullable();
