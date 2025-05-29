@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Http\Resources\EventResource;
 
 class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::with(['admin', 'attendees'])->get();
-        return view('events.index', compact('events'));
+        // Fetch all events from the database (including those seeded by EventSeeder)
+        $events = \App\Models\Event::all();
+
+        // Pass the events as JSON to the Blade view for Vue to consume
+        return view('events.index', [
+            'events' => $events->toJson()
+        ]);
     }
 
     public function create()
@@ -60,5 +66,11 @@ class EventController extends Controller
     {
         $event->delete();
         return redirect()->route('events.index')->with('success', 'Event deleted successfully!');
+    }
+
+    public function apiIndex()
+    {
+        $events = Event::all();
+        return EventResource::collection($events);
     }
 }

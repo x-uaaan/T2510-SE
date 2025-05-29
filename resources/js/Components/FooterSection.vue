@@ -1,6 +1,12 @@
 <template>
-  <footer class="bg-blue-900 text-white py-8 text-center">
-    <p>© 2024 Campus Pulse. All rights reserved.</p>
+  <footer class="bg-blue-900 text-white h-[50px] flex items-center px-4">
+    <div class="flex items-center space-x-6">
+      <p class="text-sm">© 2025 Campus Pulse. All rights reserved.</p>
+      <div class="flex items-center space-x-4">
+        <a href="mailto:support@campuspulse.com" class="text-sm hover:text-blue-200 transition-colors">Contact Us</a>
+        <a href="/feedback" class="text-sm hover:text-blue-200 transition-colors">Feedback</a>
+      </div>
+    </div>
   </footer>
 </template>
 
@@ -8,4 +14,8 @@
 export default {
   name: 'FooterSection',
 }
-</script> 
+</script>
+
+<style scoped>
+/* Removed fixed positioning */
+</style> 

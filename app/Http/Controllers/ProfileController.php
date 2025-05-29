@@ -29,13 +29,20 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // The issue is that Request doesn't have a user() method by default
+        // We need to use Auth facade to get the authenticated user
+        $user = Auth::user();
+        if (!$user) {
+            return Redirect::route('login');
         }
 
-        $request->user()->save();
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
 
         return Redirect::route('profile.edit');
     }
@@ -59,5 +66,41 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function complete(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            return Inertia::render('CompleteProfile');
+        }
+
+        $validated = $request->validate([
+            'username' => ['required', 'min:5'],
+            'phone' => ['required'],
+            'faculty' => ['required'],
+            'resume' => ['nullable', 'file', 'max:2048'],
+        ]);
+
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login');
+        }
+        
+        // Update user profile with validated data
+        $user->username = $validated['username'];
+        $user->phone = $validated['phone'];
+        $user->faculty = $validated['faculty'];
+        
+        // Handle resume upload if provided
+        if ($request->hasFile('resume')) {
+            $path = $request->file('resume')->store('resumes', 'public');
+            $user->resume_path = $path;
+        }
+        
+        // Mark profile as completed
+        $user->profile_completed = true;
+        $user->save();
+
+        return redirect()->route('events.index')->with('success', 'Profile completed successfully!');
     }
 }

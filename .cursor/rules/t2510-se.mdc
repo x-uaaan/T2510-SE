@@ -1,0 +1,156 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Project Rules for Campus Pulse
+
+## Metadata
+
+```yaml
+Project:
+  description: Project rules for Campus Pulse, an alumni management system.
+  globs:
+    - "*.php"
+    - "*.blade.php"
+    - "*.sqlite"
+    - "*.js"
+    - "*.css"
+    - "*.vue"
+  alwaysApply: true
+```
+
+---
+
+## Functionalities and Standards
+
+### Forum System
+
+- Allow users to create multiple forums.
+- Enable posting inside forums by any user.
+- Allow users to comment on posts, but replying to comments is prohibited.
+- Ensure all forum-related routes, controllers, and views are aligned with Laravel standards.
+- Validate user permissions before creating or interacting with forums.
+
+### Event Management
+
+- Only admin users can create events.
+- Display all events on the event page.
+- Show organisation-specific events on their profiles.
+- Allow users to register as participants for events.
+- Validate event data integrity and ensure database relationships align with SQLite constraints.
+
+### Searching System
+
+- Implement search functionality for forums, posts, events, and users.
+- Provide relevance-based search results with options to sort by popularity or newest.
+- Separate search results into "All", "Forum", "Post", "Event", and "User" categories.
+- Ensure efficient querying and indexing in SQLite for optimal search performance.
+
+### User Authentication and Profiles
+
+- Use Microsoft authentication for login.
+- Potentially enable Google authentication after confirmation.
+- Direct new users to complete their profile after login.
+- Display public profiles showing non-private information, forums, and posts created by the user.
+- Align authentication and user management flows with Laravel's built-in features.
+
+### Layout Standards
+
+### Base Layout Implementation
+
+- All Vue pages must use BaseLayout for consistent footer display
+- Import BaseLayout in each page component:
+  ```vue
+  import BaseLayout from '@/Layouts/BaseLayout.vue'
+  ```
+- Wrap page content with BaseLayout:
+  ```vue
+  <template>
+    <BaseLayout>
+      <!-- Page content -->
+    </BaseLayout>
+  </template>
+  ```
+- Exceptions:
+  - Pages requiring navigation should use AppLayout instead
+  - Authentication pages may use custom layouts without footer
+
+### Footer Consistency
+
+- Footer must be present on all main application pages
+- Footer height should remain consistent at 50px
+- Footer content should include:
+  - Copyright text (© 2025 Campus Pulse)
+  - Contact Us link (mailto:support@campuspulse.com)
+  - Feedback link (/feedback)
+- Footer styling should be consistent across all pages
+
+---
+
+## Development Guidelines
+
+### Framework and Database
+
+- Always follow Laravel conventions for routing, controllers, models, and views.
+- Use SQLite database features while ensuring compatibility with Laravel's ORM.
+- Validate database schema changes for consistency and integrity.
+
+### Error Handling
+
+- When an error occurs:
+  1. Examine all relevant files (including those in different directories).
+  2. List possible causes based on observed behaviour.
+  3. Suggest solutions with clear steps.
+  4. If appropriate, execute the resolution steps.
+
+### Code Structure
+
+- Maintain modular, reusable components.
+- Write concise, readable code with inline documentation for critical logic.
+- Ensure compliance with Laravel's ecosystem for packages, middleware, and authentication.
+
+### User Experience
+
+- Provide clear, structured outputs for search results.
+- Ensure smooth navigation between forums, posts, events, and user profiles.
+- Optimise UI for clarity and usability.
+
+### Testing and Debugging
+
+- Perform thorough testing of forum creation, posting, commenting, and event registration flows.
+- Regularly test SQLite database interactions for consistency and performance.
+- Validate all user authentication scenarios and profile completion steps.
+
+---
+
+## Suggestions and Improvements
+
+- **Search Efficiency**: Regularly optimise database queries to handle large datasets efficiently.
+- **Authentication**: Confirm Google authentication feasibility and ensure a fallback plan.
+- **Error Monitoring**: Use Laravel's built-in logging features to track and debug errors.
+- **Feedback Loop**: Continuously gather user feedback to improve forums, events, and search functionality.
+- **Security**: Implement role-based access control (RBAC) for admin-specific actions like event creation.
+
+---
+
+## Tags
+
+`@laravel-sqlite-standard`
+
+---
+
+## Responsibilities Added
+
+- Acknowledge independent developer roles for personal and freelance tasks.
+- Integrate the single-responsibility principle for code modifications.
+- Emphasise reuse of existing code and tools to avoid redundancy.
+- Highlight the importance of adhering to Laravel structure for consistent file handling.
+
+---
+
+## New Practices Included
+
+- Summarise all tool installations and changes for transparency.
+
+- Extract utility methods into common files for reusability.

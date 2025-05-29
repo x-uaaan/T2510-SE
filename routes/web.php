@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MicrosoftController;
+use App\Http\Controllers\ProfileController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -19,5 +20,10 @@ Route::resource('events', EventController::class);
 Route::resource('forums', ForumController::class);
 Route::resource('posts', PostController::class);
 
-Route::get('/auth/microsoft', [AuthController::class, 'redirectToMicrosoft']);
-Route::get('/auth/microsoft/callback', [AuthController::class, 'handleMicrosoftCallback']);
+Route::get('/auth/microsoft', [MicrosoftController::class, 'redirectToMicrosoft']);
+Route::get('/auth/microsoft/callback', [MicrosoftController::class, 'handleMicrosoftCallback']);
+Route::match(['get', 'post'], '/complete-profile', [ProfileController::class, 'complete'])->name('complete-profile');
+
+Route::get('/events', function () {
+    return view('events.index'); // Make sure this points to 'resources/views/events/index.blade.php'
+});

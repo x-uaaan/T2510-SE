@@ -1,14 +1,15 @@
 <template>
-  <div class="min-h-screen bg-[#18191A] text-white font-['Inter']">
-    <!-- Top Bar with Login and Sign Up -->
-    <div
-      class="w-full flex justify-end items-center px-8 py-6 bg-[#18191A] fixed top-0 left-0 z-50 shadow transition-transform duration-300"
-      :style="{ transform: showBar ? 'translateY(0)' : 'translateY(-100%)' }"
-    >
-      <a href="/login/microsoft" class="text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2D9CDB] mr-2">Login with Microsoft</a>
-      <a href="/login/microsoft" class="bg-[#2D9CDB] text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2386b7]">Sign Up with Microsoft</a>
-    </div>
-    <div class="pt-28"> <!-- Add padding top to offset fixed bar -->
+  <AppLayout>
+    <div class="min-h-screen bg-[#18191A] text-white font-['Inter']">
+      <!-- Top Bar with Login and Sign Up -->
+      <div
+        class="w-full flex justify-end items-center px-8 py-6 bg-[#18191A] fixed top-0 left-0 z-50 shadow transition-transform duration-300"
+        :style="{ transform: showBar ? 'translateY(0)' : 'translateY(-100%)' }"
+      >
+        <!--<a href="/login/microsoft" class="text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2D9CDB] mr-2">Login / Register</a>-->
+        <a href="/auth/microsoft" class="bg-[#2D9CDB] text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2386b7]">Login / Register</a>
+      </div>
+      
       <!-- Hero Section -->
       <section class="flex flex-col items-center justify-center py-32 px-4 text-center">
         <img src="/image/CampusPulseIcon.png" alt="Campus Pulse Logo" class="h-32 w-32 mb-8 mx-auto" />
@@ -51,19 +52,15 @@
       <section class="py-32 px-4 text-center bg-[#232323]">
         <h2 class="text-4xl font-bold text-white mb-6">Ready to Connect?</h2>
         <p class="text-xl text-gray-300 mb-10">Sign up now and become part of the vibrant Campus Pulse alumni community.</p>
-        <a href="/login/microsoft" class="bg-[#2D9CDB] text-white px-12 py-5 rounded shadow hover:bg-[#2386b7] text-xl font-semibold transition">Get Started with Microsoft</a>
+        <a href="/auth/microsoft" class="bg-[#2D9CDB] text-white px-12 py-5 rounded shadow hover:bg-[#2386b7] text-xl font-semibold transition">Get Started with Microsoft</a>
       </section>
-
-      <!-- Footer -->
-      <footer class="bg-[#101112] text-gray-400 py-10 text-center">
-        <p>© 2024 Campus Pulse. All rights reserved.</p>
-      </footer>
     </div>
-  </div>
+  </AppLayout>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
 
 const showBar = ref(true)
 let lastScrollY = window.scrollY
