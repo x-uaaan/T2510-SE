@@ -1,5 +1,5 @@
 <template>
-  <div class="timeline-container">
+  <div :class="['timeline-container', { 'drawer-open': drawerOpen }]">
     <div v-for="(group, date) in groupedEvents" :key="date" class="event-group-row">
       <div class="event-date-label">
         <span>{{ formatDate(date) }}</span>
@@ -20,7 +20,7 @@
 import { computed } from 'vue'
 import EventListItem from './EventListItem.vue'
 
-const props = defineProps(['events'])
+const props = defineProps(['events', 'drawerOpen'])
 
 // Group events by eventDate
 const groupedEvents = computed(() => {
@@ -44,13 +44,19 @@ function formatDate(date) {
 .timeline-container {
   background: #000;
   border-radius: 16px;
-  padding: 32px 20px;
-  max-width: 800px;
+  padding: 32px 20px 0px;
+  width: 750px;
   margin: 32px auto;
+  margin-left: 30px;
   min-height: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: margin-right 0.3s, max-width 0.3s;
+}
+.timeline-container.drawer-open {
+  margin-right: 300px; /* 400px drawer + 20px gap */
+  max-width: 800px;
 }
 .event-group-row {
   display: flex;

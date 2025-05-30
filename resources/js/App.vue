@@ -1,9 +1,10 @@
 <template>
   <div class="app-layout">
     <NavigationDrawer />
-    <div class="main-content">
+    <div :class="['main-content', { 'drawer-open': selectedEvent }]">
       <EventTimeline
         :events="events"
+        :drawer-open="!!selectedEvent"
         @event-click="openDrawer"
       />
       <EventDetailsDrawer
@@ -26,7 +27,11 @@ const selectedEvent = ref(null)
 
 function openDrawer(event) {
   selectedEvent.value = event
+
+  console.log("Updated Selected Event:", selectedEvent.value);
+  console.log("Drawer Open:", drawerOpen.value);
 }
+
 
 onMounted(async () => {
   const response = await axios.get('/api/events')
@@ -38,4 +43,5 @@ onMounted(async () => {
 <style scoped>
 .app-layout { display: flex; }
 .main-content { flex: 1; margin-left: 220px; position: relative; }
+.main-content.drawer-open { max-width: calc(100vw - 420px); margin-right: 0; margin-left: 220px; }
 </style>

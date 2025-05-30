@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('eventVenue');
             $table->integer('capacity')->nullable(); // NULL for unlimited capacity
             $table->string('organiser');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }
