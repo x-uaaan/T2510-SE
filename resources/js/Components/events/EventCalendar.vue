@@ -94,7 +94,7 @@ onMounted(() => {
   color: #fff !important;
   border-radius: 18px !important;
   font-family: inherit;
-  box-shadow: rgba(0, 0, 0, 0.15) 6px 6px 5px;
+  box-shadow: 3px 3px 12px #000a;
   padding: 10px;
   margin-bottom: 10px;
   width: 300px;
@@ -109,7 +109,7 @@ onMounted(() => {
   border-radius: 30px;
   margin: 0 36px;
   text-align: center;
-  padding: 0px 15px;
+  padding: 2px 20px;
   letter-spacing: 0.02em;
   border: none !important;
   cursor: pointer !important;
@@ -173,7 +173,7 @@ onMounted(() => {
 
 /* Weekdays */
 :deep(.vc-weekdays) {
-  color: #b0b0b0 !important;
+  color: #7ecfff !important;
   font-size: 1em;
   background: none !important;
   margin-bottom: 2px;
@@ -202,7 +202,7 @@ onMounted(() => {
 }
 
 :deep(.vc-day-content.vc-highlight-content) {
-  background: #0066ff !important;
+  background: #7ecfff !important;
   color: #fff !important;
   border-radius: 50% !important;
 }
@@ -223,7 +223,7 @@ onMounted(() => {
 }
 
 :deep(.vc-day.is-selected .vc-day-content.vc-highlight-content) {
-  background: #0066ff !important;
+  background: #7ecfff !important;
   color: #fff !important;
 }
 
