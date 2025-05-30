@@ -27,7 +27,6 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(ZiggyVue);
 
         app.component('NavBar', NavBar);
         app.component('HeroSection', HeroSection);

@@ -7,9 +7,10 @@
         :drawer-open="!!selectedEvent"
         @event-click="openDrawer"
       />
+      <EventCalendar />
       <EventDetailsDrawer
-        :event="selectedEvent"
-        @close="selectedEvent = null"
+      :event="selectedEvent"
+      @close="selectedEvent = null"
       />
     </div>
   </div>
@@ -21,6 +22,7 @@ import axios from 'axios'
 import EventTimeline from './Components/events/EventTimeline.vue'
 import EventDetailsDrawer from './Components/events/EventDetailsDrawer.vue'
 import NavigationDrawer from './Components/events/NavigationDrawer.vue'
+import EventCalendar from './Components/events/EventCalendar.vue'
 
 const events = ref([])
 const selectedEvent = ref(null)
