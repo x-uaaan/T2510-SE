@@ -176,7 +176,7 @@ onMounted(() => {
   color: #7ecfff !important;
   font-size: 1em;
   background: none !important;
-  margin-bottom: 2px;
+  margin: 2px -1px;
   letter-spacing: 0.05em;
 }
 
