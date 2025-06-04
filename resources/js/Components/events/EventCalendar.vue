@@ -2,9 +2,9 @@
   <div class="calendar-fixed" @click="handleCalendarClick">
     <div class="calendar-search-bar">
       <span class="search-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="11" cy="11" r="7" stroke="#aaa" stroke-width="2"/>
-          <line x1="16.5" y1="16.5" x2="22" y2="22" stroke="#aaa" stroke-width="2" stroke-linecap="round"/>
+        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" width="20" height="20" color="#aaa">
+          <circle cx="9.14" cy="9.14" r="7.64" fill="none" stroke="currentColor" stroke-miterlimit="10"/>
+          <line x1="22.5" y1="22.5" x2="14.39" y2="14.39" fill="none" stroke="currentColor" stroke-miterlimit="10"/>
         </svg>
       </span>
       <input
