@@ -48,6 +48,7 @@ function formatDate(date) {
   width: 750px;
   margin: 32px auto;
   margin-left: 30px;
+  margin-top: 0px;
   min-height: 300px;
   display: flex;
   flex-direction: column;

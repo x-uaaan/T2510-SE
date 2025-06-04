@@ -1,5 +1,19 @@
 <template>
   <div class="calendar-fixed" @click="handleCalendarClick">
+    <div class="calendar-search-bar">
+      <span class="search-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="11" cy="11" r="7" stroke="#aaa" stroke-width="2"/>
+          <line x1="16.5" y1="16.5" x2="22" y2="22" stroke="#aaa" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <input
+        type="search"
+        class="calendar-search-input"
+        placeholder="Type to search..."
+        v-model="searchQuery"
+      />
+    </div>
     <VDatePicker
       ref="calendarRef"
       is-dark
@@ -26,6 +40,28 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import 'v-calendar/style.css'
+
+const searchQuery = ref('')
+const showLogo = ref(true)
+let lastScrollY = window.scrollY
+
+function handleScroll() {
+  const currentY = window.scrollY
+  if (currentY < 100) {
+    showLogo.value = true
+  } else if (currentY > lastScrollY) {
+    // scrolling down
+    showLogo.value = false
+  } else {
+    // scrolling up
+    showLogo.value = true
+  }
+  lastScrollY = currentY
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
 
 // Get today's date and set as default month
 const today = new Date()
@@ -78,15 +114,49 @@ onMounted(() => {
 <style scoped>
 .calendar-fixed {
   position: fixed;
-  top: 0px;
+  top: 80px;
   right: 40px;
   z-index: 10;
   border-radius: 16px;
   width: 400px;
   height: 400px;
   display: flex;
+  padding-right: 60px;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+
+.calendar-search-bar {
+  display: flex;
   align-items: center;
-  justify-content: center;
+  background: #23242a;
+  border-radius: 10px;
+  padding: 6px 12px;
+  margin-bottom: 50px;
+  width: 69%;
+  box-shadow: 0 2px 8px #0002;
+}
+
+.search-icon {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+}
+
+.calendar-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 1em;
+  width: 100%;
+  padding: 6px 0;
+}
+
+.calendar-search-input::placeholder {
+  color: #727171;
+  opacity: 1;
 }
 
 :deep(.vc-container) {
@@ -94,7 +164,8 @@ onMounted(() => {
   color: #fff !important;
   border-radius: 18px !important;
   font-family: inherit;
-  box-shadow: 3px 3px 12px #000a;
+  box-shadow: rgba(175, 173, 173, 0.15) 5px 5px 5px;
+  border: 1px none;
   padding: 10px;
   margin-bottom: 10px;
   width: 300px;
@@ -114,10 +185,6 @@ onMounted(() => {
   border: none !important;
   cursor: pointer !important;
   user-select: none; /* Prevent text selection */
-}
-
-:deep(.vc-title):hover {
-  background: #23242a !important;
 }
 
 :deep(.vc-title):active {
@@ -233,5 +300,32 @@ onMounted(() => {
   pointer-events: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
+}
+
+.calendar-logo-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18px;
+  margin-top: 0;
+  height: 100px;
+}
+.calendar-logo-img {
+  height: 100px;
+  width: auto;
+  object-fit: contain;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.fade-slide-enter-active, .fade-slide-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+.fade-slide-enter-from, .fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.fade-slide-enter-to, .fade-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

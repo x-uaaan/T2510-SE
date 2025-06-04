@@ -7,7 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
 </head>
 
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-100 min-h-screen" style="margin:0px; overflow-y: scroll; -webkit-scrollbar: none; -ms-overflow-style: none;">
+    <style>
+      body::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
     @yield('content')
 
     @stack('scripts')

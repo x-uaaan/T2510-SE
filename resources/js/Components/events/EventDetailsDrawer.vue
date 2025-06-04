@@ -133,11 +133,13 @@ onMounted(() => {
   flex-direction: column;
   box-shadow: -2px 0 16px #000a;
   animation: slideIn 0.3s;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .drawer-scroll {
   flex: 1;
   overflow-y: scroll;
-  padding: 0 0 16px 0;
+  padding: 0;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
 }

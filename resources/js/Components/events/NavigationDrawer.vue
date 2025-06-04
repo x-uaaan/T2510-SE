@@ -83,7 +83,7 @@ function navigate(route, item) {
   overflow: hidden;
 }
 .nav-drawer.open {
-  width: 220px;
+  width: 190px;
 }
 .menu-btn {
   display: flex;
@@ -106,6 +106,7 @@ nav ul {
   transition: background 0.2s, border-radius 0.2s;
   border-radius: 10px;
   margin: 8px 8px;
+  white-space: nowrap;
 }
 .nav-item.hovered {
   background: #333;
