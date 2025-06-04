@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig({
     plugins: [
         laravel({
-            input: 'resources/js/app.js',
+            input: ['resources/js/app.js', 'resources/js/event-create.js'],
             refresh: true,
         }),
         vue({
