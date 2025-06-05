@@ -10,6 +10,7 @@ class EventResource extends JsonResource
     {
         return [
             'eventName' => $this->eventName,
+            'eventDesc' => $this->eventDesc,
             'eventDate' => $this->eventDate,
             'eventTime' => $this->eventTime,
             'eventVenue' => $this->eventVenue,

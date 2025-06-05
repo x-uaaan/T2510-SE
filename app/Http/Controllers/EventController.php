@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Http\Resources\EventResource;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class EventController extends Controller
 {
@@ -21,7 +23,7 @@ class EventController extends Controller
 
     public function create()
     {
-        return view('events.create');
+        return Inertia::render('EventCreateForm');
     }
 
     public function store(Request $request)
@@ -32,7 +34,18 @@ class EventController extends Controller
             'eventDate' => 'required|date',
             'eventTime' => 'required',
             'eventVenue' => 'required|string|max:255',
+            'capacity' => 'nullable|integer',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('event_images', 'public');
+            $validatedData['image'] = $imagePath;
+        }
+
+        // Set organiser as current user's name or email
+        $validatedData['organiser'] = Auth::user() ? (Auth::user()->name ?? Auth::user()->email) : 'Unknown';
 
         Event::create($validatedData);
         return redirect()->route('events.index')->with('success', 'Event created successfully!');

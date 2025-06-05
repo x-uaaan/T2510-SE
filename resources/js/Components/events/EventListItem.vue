@@ -49,7 +49,7 @@ function formatTime(time) {
   min-width: 500px;
   display: flex;
   align-items: center;
-  box-shadow: 0 2px 8px #0002;
+  box-shadow: rgba(0, 0, 0, 0.15) 5px 5px 2.6px;
   cursor: pointer;
   transition: box-shadow 0.2s, background 0.2s;
   gap: 24px;

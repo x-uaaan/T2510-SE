@@ -1,17 +1,85 @@
 <template>
-  <nav class="flex justify-between items-center py-6 px-8 bg-white shadow">
-    <a href="/">
-      <img src="/image/CampusPulse.png" class="h-10" alt="Campus Pulse Logo" />
-    </a>
-    <div>
-      <a href="/login" class="text-gray-700 mr-4 hover:underline">Login</a>
-      <a href="/register" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 shadow">Sign Up</a>
-    </div>
-  </nav>
+  <transition name="fade-slide-navbar">
+    <nav v-if="showNavBar" class="navbar-blank">
+      <div class="navbar-logo-container">
+        <a href="/">
+          <img src="/image/CampusPulse.png" class="navbar-logo-img" alt="Campus Pulse Logo" />
+        </a>
+      </div>
+    </nav>
+  </transition>
 </template>
 
 <script>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 export default {
   name: 'NavBar',
+  setup() {
+    const showNavBar = ref(true)
+    let lastScrollY = window.scrollY
+    function handleScroll() {
+      const currentY = window.scrollY
+      if (currentY < 100) {
+        showNavBar.value = true
+      } else if (currentY > lastScrollY) {
+        showNavBar.value = false
+      } else {
+        showNavBar.value = true
+      }
+      lastScrollY = currentY
+    }
+    onMounted(() => {
+      window.addEventListener('scroll', handleScroll)
+    })
+    onBeforeUnmount(() => {
+      window.removeEventListener('scroll', handleScroll)
+    })
+    return { showNavBar }
+  }
 }
-</script> 
+</script>
+
+<style scoped>
+.navbar-blank {
+  width: 100%;
+  height: 80px;
+  background: black;
+  position: relative;
+  z-index: 20;
+  display: block;
+  padding: 0;
+  margin: 0;
+  margin-left: 220px;
+}
+.navbar-logo-container {
+  width: 300px;
+  height: 80px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0;
+  margin: 0;
+  margin-top: -10px;
+  margin-left: 20px;
+}
+.navbar-logo-img {
+  height: 80px;
+  width: 300px;
+  object-fit: contain;
+  transition: opacity 0.3s, transform 0.3s;
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+.fade-slide-navbar-enter-active, .fade-slide-navbar-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+.fade-slide-navbar-enter-from, .fade-slide-navbar-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.fade-slide-navbar-enter-to, .fade-slide-navbar-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style> 

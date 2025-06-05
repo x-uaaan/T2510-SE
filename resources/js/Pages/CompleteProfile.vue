@@ -36,6 +36,7 @@
               />
             </div>
             <div v-if="errors.phone" class="text-red-400 text-xs mt-1">{{ errors.phone }}</div>
+            <div v-if="phoneAlert" class="text-yellow-400 text-xs mt-1">{{ phoneAlert }}</div>
           </div>
           <!-- Faculty -->
           <div class="mb-4">
@@ -219,6 +220,19 @@ const usernameAlert = computed(() => {
   if (!form.username) return ''
   if (form.username.length < 5) {
     return 'Username must be at least 5 characters'
+  }
+  return ''
+})
+
+const phoneAlert = computed(() => {
+  if (!form.phone) return ''
+  const rule = phoneRules[form.countryCode]
+  const digits = form.phone.replace(/\D/g, '').length
+  if (digits < rule.min) {
+    return `Phone number must be at least ${rule.min} digits for this country`
+  }
+  if (digits > rule.max) {
+    return `Phone number must be at most ${rule.max} digits for this country`
   }
   return ''
 })
