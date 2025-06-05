@@ -4,7 +4,12 @@
       <v-date-picker
         v-model="dateValue"
         :attributes="attributes"
-        :popover="{ visibility: 'click', placement: 'bottom-start' }"
+        :popover="{ 
+          visibility: 'focus', 
+          placement: 'bottom',
+          offset: [0, 4]
+        }"
+        :first-day-of-week="1"
         is-dark
         :input-props="{
           placeholder,
@@ -21,8 +26,12 @@
         :show-month-picker="false"
         :show-day-picker="true"
       >
-        <template #default="{ inputValue, inputEvents }">
-          <div class="datepicker-input-inner" @click="inputEvents.onClick">
+        <template #default="{ inputValue, togglePopover }">
+          <div
+            class="datepicker-input-inner"
+            :class="{ active: isPopoverOpen }"
+            @click="togglePopover"
+          >
             <span class="datepicker-placeholder" v-if="!inputValue">{{ placeholder }}</span>
             <span v-else>{{ inputValue }}</span>
             <span class="datepicker-icon">
@@ -63,7 +72,7 @@ const attributes = ref([
     key: 'today',
     highlight: {
       fillMode: 'solid',
-      color: '#8b5cf6',
+      color: '#3b82f6',
     },
     dates: today,
   },
@@ -75,29 +84,33 @@ const attributes = ref([
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  width: 100%;
+  width: 50%;
 }
 .datepicker-input-wrapper {
   position: relative;
   width: 100%;
 }
-.datepicker-input-inner {
-  display: flex;
-  align-items: center;
-  background: #353535;
-  border-radius: 14px;
-  padding: 0.7rem 1rem 0.7rem 1rem;
-  border: none;
-  color: #fff;
+.datepicker-input-inner,
+.timepicker-input {
+  border: 1px solid #353535;
+  border-radius: 15px !important;
+  background: #18191A !important;
+  color: #fff !important;
   font-size: 1.1rem;
-  cursor: pointer;
+  padding: 0.7rem 1rem;
+  min-height: 48px;
   min-width: 180px;
   width: 100%;
-  box-shadow: 0 2px 8px #0002;
-  transition: box-shadow 0.2s;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
 }
-.datepicker-input-inner:focus-within, .datepicker-input-inner:hover {
-  box-shadow: 0 0 0 2px #8b5cf6;
+.datepicker-input-inner:hover{
+  border: 1px solid #3b82f6 !important;
+  border-radius: 15px !important;
+  box-shadow: 0 0 0 1px #3b82f688 !important;
+  outline: none !important;
 }
 .datepicker-placeholder {
   color: #bdbdbd;
@@ -112,27 +125,190 @@ const attributes = ref([
 .datepicker-input {
   display: none;
 }
-.custom-calendar .vc-popover-content-wrapper {
-  background: #18191A !important;
+
+/* Dark Calendar Popover - Same Width as Input */
+:deep(.vc-popover-content-wrapper) {
+  background: #23242a !important;
   color: #fff !important;
-  border-radius: 18px !important;
-  box-shadow: 0 8px 32px 0 #0003, 0 1.5px 4px #0002;
-  border: 1px solid #353535;
-  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  border-radius: 15px !important;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6), 0 6px 12px rgba(0, 0, 0, 0.4) !important;
+  border: none !important;
+  z-index: 99999 !important;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif !important;
+  margin-top: 0 !important;
+  width: 100% !important;
+  min-width: 180px !important;
 }
-.custom-calendar .vc-title, .custom-calendar .vc-weekday {
+
+:deep(.vc-popover-content) {
+  padding: 12px !important;
+  margin: 0 !important;
+  background: #23242a !important;
+  border: none !important;
+}
+
+:deep(.vc-container) {
+  background: #23242a !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+:deep(.vc-header) {
+  padding: 8px 12px !important;
+  margin: 0 0 8px 0 !important;
+  border: none !important;
+}
+
+:deep(.vc-title) {
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  margin: 0 !important;
+}
+
+:deep(.vc-weekdays) {
+  padding: 0 4px !important;
+  margin: 0 0 4px 0 !important;
+  background: #23242a !important;
+  border: none !important;
+}
+
+:deep(.vc-weekday) {
+  color: #bdbdbd !important;
+  font-weight: 500 !important;
+  font-size: 0.8rem !important;
+  padding: 6px 2px !important;
+  text-align: center !important;
+  background: #23242a !important;
+  border: none !important;
+}
+
+:deep(.vc-weeks) {
+  padding: 0 4px !important;
+  margin: 0 !important;
+  background: #23242a !important;
+  border: none !important;
+}
+
+:deep(.vc-week) {
+  margin: 2px 0 !important;
+  border: none !important;
+}
+
+:deep(.vc-day) {
+  margin: 1px !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+:deep(.vc-day-content) {
+  border-radius: 15px !important;
+  transition: all 0.15s ease !important;
+  color: #fff !important;
+  font-weight: 500 !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.9rem !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+:deep(.vc-day-content:hover) {
+  background: #3b82f6 !important;
+  color: #fff !important;
+  transform: scale(1.05) !important;
+  border-radius: 15px !important;
+}
+
+:deep(.vc-day-content.is-disabled) {
+  color: #555 !important;
+  opacity: 0.5 !important;
+}
+
+:deep(.vc-day-content.is-not-in-month) {
+  color: #666 !important;
+  opacity: 0.6 !important;
+}
+
+:deep(.vc-highlight) {
+  background: #3b82f6 !important;
+  color: #fff !important;
+  border-radius: 15px !important;
+}
+
+:deep(.vc-nav-item) {
+  color: #fff !important;
+  border-radius: 15px !important;
+  transition: all 0.15s ease !important;
+  font-size: 0.9rem !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+:deep(.vc-nav-item:hover) {
+  background: #3b82f6 !important;
+  color: #fff !important;
+  border-radius: 15px !important;
+}
+
+:deep(.vc-arrows-container) {
+  padding: 0 4px !important;
+}
+
+:deep(.vc-arrow) {
+  color: #fff !important;
+  border-radius: 15px !important;
+  transition: all 0.15s ease !important;
+  width: 28px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+:deep(.vc-arrow:hover) {
+  background: #3b82f6 !important;
   color: #fff !important;
 }
-.custom-calendar .vc-day-content {
-  border-radius: 50% !important;
-  transition: background 0.2s;
+
+/* Remove all borders and lines */
+:deep(.vc-popover) {
+  z-index: 99999 !important;
+  position: fixed !important;
+  margin: 0 !important;
+  border: none !important;
 }
-.custom-calendar .vc-day-content:hover {
-  background: #8b5cf6 !important;
-  color: #fff !important;
+
+:deep(.vc-popover-caret) {
+  display: none !important;
 }
-.custom-calendar .vc-highlight {
-  background: #8b5cf6 !important;
-  color: #fff !important;
+
+:deep(.vc-pane) {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #23242a !important;
+  border: none !important;
+}
+
+/* Remove any separator lines */
+:deep(.vc-day-box-center-center) {
+  border: none !important;
+}
+
+:deep(.vc-day-layer) {
+  border: none !important;
+}
+
+/* Ensure popover matches input width */
+:deep(.vc-popover-content-wrapper) {
+  max-width: none !important;
 }
 </style> 
