@@ -1,23 +1,19 @@
 <template>
-  <AppLayout>
     <div class="min-h-screen bg-[#18191A] text-white font-['Inter']">
-      <!-- Top Bar with Login and Sign Up -->
-      <div
-        class="w-full flex justify-end items-center px-8 py-6 bg-[#18191A] fixed top-0 left-0 z-50 shadow transition-transform duration-300"
-        :style="{ transform: showBar ? 'translateY(0)' : 'translateY(-100%)' }"
-      >
-        <!--<a href="/login/microsoft" class="text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2D9CDB] mr-2">Login / Register</a>-->
-        <a href="/auth/microsoft" class="bg-[#2D9CDB] text-white text-lg font-medium px-4 py-2 rounded hover:bg-[#2386b7]">Login / Register</a>
-      </div>
-      
       <!-- Hero Section -->
-      <section class="flex flex-col items-center justify-center py-32 px-4 text-center">
-        <img src="/image/CampusPulseIcon.png" alt="Campus Pulse Logo" class="h-32 w-32 mb-8 mx-auto" />
-        <h1 class="text-6xl font-extrabold text-white mb-6">Welcome to Campus Pulse</h1>
-        <p class="text-2xl text-gray-300 max-w-2xl mx-auto mb-10">
-          The all-in-one alumni system to connect, collaborate, and stay engaged with your university community.
-        </p>
-        <a href="#forum" class="bg-[#2D9CDB] text-white px-10 py-4 rounded shadow hover:bg-[#2386b7] text-xl font-semibold transition">Learn More</a>
+      <section class="relative flex flex-col items-center justify-center min-h-screen px-4 text-center bg-black overflow-hidden">
+        <!-- Centered watermark icon -->
+        <img src="/image/CampusPulseIcon.png"
+             alt="Campus Pulse Watermark"
+             class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 w-[300px] h-[300px] z-0" />
+        <div class="relative z-10 flex flex-col items-center">
+          <!-- Centered logo above wordmark -->
+          <img src="/image/CampusPulse.png" alt="Campus Pulse Logo" class="mx-auto mb-0 h-[125px]" />
+          <p class="text-base text-gray-300 mb-8 max-w-2xl mx-auto whitespace-nowrap">
+            The all-in-one alumni system to connect, collaborate, and stay engaged with your university community.
+          </p>
+          <a href="/auth/microsoft" class="bg-[#2D9CDB] text-black px-6 py-2 rounded shadow hover:bg-[#2386b7] text-base font-semibold transition">Learn More</a>
+        </div>
       </section>
 
       <!-- Forum Section -->
@@ -55,7 +51,7 @@
         <a href="/auth/microsoft" class="bg-[#2D9CDB] text-white px-12 py-5 rounded shadow hover:bg-[#2386b7] text-xl font-semibold transition">Get Started with Microsoft</a>
       </section>
     </div>
-  </AppLayout>
+<FooterSection />
 </template>
 
 <script setup>
