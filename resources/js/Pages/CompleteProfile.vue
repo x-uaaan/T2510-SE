@@ -49,41 +49,30 @@
           </div>
           <!-- Resume -->
           <div class="mb-5">
-            <label class="block text-gray-300 mb-1 text-sm">Resume</label>
-            <div v-if="!form.resume">
-              <div
-                class="border-2 border-dashed border-[#bdbdbd33] rounded-xl p-4 text-center cursor-pointer bg-[#23232b] hover:bg-[#23233b] transition"
-                @dragover.prevent
-                @drop.prevent="onDrop"
-                @click="fileInput.click()"
+            <label for="resume-upload" class="block text-gray-300 mb-1 text-sm">Resume</label>
+            <div class="relative">
+              <input
+                id="resume-upload"
+                type="file"
+                accept=".pdf"
+                @change="onFileChange"
+                ref="fileInput"
+                class="block w-full text-sm text-gray-200
+                       file:mr-4 file:py-2 file:px-4
+                       file:rounded-xl file:border-0
+                       file:text-sm file:font-semibold
+                       file:bg-[#18191A] file:text-white
+                       hover:file:bg-[#23233b]
+                       bg-[#18191A] border border-[#353535] rounded-xl pr-20"
+              />
+              <button
+                v-if="form.resumeName"
+                type="button"
+                @click="removeResume"
+                class="absolute top-1/2 right-3 -translate-y-1/2 text-red-500 hover:text-red-700 text-xs font-semibold"
+                style="z-index:2;"
               >
-                <input
-                  type="file"
-                  ref="fileInput"
-                  class="hidden"
-                  accept=".pdf"
-                  @change="onFileChange"
-                />
-                <div>
-                  <svg class="mx-auto mb-2" width="32" height="32" fill="none" stroke="currentColor"><path d="M20 30V10M10 20h20" /></svg>
-                  <span class="block font-semibold text-[#6c5ce7] text-sm">Click to upload</span>
-                  <span class="block text-xs text-gray-500">or drag and drop<br>PDF only (max 2MB)</span>
-                </div>
-              </div>
-            </div>
-            <div v-else class="flex items-center justify-between bg-[#e9e6f7] rounded-xl px-3 py-2 mt-1">
-              <div class="flex items-center gap-2">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <rect x="3" y="3" width="18" height="18" rx="4" fill="#e0e7ff"/>
-                  <text x="12" y="17" text-anchor="middle" font-size="10" fill="#6366f1" font-family="Arial">PDF</text>
-                </svg>
-                <div>
-                  <div class="font-semibold text-[#6366f1] text-xs">{{ form.resumeName }}</div>
-                  <div class="text-xs text-gray-500">{{ resumeSize }}</div>
-                </div>
-              </div>
-              <button type="button" @click="removeResume" class="ml-2 text-red-500 hover:text-red-700">
-                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                Remove
               </button>
             </div>
             <div v-if="errors.resume" class="text-red-400 text-xs mt-1">{{ errors.resume }}</div>
@@ -95,7 +84,7 @@
           </button>
           <div class="text-center mt-2 text-sm text-gray-400">
             Already have an account?
-            <a href="/login" class="text-blue-400 hover:underline ml-1">Log in!</a>
+            <a href="/auth/microsoft" class="text-blue-400 hover:underline ml-1">Log in!</a>
           </div>
         </div>
       </form>
@@ -238,51 +227,38 @@ const phoneAlert = computed(() => {
 })
 
 function onFileChange(e) {
-  const file = e.target.files[0]
-  if (file) {
-    if (file.type !== 'application/pdf') {
-      form.resume = null
-      form.resumeName = ''
-      errors.value.resume = 'Only PDF files are allowed'
-      return
-    }
-    if (file.size > 2 * 1024 * 1024) {
-      form.resume = null
-      form.resumeName = ''
-      errors.value.resume = 'File size must be 2MB or less'
-      return
-    }
-    form.resume = file
-    form.resumeName = file.name
-    errors.value.resume = ''
-  }
-}
+  const file = e.target.files[0];
+  if (!file) return;
 
-function onDrop(e) {
-  const file = e.dataTransfer.files[0]
-  if (file) {
-    if (file.type !== 'application/pdf') {
-      form.resume = null
-      form.resumeName = ''
-      errors.value.resume = 'Only PDF files are allowed'
-      return
-    }
-    if (file.size > 2 * 1024 * 1024) {
-      form.resume = null
-      form.resumeName = ''
-      errors.value.resume = 'File size must be 2MB or less'
-      return
-    }
-    form.resume = file
-    form.resumeName = file.name
-    errors.value.resume = ''
+  // Only PDF
+  if (file.type !== 'application/pdf') {
+    form.resume = null;
+    form.resumeName = '';
+    errors.value.resume = 'Only PDF files are allowed';
+    e.target.value = ''; // Reset input
+    return;
   }
+  // Max 2MB
+  if (file.size > 2 * 1024 * 1024) {
+    form.resume = null;
+    form.resumeName = '';
+    errors.value.resume = 'File size must be 2MB or less';
+    e.target.value = ''; // Reset input
+    return;
+  }
+  // Valid file
+  form.resume = file;
+  form.resumeName = file.name;
+  errors.value.resume = '';
 }
 
 const fileInput = ref(null)
 function removeResume() {
-  form.resume = null
-  form.resumeName = ''
+  form.resume = null;
+  form.resumeName = '';
+  if (fileInput.value) {
+    fileInput.value.value = ''; // Reset the input so it shows "No file chosen"
+  }
 }
 
 function onPhoneInput(e) {
@@ -361,5 +337,19 @@ select {
   -moz-appearance: none;
   appearance: none;
   background-image: none !important;
+}
+input[type="file"]::file-selector-button {
+  background: #18191A;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.7rem;
+  margin: 0.3rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+input[type="file"]::file-selector-button:hover {
+  background: #23233b;
 }
 </style>
