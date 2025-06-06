@@ -10,12 +10,12 @@ class ForumController extends Controller
     public function index()
     {
         $forums = Forum::all();
-        return view('forums.index', compact('forums'));
+        return view('forum.index', compact('forums'));
     }
 
     public function create()
     {
-        return view('forums.create');
+        return view('forum.create');
     }
 
     public function store(Request $request)
@@ -26,17 +26,17 @@ class ForumController extends Controller
         ]);
 
         Forum::create($validatedData);
-        return redirect()->route('forums.index')->with('success', 'Forum created successfully!');
+        return redirect()->route('forum.index')->with('success', 'Forum created successfully!');
     }
 
     public function show(Forum $forum)
     {
-        return view('forums.show', compact('forum'));
+        return view('forum.show', compact('forum'));
     }
 
     public function edit(Forum $forum)
     {
-        return view('forums.edit', compact('forum'));
+        return view('forum.edit', compact('forum'));
     }
 
     public function update(Request $request, Forum $forum)
@@ -47,12 +47,18 @@ class ForumController extends Controller
         ]);
 
         $forum->update($validatedData);
-        return redirect()->route('forums.index')->with('success', 'Forum updated successfully!');
+        return redirect()->route('forum.index')->with('success', 'Forum updated successfully!');
     }
 
     public function destroy(Forum $forum)
     {
         $forum->delete();
-        return redirect()->route('forums.index')->with('success', 'Forum deleted successfully!');
+        return redirect()->route('forum.index')->with('success', 'Forum deleted successfully!');
+    }
+
+    public function apiIndex()
+    {
+        $forums = Forum::withCount('posts')->get();
+        return response()->json($forums);
     }
 }

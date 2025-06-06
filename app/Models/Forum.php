@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Forum extends Model
 {
-    public function admin()
-    {    return $this->belongsTo(Admin::class);    }
+    protected $primaryKey = 'forumID';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     public function posts()
-    {    return $this->hasMany(Post::class);    }
+    {
+        return $this->hasMany(Post::class, 'forumID', 'forumID');
+    }
 }

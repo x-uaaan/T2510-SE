@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-blue-900 text-white h-[50px] flex items-center px-4">
+  <footer class="bg-blue-900 text-white h-[50px] flex items-center justify-center px-4">
     <div class="flex items-center space-x-6">
       <p class="text-sm">© 2025 Campus Pulse. All rights reserved.</p>
       <div class="flex items-center space-x-4">
@@ -15,7 +15,3 @@ export default {
   name: 'FooterSection',
 }
 </script>
-
-<style scoped>
-/* Removed fixed positioning */
-</style> 

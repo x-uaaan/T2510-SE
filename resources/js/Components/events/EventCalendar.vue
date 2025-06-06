@@ -1,19 +1,6 @@
 <template>
   <div class="calendar-fixed" @click="handleCalendarClick">
-    <div class="calendar-search-bar">
-      <span class="search-icon">
-        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" width="20" height="20" color="#aaa">
-          <circle cx="9.14" cy="9.14" r="7.64" fill="none" stroke="currentColor" stroke-miterlimit="10"/>
-          <line x1="22.5" y1="22.5" x2="14.39" y2="14.39" fill="none" stroke="currentColor" stroke-miterlimit="10"/>
-        </svg>
-      </span>
-      <input
-        type="search"
-        class="calendar-search-input"
-        placeholder="Type to search..."
-        v-model="searchQuery"
-      />
-    </div>
+    <SearchBar />
     <VDatePicker
       ref="calendarRef"
       is-dark
@@ -40,6 +27,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import 'v-calendar/style.css'
+import SearchBar from '@/Components/SearchBar.vue'
 
 const searchQuery = ref('')
 const showLogo = ref(true)
@@ -115,7 +103,7 @@ onMounted(() => {
 .calendar-fixed {
   position: fixed;
   top: 80px;
-  right: 40px;
+  right: 70px;
   z-index: 10;
   border-radius: 16px;
   width: 400px;
@@ -127,46 +115,19 @@ onMounted(() => {
   justify-content: flex-start;
 }
 
-.calendar-search-bar {
-  display: flex;
-  align-items: center;
-  background: #23242a;
-  border-radius: 10px;
-  padding: 6px 12px;
-  margin-bottom: 50px;
-  width: 69%;
-  box-shadow: 0 2px 8px #0002;
-}
-
-.search-icon {
-  display: flex;
-  align-items: center;
-  margin-right: 8px;
-}
-
-.calendar-search-input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #fff;
-  font-size: 1em;
-  width: 100%;
-  padding: 6px 0;
-}
-
-.calendar-search-input::placeholder {
-  color: #727171;
-  opacity: 1;
+.search-bar {
+  margin-bottom: 30px;
+  width: 273px;
 }
 
 :deep(.vc-container) {
   background: #18191a !important;
   color: #fff !important;
-  border-radius: 18px !important;
   font-family: inherit;
-  box-shadow: rgba(175, 173, 173, 0.15) 5px 5px 5px;
-  border: 1px none;
-  padding: 10px;
+  border-radius: 15px;
+  padding: 5px 12px;
+  box-shadow: 0 2px 8px #0002;
+  border: 1px solid #3d3e46 !important;
   margin-bottom: 10px;
   width: 300px;
   height: 310px;
@@ -176,6 +137,7 @@ onMounted(() => {
 :deep(.vc-title) {
   color: #fff !important;
   font-size: 1em;
+  font-family: inherit;
   background: none !important;
   border-radius: 30px;
   margin: 0 36px;

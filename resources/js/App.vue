@@ -24,7 +24,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import EventTimeline from './Components/events/EventTimeline.vue'
 import EventDetailsDrawer from './Components/events/EventDetailsDrawer.vue'
-import NavigationDrawer from './Components/events/NavigationDrawer.vue'
+import NavigationDrawer from './Components/NavigationDrawer.vue'
 import EventCalendar from './Components/events/EventCalendar.vue'
 import NavBar from './Components/NavBar.vue'
 
