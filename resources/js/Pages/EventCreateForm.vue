@@ -2,8 +2,8 @@
   <div class="event-create-container flex flex-col md:flex-row gap-0 items-start justify-center py-12">
     <!-- Event Image Preview & Upload -->
     <div class="flex flex-col items-center md:w-1/3 w-full">
-      <div class="relative w-80 h-80 rounded-3xl overflow-hidden bg-gradient-to-tr from-purple-400 to-pink-400 flex items-center justify-center mb-6 shadow-2xl border-4 border-[#232323]">
-        <img :src="imagePreview || 'https://placehold.co/300x300?text=Event+Image'" alt="Event Image" class="object-cover w-full h-full" />
+      <div class="relative w-80 h-80 rounded-3xl overflow-hidden bg-gradient-to-tr from-purple-400 to-pink-400 flex items-center justify-center mb-6 shadow-2xl border-2 border-[#232323]">
+        <img :src="imagePreview || 'https://placehold.co/300x300?text=Event+Image'" alt="Event Image" class="object-cover w-full h-full"/>
         <label for="image" class="absolute bottom-4 right-4 bg-white/90 rounded-full p-3 cursor-pointer shadow-lg hover:bg-purple-100 transition">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9.828M7 7h.01" /></svg>
         </label>
@@ -123,7 +123,7 @@ async function submit() {
 <style scoped>
 .event-create-container {
   min-height: 100vh;
-  background: transparent;
+  background-color: #000;
 }
 .event-form {
   box-shadow: 0 8px 32px 0 #0003, 0 1.5px 4px #0002;
@@ -159,10 +159,19 @@ textarea::placeholder {
   color: #bbb !important;
 }
 button{
-  border-radius: 30px !important;
-  background: #3b82f6 !important;
+  width: auto;
+  background: #18191a;
+  color: #fff;
+  box-shadow: 0 0 0 1px #3b82f688 !important;
+  border: 1px solid #3b82f6;
+  border-radius: 25px;
+  padding: 10px 18px;
+  font-size: 1em;
+  cursor: pointer;
+  outline: none;
 }
 button:hover{
-  background: #2457a9 !important;
+  background: #232323;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 </style> 

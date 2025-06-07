@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Forum;
+use Inertia\Inertia;
 
 class ForumController extends Controller
 {
@@ -15,7 +16,7 @@ class ForumController extends Controller
 
     public function create()
     {
-        return view('forum.create');
+        return Inertia::render('ForumCreateForm');
     }
 
     public function store(Request $request)

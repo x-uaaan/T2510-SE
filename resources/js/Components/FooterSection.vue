@@ -1,11 +1,9 @@
 <template>
-  <footer class="bg-blue-900 text-white h-[50px] flex items-center justify-center px-4">
-    <div class="flex items-center space-x-6">
-      <p class="text-sm">© 2025 Campus Pulse. All rights reserved.</p>
-      <div class="flex items-center space-x-4">
-        <a href="mailto:support@campuspulse.com" class="text-sm hover:text-blue-200 transition-colors">Contact Us</a>
-        <a href="/feedback" class="text-sm hover:text-blue-200 transition-colors">Feedback</a>
-      </div>
+  <footer class="footer-section">
+    <div class="footer-content">
+      <a href="@/views/app.blade.php">© 2025 Campus Pulse. All rights reserved.</a>
+      <a href="mailto:support@campuspulse.com">Contact Us</a>
+      <a href="mailto:support@campuspulse.com">Feedback</a>
     </div>
   </footer>
 </template>
@@ -15,3 +13,33 @@ export default {
   name: 'FooterSection',
 }
 </script>
+
+<style scoped>
+.footer-section {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 50px;
+  background: #232323; /* blue-900 */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+.footer-content {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+a {
+  text-decoration: none;
+  color: white;
+}
+
+a:hover {
+  color: #d3cece;
+  transition: color 0.3s ease;
+}
+</style>

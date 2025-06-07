@@ -1,7 +1,16 @@
 <template>
   <div class="forum-list-bg">
+    <NavBar />
     <NavigationDrawer />
-    <SearchBar />
+    <div class="search-menu-row">
+      <SearchBar />
+      <button class="menu-btn create-btn" @click="showCreateModal = true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 4V20M4 12H20" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span>Create</span>
+      </button>
+    </div>
     <div class="forum-list-content">
       <div class="forum-list-grid">
         <ForumListItem
@@ -12,6 +21,12 @@
         />
       </div>
     </div>
+    <CreateForumModal 
+      :show="showCreateModal" 
+      @close="showCreateModal = false"
+      @created="refreshForums"
+    />
+    <FooterSection />
   </div>
 </template>
 
@@ -20,27 +35,33 @@ import { ref, onMounted } from 'vue'
 import NavigationDrawer from '@/Components/NavigationDrawer.vue'
 import ForumListItem from './ForumListItem.vue'
 import SearchBar from '@/Components/SearchBar.vue'
+import FooterSection from '@/Components/FooterSection.vue'
+import NavBar from '@/Components/NavBar.vue'
+import CreateForumModal from './CreateForumModal.vue'
 
 const forums = ref([])
+const showCreateModal = ref(false)
 
 function goToForum(id) {
   window.location.href = `/posts?forum_id=${id}`
 }
 
-onMounted(async () => {
+async function refreshForums() {
   try {
     const res = await fetch('/api/forum')
     forums.value = await res.json()
   } catch (e) {
     forums.value = []
   }
-})
+}
+
+onMounted(refreshForums)
 </script>
 
 <style scoped>
 .search-bar {
   width: 250px;
-  margin-right: 160px;
+  margin-right: 10px;
   margin-top: 5px;
 }
 .forum-list-bg {
@@ -81,5 +102,40 @@ onMounted(async () => {
   color: #fff;
   margin-top: 40px;
   font-size: 1.2em;
+}
+.search-menu-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin: 20px 170px 0 0;
+}
+.create-btn-margin {
+  margin-left: 0.5rem;
+}
+.create-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.68rem 1rem;
+  padding-bottom: 0.56rem;
+  margin-top: 5.5px;
+  background: #23242a;
+  border: 1px solid #3d3e46;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.create-btn:hover {
+  background: #2d2e35;
+}
+.create-btn svg {
+  width: 20px;
+  height: 20px;
+}
+span {
+  font-size: 1.1rem;
+  color: #727171;
 }
 </style> 

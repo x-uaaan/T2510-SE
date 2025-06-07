@@ -1,12 +1,17 @@
 <template>
   <div class="post-card-single">
     <div class="post-header-row">
-      <div class="post-title">{{ post.postTitle }}</div>
-      <div class="post-meta">
-        By <a :href="`/profile/${post.authorId}`" class="author-link">{{ post.author }}</a>
+      <div class="post-title-container">
+        <div class="post-title">{{ post.postTitle }}</div>
+        <div class="post-desc">{{ post.postDesc }}</div>
+      </div>
+      <div class="right-side">
+        <MenuPopover class="menu-popover-margin" />
+        <div class="post-meta">
+          By <a :href="`/profile/${post.authorId}`" class="author-link">{{ post.author }}</a>
+        </div>
       </div>
     </div>
-    <div class="post-desc">{{ post.postDesc }}</div>
     <hr class="divider" style="margin-top: 20px; margin-bottom: 20px;" />
     <div class="comments-section">
       <ul class="comments-list">
@@ -29,6 +34,7 @@
 
 <script setup>
 import { defineProps, ref } from 'vue';
+import MenuPopover from '@/Components/MenuPopover.vue';
 const props = defineProps({
   post: Object
 });
@@ -43,7 +49,7 @@ const newComment = ref('');
   padding: 32px 40px;
   margin-bottom: 32px;
   margin-top: 35px;
-  width: 800px;
+  width: 850px;
   box-shadow: 0 4px 16px #0002;
   display: flex;
   flex-direction: column;
@@ -52,19 +58,27 @@ const newComment = ref('');
 .post-header-row {
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: space-between;
-  gap: 18px;
+  width: 100%;
+  align-items: top;
 }
 .post-title {
   font-size: 2em;
   font-weight: bold;
   margin-bottom: 0;
 }
+.right-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: auto;
+}
 .post-meta {
   color: #b0b0b0;
   font-size: 0.8em;
   white-space: nowrap;
+  margin-top: 10px;
 }
 .author-link {
   color: #b0b0b0;

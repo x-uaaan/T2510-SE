@@ -1,10 +1,8 @@
 <template>
   <div class="post-show-bg">
+    <NavBar />
     <NavigationDrawer />
-    <SearchBar v-model="search" placeholder="Type to search..." />
     <div class="post-show-content">
-      <div class="search-bar-row">
-      </div>
       <PostShowCard :post="filteredPost" />
     </div>
   </div>
@@ -12,11 +10,12 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed } from 'vue';
+import { defineProps, ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import NavigationDrawer from '@/Components/NavigationDrawer.vue';
 import PostShowCard from '@/Components/posts/PostShowCard.vue';
-import SearchBar from '@/Components/SearchBar.vue';
 import FooterSection from '@/Components/FooterSection.vue';
+import NavBar from '@/Components/NavBar.vue';
+
 const props = defineProps({
   post: Object
 });
@@ -28,6 +27,26 @@ const filteredPost = computed(() => {
     comments: props.post.comments.filter(c => c.toLowerCase().includes(search.value.toLowerCase())),
   };
 });
+
+const showNavBar = ref(true)
+let lastScrollY = 0
+function handleScroll() {
+  const currentY = window.scrollY
+  if (currentY > lastScrollY) {
+    showNavBar.value = false
+  } else if (currentY < lastScrollY) {
+    showNavBar.value = true
+  }
+  lastScrollY = currentY
+}
+onMounted(() => {
+  showNavBar.value = true
+  lastScrollY = window.scrollY
+  window.addEventListener('scroll', handleScroll)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>
 
 <style scoped>
@@ -35,9 +54,10 @@ const filteredPost = computed(() => {
   min-height: 100vh;
   background: #000;
   display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .post-show-content {
-  margin-left: 120px;
   margin-top: 10px;
   margin-bottom: 75px;
   width: 100%;
@@ -49,21 +69,19 @@ const filteredPost = computed(() => {
   width: 600px;
   display: flex;
   justify-content: flex-end;
+  flex-direction: row;
   margin-bottom: 35px;
 }
 
-.search-bar {
-  position: fixed;
-  right: 0px;
-  width: 275px;
-  height: auto;
-  margin-right: 160px;
-  padding: 3px 12px;
-  font-size: 1em;
+.fade-slide-navbar-enter-active, .fade-slide-navbar-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
 }
-
-.search-input::placeholder {
-  font-size: 0.9em;
-  padding: 0px 12px;
+.fade-slide-navbar-enter-from, .fade-slide-navbar-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.fade-slide-navbar-enter-to, .fade-slide-navbar-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style> 
