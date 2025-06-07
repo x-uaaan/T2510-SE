@@ -4,18 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Inertia\Inertia;
 
 class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::all();
-        return view('posts.index', compact('posts'));
+        return Inertia::render('posts/PostList');
     }
 
     public function create()
     {
-        return view('posts.create');
+        return Inertia::render('posts/PostCreate');
     }
 
     public function store(Request $request)
@@ -23,7 +23,8 @@ class PostController extends Controller
         $validatedData = $request->validate([
             'postTitle' => 'required|string|max:255',
             'postDesc' => 'required',
-            'alumniID' => 'required|integer|exists:alumnis,id',
+            'alumniID' => 'required|integer|exists:alumni,alumniID',
+            'forumID' => 'required|integer|exists:forums,forumID',
         ]);
 
         Post::create($validatedData);
@@ -32,12 +33,24 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
-        return view('posts.show', compact('post'));
+        $post->load('alumni');
+        $comments = [];
+        if ($post->comment) {
+            $comments = json_decode($post->comment, true);
+        }
+        return Inertia::render('posts/PostShow', [
+            'post' => [
+                'postTitle' => $post->postTitle,
+                'postDesc' => $post->postDesc,
+                'author' => $post->alumni ? $post->alumni->alumniName : 'Unknown',
+                'comments' => $comments,
+            ]
+        ]);
     }
 
     public function edit(Post $post)
     {
-        return view('posts.edit', compact('post'));
+        return Inertia::render('posts/PostEdit', ['post' => $post]);
     }
 
     public function update(Request $request, Post $post)
@@ -55,5 +68,18 @@ class PostController extends Controller
     {
         $post->delete();
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully!');
+    }
+
+    public function apiIndex(Request $request)
+    {
+        $forumId = $request->query('forum_id');
+        $query = Post::query();
+        
+        if ($forumId) {
+            $query->where('forumID', $forumId);
+        }
+        
+        $posts = $query->orderBy('timestamp', 'desc')->get();
+        return response()->json($posts);
     }
 }

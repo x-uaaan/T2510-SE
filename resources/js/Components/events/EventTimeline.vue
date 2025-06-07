@@ -15,13 +15,11 @@
       </div>
     </div>
   </div>
-  <FooterSection />
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import EventListItem from './EventListItem.vue'
-import FooterSection from '@/Components/FooterSection.vue'
 
 const props = defineProps(['events', 'drawerOpen'])
 

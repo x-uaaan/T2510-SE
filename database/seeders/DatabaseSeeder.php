@@ -19,9 +19,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            EventSeeder::class,
             AdminSeeder::class,
             ForumSeeder::class,
+            AlumniSeeder::class,
+            PostSeeder::class,
+            EventSeeder::class,
         ]);
     }
 }

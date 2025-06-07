@@ -1,55 +1,61 @@
 <template>
-  <div class="forum-list-bg">
+  <div class="post-list-bg">
     <NavigationDrawer />
     <SearchBar />
-    <div class="forum-list-content">
-      <div class="forum-list-grid">
-        <ForumListItem
-          v-for="forum in forums"
-          :key="forum.forumID"
-          :forum="forum"
-          @click="goToForum(forum.forumID)"
+    <div class="post-list-content">
+      <div class="post-list-grid">
+        <PostListItem
+          v-for="post in posts"
+          :key="post.postID"
+          :post="post"
+          @click="goToPost(post.postID)"
         />
       </div>
     </div>
   </div>
+  <FooterSection />
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import NavigationDrawer from '@/Components/NavigationDrawer.vue'
-import ForumListItem from './ForumListItem.vue'
+import PostListItem from './PostListItem.vue'
+import FooterSection from '@/Components/FooterSection.vue'
 import SearchBar from '@/Components/SearchBar.vue'
 
-const forums = ref([])
+const posts = ref([])
 
-function goToForum(id) {
-  window.location.href = `/posts?forum_id=${id}`
+function goToPost(id) {
+  window.location.href = `/posts/${id}`
 }
 
 onMounted(async () => {
   try {
-    const res = await fetch('/api/forum')
-    forums.value = await res.json()
+    const urlParams = new URLSearchParams(window.location.search);
+    const forumId = urlParams.get('forum_id');
+    const url = forumId ? `/api/posts?forum_id=${forumId}` : '/api/posts';
+    const res = await fetch(url);
+    posts.value = await res.json();
   } catch (e) {
-    forums.value = []
+    posts.value = [];
   }
 })
 </script>
 
 <style scoped>
 .search-bar {
-  width: 250px;
+  width: 275px;
   margin-right: 160px;
   margin-top: 5px;
+  padding: 3px 12px;
 }
-.forum-list-bg {
+.post-list-bg {
   min-height: 100vh;
   background: #000;
   display: flex;
   flex-direction: column;
 }
-.forum-list-content {
+.post-list-content {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -57,27 +63,26 @@ onMounted(async () => {
   margin-top: 20px;
   margin-left: 180px;
   margin-bottom: 50px;
+  padding-left: 80px;
 }
-.forum-list-grid {
+.post-list-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
   width: 100%;
-  max-width: 1200px;
 }
 @media (max-width: 1250px) {
-    .forum-list-content {
+    .post-list-content {
         margin-left: 70px;
         align-items: center;
     }   
-    .forum-list-grid {
+    .post-list-grid {
         grid-template-columns: 1fr;
         align-items: center;
         gap: 5px;
         max-width: 500px;
     }
 }
-.no-forums {
+.no-posts {
   color: #fff;
   margin-top: 40px;
   font-size: 1.2em;

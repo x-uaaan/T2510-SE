@@ -39,7 +39,7 @@ const interestSvg = `<svg width='24' height='24' viewBox='0 0 24 24' fill='none'
   box-shadow: 0 4px 16px #0002;
 }
 .forum-card:hover {
-  background: #18191a;
+  background: #343434;
   box-shadow: 0 4px 16px #0004;
 }
 .forum-content {
