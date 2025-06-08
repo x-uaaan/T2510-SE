@@ -60,7 +60,6 @@ onBeforeUnmount(() => {
 .post-show-content {
   margin-top: 10px;
   margin-bottom: 75px;
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -12,7 +12,7 @@
         </svg>
         <span>Create</span>
       </button>
-      <MenuPopover class="menu-popover-margin" />
+      <MenuPopover :forum="forum" @updated="$emit('updated')" />
     </div>
     <div class="post-list-content">
       <div class="post-list-grid">
@@ -95,7 +95,6 @@ onBeforeUnmount(() => {
 <style scoped>
 .search-bar {
   width: 275px;
-  margin-right: 10px;
   margin-top: 5px;
   padding: 3px 12px;
 }

@@ -105,7 +105,7 @@ async function submit() {
   border-radius: 1rem;
   padding: 1.5rem;
   width: 400px;
-  height: 300px;
+  height: auto;
   max-width: 400px;
   border: 1px solid #353535;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
@@ -151,19 +151,20 @@ async function submit() {
 }
 
 button{
-  width: 150px;
+  width: 120px;
   background: #18191a;
   color: #fff;
-  box-shadow: 0 0 0 1px #3b82f688 !important;
-  border: 1px solid #3b82f6;
+  box-shadow: 0 2px 8px #0002 !important;
+  border: 1px solid #3d3e46;
   border-radius: 25px;
-  padding: 13px 18px;
-  font-size: 1em;
+  padding: 0.5rem 0;
   cursor: pointer;
   outline: none;
 }
 button:hover{
-  background: #232323;
+  border: 0.5px solid #3b82f6 !important;
+  box-shadow: 0 0 0 2px #3b82f688 !important;
+  background: #23242a !important;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 

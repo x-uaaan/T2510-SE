@@ -1,27 +1,21 @@
 <template>
   <div v-if="show" class="modal-overlay">
     <div class="modal-content">
-    <form @submit.prevent="submit" class="forum-form">
+    <form @submit.prevent="submit" class="post-form">
         <input 
-          v-model="form.forumTitle" 
+          v-model="form.postTitle" 
           type="text" 
-          placeholder="Forum Title" 
+          placeholder="Post Title" 
           required 
           class="form-input"
         />
         <textarea 
-          v-model="form.forumDesc" 
-          placeholder="Forum Description" 
+          v-model="form.postDesc" 
+          placeholder="Post Description" 
           required 
           class="form-input"
           rows="4"
         ></textarea>
-        <input 
-          v-model="form.Categories" 
-          type="text" 
-          placeholder="Categories (comma separated)" 
-          class="form-input"
-        />
         <div v-if="errorMsg" class="error-message">{{ errorMsg }}</div>
         <div class="modal-button">
             <button @click="$emit('close')" class="close-btn">
@@ -32,7 +26,7 @@
             type="submit" 
             :disabled="submitting" 
             class="submit-btn"
-            >Create
+            >Update
             </button>
         </div>
       </form>
@@ -41,30 +35,43 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps({
-  show: Boolean
+  show: Boolean,
+  post: {
+    type: Object,
+    required: true
+  }
 })
 
-const emit = defineEmits(['close', 'created'])
+const emit = defineEmits(['close', 'updated'])
 
 const form = ref({
-  forumTitle: '',
-  forumDesc: '',
-  Categories: ''
+  postTitle: '',
+  postDesc: ''
 })
 
 const submitting = ref(false)
 const errorMsg = ref('')
+
+// Watch for changes in the post prop and update the form
+watch(() => props.post, (newPost) => {
+  if (newPost) {
+    form.value = {
+      postTitle: newPost.postTitle,
+      postDesc: newPost.postDesc
+    }
+  }
+}, { immediate: true })
 
 async function submit() {
   submitting.value = true
   errorMsg.value = ''
   
   try {
-    const response = await fetch('/api/forum', {
-      method: 'POST',
+    const response = await fetch(`/api/post/${props.post.postID}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -74,20 +81,15 @@ async function submit() {
 
     if (!response.ok) {
       const data = await response.json()
-      errorMsg.value = data.message || 'Failed to create forum.'
+      errorMsg.value = data.message || 'Failed to update post.'
       submitting.value = false
       return
     }
 
-    emit('created')
+    emit('updated')
     emit('close')
-    form.value = {
-      forumTitle: '',
-      forumDesc: '',
-      Categories: ''
-    }
   } catch (err) {
-    errorMsg.value = 'An error occurred while creating the forum.'
+    errorMsg.value = 'An error occurred while updating the post.'
   } finally {
     submitting.value = false
   }
@@ -113,7 +115,7 @@ async function submit() {
   border-radius: 1rem;
   padding: 1.5rem;
   width: 400px;
-  height: 280px;
+  height: auto;
   max-width: 400px;
   border: 1px solid #353535;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
@@ -122,7 +124,7 @@ async function submit() {
   align-items: center;
 }
 
-.forum-form {
+.post-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -159,23 +161,21 @@ async function submit() {
 }
 
 button{
-  width: 150px;
-  border: 1px solid #3b82f6;
+  width: 120px;
+  background: #18191a;
+  color: #fff;
+  box-shadow: 0 2px 8px #0002 !important;
+  border: 1px solid #3d3e46;
   border-radius: 25px;
-  padding: 13px 18px;
+  padding: 0.5rem 0;
   font-size: 1em;
   cursor: pointer;
   outline: none;
-  border: 1px solid #3d3e46;
-  color: #fff;
-  box-shadow: 0 2px 8px #0002;
-  background: #18191a;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 button:hover{
-  background: #23242a;
   border: 0.5px solid #3b82f6 !important;
-  box-shadow: 0 0 0 1px #3b82f688 !important;
+  box-shadow: 0 0 0 2px #3b82f688 !important;
+  background: #23242a !important;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 

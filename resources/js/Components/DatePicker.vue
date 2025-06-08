@@ -88,7 +88,7 @@ const attributes = ref([
 }
 .datepicker-input-wrapper {
   position: relative;
-  width: 100%;
+  width: 115%;
 }
 .datepicker-input-inner,
 .timepicker-input {
@@ -145,6 +145,7 @@ const attributes = ref([
   margin: 0 !important;
   background: #23242a !important;
   border: none !important;
+  width: 100% !important;
 }
 
 :deep(.vc-container) {

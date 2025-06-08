@@ -1,6 +1,6 @@
 <template>
-  <div class="forum-card" @click="$emit('click')">
-    <div class="forum-content">
+  <div class="forum-card">
+    <div class="forum-content" @click="$emit('click')">
       <div class="forum-title">{{ forum.forumTitle }}</div>
       <div class="forum-meta-row">
         <span class="forum-icon-label categories">
@@ -18,7 +18,11 @@
 </template>
 
 <script setup>
+import MenuPopover from '@/Components/MenuPopover.vue'
+
 const props = defineProps(['forum'])
+const emit = defineEmits(['click', 'updated'])
+
 const postSvg = `<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='3' y='5' width='18' height='14' rx='2' stroke='#fff' stroke-width='1.5'/><path d='M7 9H17' stroke='#fff' stroke-width='1.5' stroke-linecap='round'/><path d='M7 13H13' stroke='#fff' stroke-width='1.5' stroke-linecap='round'/></svg>`
 const interestSvg = `<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='12' cy='12' r='10' stroke='#fff' stroke-width='1.5'/><circle cx='12' cy='12' r='4' stroke='#fff' stroke-width='1.5'/></svg>`
 </script>
@@ -34,6 +38,7 @@ const interestSvg = `<svg width='24' height='24' viewBox='0 0 24 24' fill='none'
   width: 450px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   cursor: pointer;
   transition: box-shadow 0.2s, background 0.2s;
   box-shadow: 0 4px 16px #0002;
@@ -48,6 +53,7 @@ const interestSvg = `<svg width='24' height='24' viewBox='0 0 24 24' fill='none'
   align-items: left;
   gap: 8px;
   width: 100%;
+  cursor: pointer;
 }
 .forum-title {
   font-size: 1.3em;

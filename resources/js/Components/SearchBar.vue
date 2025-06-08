@@ -68,7 +68,6 @@ defineEmits(['update:modelValue']);
 }
 
 .search-bar:focus-within{
-  border-color: #3b82f6 !important;
   box-shadow: 0 0 0 2px #3b82f688 !important;
   border: 0.5px solid #3b82f6 !important;
   border-radius: 10px !important;

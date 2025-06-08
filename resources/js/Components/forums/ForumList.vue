@@ -18,6 +18,7 @@
           :key="forum.forumID"
           :forum="forum"
           @click="goToForum(forum.forumID)"
+          @updated="refreshForums"
         />
       </div>
     </div>

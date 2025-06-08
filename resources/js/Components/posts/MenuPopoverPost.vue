@@ -8,7 +8,7 @@
       <div v-if="open" class="menu-popover" @click.outside="closeMenu">
         <ul>
           <li @click="handleEdit">
-            <span>Edit Forum</span>
+            <span>Edit Post</span>
           </li>
           <li @click="showDeleteConfirm = true; closeMenu();" class="danger">
             <span>Delete</span>
@@ -17,18 +17,18 @@
       </div>
     </transition>
   </div>
-  <EditForumModal 
+  <EditPostModal 
     v-if="showEditModal"
     :show="showEditModal"
-    :forum="forum"
+    :post="post"
     @close="showEditModal = false"
     @updated="handleUpdated"
   />
   <div v-if="showDeleteConfirm" class="delete-confirm-overlay">
     <div class="delete-confirm-modal">
-      <div class="delete-confirm-title">Delete Forum?</div>
+      <div class="delete-confirm-title">Delete Post?</div>
       <div class="delete-confirm-message">
-        Forums cannot be restored if deleted. 
+        Posts cannot be restored if deleted. 
       </div>
       <div class="delete-confirm-actions">
         <button class="cancel-btn" @click="showDeleteConfirm = false">Cancel</button>
@@ -40,10 +40,10 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
-import EditForumModal from '@/Components/forums/EditForumModal.vue';
+import EditPostModal from '@/Components/posts/EditPostModal.vue';
 
 const props = defineProps({
-  forum: {
+  post: {
     type: Object,
     required: true
   }
@@ -199,7 +199,6 @@ onBeforeUnmount(() => {
   width: 100%;
   justify-content: center;
 }
-
 .cancel-btn, .delete-btn {
   width: 120px;
   padding: 0.5rem 0;
@@ -216,7 +215,7 @@ onBeforeUnmount(() => {
 .cancel-btn:hover {
   background: #23242a;
   border: 0.5px solid #3b82f6 !important;
-  box-shadow: 0 0 0 1px #3b82f688 !important;
+  box-shadow: 0 0 0 2px #3b82f688 !important;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 .delete-btn {
@@ -229,6 +228,5 @@ onBeforeUnmount(() => {
   background: #e6004c44;
   border-color: #ff1a5b;
   box-shadow: 0 0 0 3px #ff1a5b55;
-  color: #fff;
 }
 </style> 

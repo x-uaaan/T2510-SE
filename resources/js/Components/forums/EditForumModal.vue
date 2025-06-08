@@ -32,7 +32,7 @@
             type="submit" 
             :disabled="submitting" 
             class="submit-btn"
-            >Create
+            >Update
             </button>
         </div>
       </form>
@@ -41,13 +41,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps({
-  show: Boolean
+  show: Boolean,
+  forum: {
+    type: Object,
+    required: true
+  }
 })
 
-const emit = defineEmits(['close', 'created'])
+const emit = defineEmits(['close', 'updated'])
 
 const form = ref({
   forumTitle: '',
@@ -58,13 +62,24 @@ const form = ref({
 const submitting = ref(false)
 const errorMsg = ref('')
 
+// Watch for changes in the forum prop and update the form
+watch(() => props.forum, (newForum) => {
+  if (newForum) {
+    form.value = {
+      forumTitle: newForum.forumTitle,
+      forumDesc: newForum.forumDesc,
+      Categories: newForum.Categories || ''
+    }
+  }
+}, { immediate: true })
+
 async function submit() {
   submitting.value = true
   errorMsg.value = ''
   
   try {
-    const response = await fetch('/api/forum', {
-      method: 'POST',
+    const response = await fetch(`/api/forum/${props.forum.forumID}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -74,20 +89,15 @@ async function submit() {
 
     if (!response.ok) {
       const data = await response.json()
-      errorMsg.value = data.message || 'Failed to create forum.'
+      errorMsg.value = data.message || 'Failed to update forum.'
       submitting.value = false
       return
     }
 
-    emit('created')
+    emit('updated')
     emit('close')
-    form.value = {
-      forumTitle: '',
-      forumDesc: '',
-      Categories: ''
-    }
   } catch (err) {
-    errorMsg.value = 'An error occurred while creating the forum.'
+    errorMsg.value = 'An error occurred while updating the forum.'
   } finally {
     submitting.value = false
   }
@@ -113,7 +123,7 @@ async function submit() {
   border-radius: 1rem;
   padding: 1.5rem;
   width: 400px;
-  height: 280px;
+  height: auto;
   max-width: 400px;
   border: 1px solid #353535;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
@@ -159,23 +169,21 @@ async function submit() {
 }
 
 button{
-  width: 150px;
-  border: 1px solid #3b82f6;
+  width: 120px;
+  background: #18191a;
+  color: #fff;
+  box-shadow: 0 2px 8px #0002 !important;
+  border: 1px solid #3d3e46;
   border-radius: 25px;
-  padding: 13px 18px;
+  padding: 0.5rem 0;
   font-size: 1em;
   cursor: pointer;
   outline: none;
-  border: 1px solid #3d3e46;
-  color: #fff;
-  box-shadow: 0 2px 8px #0002;
-  background: #18191a;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 button:hover{
-  background: #23242a;
   border: 0.5px solid #3b82f6 !important;
-  box-shadow: 0 0 0 1px #3b82f688 !important;
+  box-shadow: 0 0 0 2px #3b82f688 !important;
+  background: #23242a !important;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 

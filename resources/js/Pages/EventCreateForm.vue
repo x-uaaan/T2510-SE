@@ -16,14 +16,14 @@
       <div class="flex flex-col gap-4">
         <div>
           <label class="block text-white/70 text-sm mb-1">Start</label>
-          <div class="flex gap-2">
+          <div class="flex" style="display: flex; justify-content: space-between;">
             <DatePicker v-model="form.eventDate" class="w-1/2"/>
             <TimePicker v-model="form.eventTime" class="w-1/2"/>
           </div>
         </div>
         <div>
           <label class="block text-white/70 text-sm mb-1">End</label>
-          <div class="flex gap-2">
+          <div class="flex" style="display: flex; justify-content: space-between;">
             <DatePicker v-model="form.endDate" class="w-1/2"/>
             <TimePicker v-model="form.endTime" class="w-1/2"/>
           </div>

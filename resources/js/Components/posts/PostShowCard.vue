@@ -6,7 +6,7 @@
         <div class="post-desc">{{ post.postDesc }}</div>
       </div>
       <div class="right-side">
-        <MenuPopover class="menu-popover-margin" />
+        <MenuPopoverPost class="menu-popover-margin" />
         <div class="post-meta">
           By <a :href="`/profile/${post.authorId}`" class="author-link">{{ post.author }}</a>
         </div>
@@ -34,7 +34,7 @@
 
 <script setup>
 import { defineProps, ref } from 'vue';
-import MenuPopover from '@/Components/MenuPopover.vue';
+import MenuPopoverPost from '@/Components/posts/MenuPopoverPost.vue';
 const props = defineProps({
   post: Object
 });
