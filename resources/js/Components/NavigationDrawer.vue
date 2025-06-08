@@ -79,7 +79,7 @@ function navigate(route, item) {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 10;
+  z-index: 30;
   overflow: hidden;
 }
 .nav-drawer.open {

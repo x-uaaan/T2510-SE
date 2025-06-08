@@ -1,6 +1,5 @@
 <template>
   <div :class="['timeline-container', { 'drawer-open': drawerOpen }]">
-    <SearchBar />
     <div v-for="(group, date) in groupedEvents" :key="date" class="event-group-row">
       <div class="event-date-label">
         <span>{{ formatDate(date) }}</span>
@@ -43,22 +42,22 @@ function formatDate(date) {
 
 <style scoped>
 .timeline-container {
-  background: #000;
+  background: none;
   border-radius: 16px;
-  padding: 32px 20px 0px;
-  width: 750px;
+  padding: 32px 0px 0px;
   margin: 32px auto;
-  margin-left: 30px;
   margin-top: 0px;
   min-height: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
   transition: margin-right 0.3s, max-width 0.3s;
+  z-index: 10;
 }
 .timeline-container.drawer-open {
-  margin-right: 300px; /* 400px drawer + 20px gap */
-  max-width: 800px;
+  margin-right: 300px;
+  width: 800px;
+  margin-left: 0px;
 }
 .event-group-row {
   display: flex;
