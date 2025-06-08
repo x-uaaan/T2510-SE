@@ -40,7 +40,7 @@ function formatTime(time) {
 
 <style scoped>
 .event-card {
-  background: #18191a;
+  background: #232323;
   color: #fff;
   border-radius: 24px;
   padding: 20px 28px;
@@ -56,7 +56,7 @@ function formatTime(time) {
   height: 130px;
 }
 .event-card:hover {
-  background: #23242a;
+  background: #343434;
   box-shadow: 0 4px 16px #0004;
 }
 .event-avatar {

@@ -12,7 +12,7 @@ class EventSeeder extends Seeder
     {
         DB::table('events')->insert([
             [
-                'eventName' => 'Orientation Week Kickoff',
+                'eventName' => 'Orientation Week',
                 'eventDesc' => 'This event marks the beginning of your exciting journey at the university. Designed to help new students transition smoothly into campus life, the day is filled with engaging activities. Begin with an inspiring welcome speech from our principal, followed by a detailed campus tour where you’ll discover all the essential spots like lecture halls, the library, and recreation areas. Participate in interactive ice-breaker games led by student mentors, and enjoy performances from various student clubs showcasing the diverse opportunities you can explore. This is your chance to learn, connect, and make your first steps on campus memorable.',
                 'eventDate' => '2025-08-05',
                 'eventTime' => '09:00:00',

@@ -13,4 +13,10 @@ function previewImage(event) {
     reader.readAsDataURL(event.target.files[0]);
 }
 </script>
+
+<style>
+    body {
+        background-color: #18191a;
+    }
+</style>
 @endsection

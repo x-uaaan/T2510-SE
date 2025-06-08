@@ -173,15 +173,14 @@ onUnmounted(() => {
 <style scoped>
 .timepicker-group {
   display: flex;
-  flex-direction: column;
   gap: 0.25rem;
   width: 50%;
   position: relative;
+  justify-content: flex-end;
 }
 
 .timepicker-input-wrapper {
-  position: relative;
-  width: 100%;
+  width: 80%;
 }
 
 .timepicker-input {
