@@ -41,7 +41,7 @@ export default {
 
 <style scoped>
 .navbar-blank {
-  width: calc(100% - 220px);
+  width: 100%;
   height: 80px;
   background: black;
   position: relative;
@@ -49,16 +49,21 @@ export default {
   display: block;
   padding: 0;
   margin: 0;
-  margin-left: 220px;
 }
 .navbar-logo-container {
-  width: 300px;
+  width: calc(100% - 220px);
   height: 70px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
   padding: 0;
   margin: 0;
+  margin-left: 220px;
+}
+@media (max-width: 1200px) {
+  .navbar-logo-container {
+    margin-left: 90px;
+  }
 }
 .navbar-logo-img {
   height: 80px;

@@ -1,8 +1,5 @@
 <template>
   <div class="app-layout app-bg-black">
-    <div class="nav-bar-container">
-      <NavBar />
-    </div>
     <NavigationDrawer />
     <div :class="['main-content', { 'drawer-open': selectedEvent }]">
       <EventTimeline
@@ -12,9 +9,12 @@
       />
       <EventCalendar />
       <EventDetailsDrawer
-      :event="selectedEvent"
-      @close="selectedEvent = null"
+        :event="selectedEvent"
+        @close="selectedEvent = null"
       />
+      <div class="nav-bar-container">
+        <NavBar />
+      </div>
     </div>
   </div>
   <FooterSection />
@@ -49,7 +49,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.app-layout { display: flex; background: #000; min-height: 100vh; }
+.app-layout { display: flex;min-height: 100vh; }
 .app-bg-black { background: #000; }
 .nav-bar-container {
   position: fixed;
@@ -60,15 +60,28 @@ onMounted(async () => {
 }
 .main-content {
   flex: 1;
-  margin-left: 220px;
-  position: relative;
   margin-top: 56px;
+  margin-left: 250px;
+  margin-right: 530px;
+  position: relative;
   padding-bottom: 50px; /* Add padding for fixed footer */
   z-index: 20;
 }
 .main-content.drawer-open {
   max-width: calc(100vw - 420px);
   margin-right: 0;
-  margin-left: 220px;
+  margin-left: 250px;
+}
+@media (max-width: 1200px) {
+  .nav-bar-container{
+    width: 100%;
+  }
+  .main-content {
+    margin-left: 90px;
+    margin-right: 0px;
+  }
+  .main-content.drawer-open {
+    margin-left: 90px;
+  }
 }
 </style>

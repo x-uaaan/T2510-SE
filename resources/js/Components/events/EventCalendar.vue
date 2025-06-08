@@ -1,6 +1,16 @@
 <template>
   <div class="calendar-fixed" @click="handleCalendarClick">
-    <SearchBar />
+    <div class="search-menu-row">
+      <SearchBar />
+      <a href="/events/create">
+        <button class="menu-btn create-btn" @click="showCreateModal = true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 4V20M4 12H20" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span>Create</span>
+      </button>
+      </a>
+    </div>
     <VDatePicker
       ref="calendarRef"
       is-dark
@@ -105,19 +115,61 @@ onMounted(() => {
   top: 80px;
   right: 70px;
   z-index: 10;
+  margin-right: 50px;
   border-radius: 16px;
-  width: 400px;
-  height: 400px;
   display: flex;
-  padding-right: 60px;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   justify-content: flex-start;
 }
 
-.search-bar {
+@media screen and (max-width: 1200px) {
+  .calendar-fixed {
+    display: none;
+  }
+}
+.search-menu-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 0.5rem;
   margin-bottom: 30px;
-  width: 273px;
+}
+
+.search-bar {
+  width: 150px;
+}
+
+.create-btn-margin {
+  margin-left: 0.5rem;
+}
+.create-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.68rem 1rem;
+  padding-bottom: 0.56rem;
+  background: #23242a;
+  border: 1px solid #3d3e46;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.create-btn:hover {
+  background: #2d2e35;
+}
+.create-btn svg {
+  width: 20px;
+  height: 20px;
+}
+a {
+  text-decoration: none !important;
+}
+span {
+  font-size: 1.1rem;
+  color: #727171;
+
 }
 
 :deep(.vc-container) {
