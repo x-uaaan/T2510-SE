@@ -46,7 +46,7 @@ function formatTime(time) {
   padding: 20px 28px;
   margin: 10px;
   margin-top: 0px;
-  min-width: 500px;
+  width: 640px;
   display: flex;
   align-items: center;
   box-shadow: rgba(0, 0, 0, 0.15) 5px 5px 2.6px;
@@ -54,10 +54,16 @@ function formatTime(time) {
   transition: box-shadow 0.2s, background 0.2s;
   gap: 24px;
   height: 130px;
+  z-index: 1000;
 }
 .event-card:hover {
   background: #343434;
   box-shadow: 0 4px 16px #0004;
+}
+@media (max-width: 1200px) {
+  .event-card {
+    width: 550px;
+  }
 }
 .event-avatar {
   width: 90px;
@@ -92,6 +98,7 @@ function formatTime(time) {
   align-items: center;
   gap: 18px;
   margin-top: 2px;
+  white-space: nowrap;
 }
 .event-icon-label {
   display: flex;

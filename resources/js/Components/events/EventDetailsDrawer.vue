@@ -116,11 +116,13 @@ onMounted(() => {
 .drawer-backdrop {
   position: fixed;
   top: 0;
+  left: 0;
   right: 0;
-  width: 430px;
+  bottom: 0;
+  width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.4);
-  z-index: 1000;
+  background: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,1));
+  z-index: 2000;
   display: flex;
   justify-content: flex-end;
 }
@@ -135,6 +137,7 @@ onMounted(() => {
   animation: slideIn 0.3s;
   padding-left: 10px;
   padding-right: 10px;
+  z-index: 2010;
 }
 .drawer-scroll {
   flex: 1;
@@ -277,12 +280,13 @@ onMounted(() => {
   border-radius: 1.5rem;
 }
 .drawer-footer {
-  padding: 16px 24px;
-  padding-bottom: 0;
   border-top: 1px solid #222;
-  background: #181818;
+  padding: 16px 0px;
+  bottom: 0;
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: space-around;
   gap: 20px;
 }
 .drawer-link {
