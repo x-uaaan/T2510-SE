@@ -17,7 +17,7 @@ Route::get('/about', function () {
 });
 
 Route::resource('events', EventController::class);
-Route::resource('forums', ForumController::class);
+Route::resource('forum', ForumController::class);
 Route::resource('posts', PostController::class);
 
 Route::get('/auth/microsoft', [MicrosoftController::class, 'redirectToMicrosoft']);

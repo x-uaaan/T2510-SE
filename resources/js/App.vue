@@ -17,6 +17,7 @@
       />
     </div>
   </div>
+  <FooterSection />
 </template>
 
 <script setup>
@@ -24,9 +25,10 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import EventTimeline from './Components/events/EventTimeline.vue'
 import EventDetailsDrawer from './Components/events/EventDetailsDrawer.vue'
-import NavigationDrawer from './Components/events/NavigationDrawer.vue'
+import NavigationDrawer from './Components/NavigationDrawer.vue'
 import EventCalendar from './Components/events/EventCalendar.vue'
 import NavBar from './Components/NavBar.vue'
+import FooterSection from './Components/FooterSection.vue'
 
 const events = ref([])
 const selectedEvent = ref(null)
@@ -54,13 +56,15 @@ onMounted(async () => {
   left: 0;
   top: 0;
   width: 100vw;
-  z-index: 15;
+  z-index: 30;
 }
 .main-content {
   flex: 1;
   margin-left: 220px;
   position: relative;
   margin-top: 56px;
+  padding-bottom: 50px; /* Add padding for fixed footer */
+  z-index: 20;
 }
 .main-content.drawer-open {
   max-width: calc(100vw - 420px);

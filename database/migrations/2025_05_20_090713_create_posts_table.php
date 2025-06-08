@@ -14,8 +14,10 @@ return new class extends Migration
             $table->text('postDesc');
             $table->text('comment')->nullable();
             $table->timestamp('timestamp');
-            $table->foreignId('forumID')->constrained('forums')->onDelete('cascade');
-            $table->foreignId('alumniID')->constrained('alumni')->onDelete('cascade');
+            $table->unsignedInteger('forumID');
+            $table->foreign('forumID')->references('forumID')->on('forums')->onDelete('cascade');
+            $table->unsignedInteger('alumniID');
+            $table->foreign('alumniID')->references('alumniID')->on('alumni')->onDelete('cascade');
             $table->timestamps();
         });
     }

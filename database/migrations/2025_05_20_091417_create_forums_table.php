@@ -12,7 +12,9 @@ return new class extends Migration
             $table->increments('forumID');
             $table->string('forumTitle');
             $table->text('forumDesc');
-            $table->foreignId('adminID')->constrained('admins')->onDelete('cascade');
+            $table->string('organiser');
+            $table->integer('organiserID');
+            $table->string('Categories')->nullable();
             $table->timestamps();
         });
     }
