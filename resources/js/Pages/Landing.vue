@@ -12,7 +12,12 @@
           <p class="text-base text-gray-300 mb-8 max-w-2xl mx-auto whitespace-nowrap">
             The all-in-one alumni system to connect, collaborate, and stay engaged with your university community.
           </p>
-          <a href="/auth/microsoft" class="bg-[#2D9CDB] text-black px-6 py-2 rounded shadow hover:bg-[#2386b7] text-base font-semibold transition">Learn More</a>
+          <a href="/auth/microsoft" style="width: auto; display: flex; align-items: center; gap: 5px; border-radius: 10px; padding: 10px 15px 10px 20px;" class="bg-[#2D9CDB] text-black px-6 py-2 rounded shadow hover:bg-[#2386b7] text-base font-semibold transition">
+            Learn More
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 12H21M21 12L14 5M21 12L14 19" stroke="#000000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </a>
         </div>
       </section>
 

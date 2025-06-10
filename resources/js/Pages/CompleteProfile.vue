@@ -1,7 +1,7 @@
 <template>
   <BaseLayout>
     <div class="min-h-screen flex items-center justify-center bg-[#18191A]">
-      <form @submit.prevent="submit" class="bg-[#232323] p-6 rounded-2xl shadow-xl w-full max-w-md border border-[#292929] flex flex-col justify-between h-[650px]">
+      <form @submit.prevent="submit" class="bg-[#232323] p-6 rounded-2xl shadow-xl w-full max-w-md border border-[#292929] flex flex-col justify-between h-[600px]">
         <div>
           <img src="/image/CampusPulse.png" alt="Campus Pulse Logo" class="mx-auto mb-2 h-12" />
           <h2 class="text-base font-bold mb-4 text-center text-white">Complete Your Profile</h2>
@@ -133,6 +133,7 @@ const form = useForm({
   faculty: '',
   resume: null,
   resumeName: '',
+  role: 'alumni',
 })
 
 const errors = ref({})
@@ -295,6 +296,7 @@ async function submit() {
   formData.append('username', form.username)
   formData.append('phone', form.countryCode + form.phone)
   formData.append('faculty', form.faculty)
+  formData.append('role', form.role)
   if (form.resume) {
     formData.append('resume', form.resume)
   }

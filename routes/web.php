@@ -27,3 +27,5 @@ Route::match(['get', 'post'], '/complete-profile', [ProfileController::class, 'c
 Route::get('/events', function () {
     return view('events.index'); // Make sure this points to 'resources/views/events/index.blade.php'
 });
+
+Route::middleware(['auth'])->get('/profile', [ProfileController::class, 'show'])->name('profile.show');
