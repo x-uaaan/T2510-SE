@@ -7,13 +7,32 @@
           <h2 class="text-base font-bold mb-4 text-center text-white">Complete Your Profile</h2>
         </div>
         <div class="flex-1 flex flex-col justify-center">
+          <!-- Role -->
+          <div class="mb-4 flex items-center justify-center gap-8">
+            <label class="flex items-center cursor-pointer">
+              <input type="radio" v-model="form.role" value="alumni" class="hidden" />
+              <span :class="['w-5 h-5 rounded-full border-2 flex items-center justify-center mr-2', form.role === 'alumni' ? 'border-blue-500' : 'border-gray-500']">
+                <span v-if="form.role === 'alumni'" class="w-3 h-3 bg-blue-500 rounded-full block"></span>
+              </span>
+              <span class="text-white text-base">Alumni</span>
+            </label>
+            <label class="flex items-center cursor-pointer">
+              <input type="radio" v-model="form.role" value="lecturer" class="hidden" />
+              <span :class="['w-5 h-5 rounded-full border-2 flex items-center justify-center mr-2', form.role === 'lecturer' ? 'border-blue-500' : 'border-gray-500']">
+                <span v-if="form.role === 'lecturer'" class="w-3 h-3 bg-blue-500 rounded-full block"></span>
+              </span>
+              <span class="text-white text-base">Lecturer</span>
+            </label>
+          </div>
           <!-- Username -->
+           <!--
           <div class="mb-4">
             <label class="block text-gray-300 mb-1 text-sm"><span class="text-red-500">*</span> Username</label>
             <input v-model="form.username" type="text" class="w-full px-3 py-2 rounded-xl bg-[#18191A] text-white border border-[#353535] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition outline-none text-sm" />
             <div v-if="errors.username" class="text-red-400 text-xs mt-1">{{ errors.username }}</div>
             <div v-if="usernameAlert" class="text-yellow-400 text-xs mt-1">{{ usernameAlert }}</div>
           </div>
+          -->
           <!-- Phone Number -->
           <div class="mb-4">
             <label class="block text-gray-300 mb-1 text-sm"><span class="text-red-500">*</span> Phone Number</label>
@@ -93,14 +112,16 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useForm, usePage, router } from '@inertiajs/vue3'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 import BaseLayout from '@/Layouts/BaseLayout.vue'
 
+const props = defineProps(['email', 'name'])
+
 const faculties = [
-  'Faculty of Engineering', 'Faculty of Engineering & Technology', 
+  'Faculty of Engineering', 'Faculty of Engineering & Technology',
   'Faculty of Artificial Intelligence & Engineering', 
   'Faculty of Business', 'Faculty of Management', 
   'Faculty of Computing & Infomatics', 'Faculty of Information Science & Technology',
@@ -133,7 +154,9 @@ const form = useForm({
   faculty: '',
   resume: null,
   resumeName: '',
-  role: 'alumni',
+  role: '',
+  email: '',
+  name: '',
 })
 
 const errors = ref({})
@@ -152,13 +175,6 @@ const resumeSize = computed(() => {
 function validate() {
   errors.value = {}
   
-  // Username validation - only check length
-  if (!form.username) {
-    errors.value.username = 'Username is required'
-  } else if (form.username.length < 5) {
-    errors.value.username = 'Username must be at least 5 characters'
-  }
-
   // Phone validation
   if (!form.phone) {
     errors.value.phone = 'Phone number is required'
@@ -175,6 +191,11 @@ function validate() {
     errors.value.faculty = 'Faculty is required'
   }
 
+  // Role validation
+  if (!form.role) {
+    errors.value.role = 'Please select a role'
+  }
+
   // Resume validation (optional)
   if (form.resume) {
     if (form.resume.size > 2 * 1024 * 1024) {
@@ -186,12 +207,7 @@ function validate() {
 }
 
 const canSubmit = computed(() => {
-  if (!form.username || !form.phone || !form.faculty) {
-    return false
-  }
-
-  // Username check - only length
-  if (form.username.length < 5) {
+  if (!form.role || !form.phone || !form.faculty) {
     return false
   }
 
@@ -203,15 +219,6 @@ const canSubmit = computed(() => {
   }
 
   return true
-})
-
-// Live username alert - only length
-const usernameAlert = computed(() => {
-  if (!form.username) return ''
-  if (form.username.length < 5) {
-    return 'Username must be at least 5 characters'
-  }
-  return ''
 })
 
 const phoneAlert = computed(() => {
@@ -280,6 +287,11 @@ function onPhoneKeyPress(e) {
   }
 }
 
+onMounted(() => {
+  if (props.email) form.email = props.email
+  if (props.name) form.name = props.name
+})
+
 async function submit() {
   if (!validate()) {
     // Show validation errors
@@ -293,7 +305,8 @@ async function submit() {
   }
 
   const formData = new FormData()
-  formData.append('username', form.username)
+  formData.append('email', form.email)
+  formData.append('name', form.name)
   formData.append('phone', form.countryCode + form.phone)
   formData.append('faculty', form.faculty)
   formData.append('role', form.role)
@@ -308,6 +321,8 @@ async function submit() {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 3000,
         })
+        // Use router.visit instead of window.location for proper Inertia handling
+        router.visit('/events')
       },
       onError: (errors) => {
         Object.keys(errors).forEach(key => {

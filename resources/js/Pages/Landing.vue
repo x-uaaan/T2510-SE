@@ -12,10 +12,10 @@
           <p class="text-base text-gray-300 mb-8 max-w-2xl mx-auto whitespace-nowrap">
             The all-in-one alumni system to connect, collaborate, and stay engaged with your university community.
           </p>
-          <a href="/auth/microsoft" style="width: auto; display: flex; align-items: center; gap: 5px; border-radius: 10px; padding: 10px 15px 10px 20px;" class="bg-[#2D9CDB] text-black px-6 py-2 rounded shadow hover:bg-[#2386b7] text-base font-semibold transition">
+          <a href="/auth/microsoft" class="learnmore-btn px-6 py-2 rounded shadow hover:bg-[#2386b7] text-base font-semibold transition">
             Learn More
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 12H21M21 12L14 5M21 12L14 19" stroke="#000000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M3 12H21M21 12L14 5M21 12L14 19" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
           </a>
         </div>
@@ -84,3 +84,20 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
 })
 </script>
+
+<style scoped>
+.learnmore-btn {
+  width: auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #23242a;
+  color: #fff;
+  border: 1px solid #3d3e46; border-radius: 10px; padding: 10px 15px 10px 20px;
+}
+.learnmore-btn:hover {
+  background: #2d2e35;
+  border: 1px solid #3b82f6;
+  box-shadow: 0 0 0 2px #3b82f688;
+}
+</style>

@@ -5,12 +5,13 @@
     <div class="profile-container">
       <div class="profile-header">
         <div class="profile-info">
-          <h2 class="profile-username">{{ user.username }}</h2>
+          <h2 class="profile-username">{{ alumni.alumniName }}</h2>
           <div class="profile-tag">{{ userTag }}</div>
-          <div class="profile-email">{{ user.email }}</div>
-          <div class="profile-faculty">{{ user.faculty }}</div>
-          <div v-if="user.resume_path" class="profile-resume">
-            <a :href="user.resume_path" target="_blank">Download Resume</a>
+          <div class="profile-email">{{ alumni.alumniEmail }}</div>
+          <div class="profile-faculty">{{ alumni.alumniFaculty }}</div>
+          <div class="profile-phone">{{ alumni.alumniPhone }}</div>
+          <div v-if="alumni.alumniResume" class="profile-resume">
+            <a :href="alumni.alumniResume" target="_blank">Download Resume</a>
           </div>
         </div>
         <button class="edit-btn" @click="goToEdit">EDIT</button>
@@ -56,12 +57,12 @@ import NavigationDrawer from '@/Components/NavigationDrawer.vue'
 import FooterSection from '@/Components/FooterSection.vue'
 
 const page = usePage()
-const user = ref(page.props.user)
+const alumni = ref(page.props.alumni)
 const forums = ref(page.props.forums)
 const posts = ref(page.props.posts)
 const events = ref(page.props.events)
 const tab = ref('forum')
-const userTag = computed(() => user.value.is_lecturer ? 'Lecturer' : (user.value.is_alumni ? 'Alumni' : 'User'))
+const userTag = computed(() => 'Alumni')
 function goToEdit() {
   window.location.href = '/profile/edit'
 }

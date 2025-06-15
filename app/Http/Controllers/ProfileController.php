@@ -6,196 +6,117 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\Alumni;
+use App\Models\Lecturer;
+use App\Models\Admin;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): Response
+    public function showCompleteProfileForm()
     {
-        return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status' => session('status'),
+        $socialiteUserData = session('socialite_user_data');
+        if (!$socialiteUserData) {
+            return redirect()->route('home');
+        }
+        return Inertia::render('CompleteProfile', [
+            'email' => $socialiteUserData['email'] ?? '',
+            'name' => $socialiteUserData['name'] ?? '',
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        // The issue is that Request doesn't have a user() method by default
-        // We need to use Auth facade to get the authenticated user
-        $user = Auth::user();
-        if (!$user) {
-            return Redirect::route('login');
-        }
-
-        $user->fill($request->validated());
-
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
-        $user->save();
-
-        return Redirect::route('profile.edit');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'password' => ['required', 'current_password'],
+        Log::info('ProfileController: Starting profile completion process');
+        
+        // Validate the request
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'faculty' => 'required|string|max:255',
+            'role' => 'required|in:alumni,lecturer',
+            'resume' => 'nullable|file|mimes:pdf|max:2048'
         ]);
 
-        $user = $request->user();
+        Log::info('ProfileController: Validation passed', [
+            'email' => $validated['email'],
+            'role' => $validated['role']
+        ]);
 
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
-    }
-
-    public function complete(Request $request)
-    {
         try {
-            $user = Auth::user();
-            if (!$user) {
-                return redirect()->route('login')->with('error', 'Please log in to complete your profile.');
+            // Handle resume upload if present
+            $resumePath = null;
+            if ($request->hasFile('resume')) {
+                $resumePath = $request->file('resume')->store('resumes', 'public');
+                Log::info('ProfileController: Resume uploaded', ['path' => $resumePath]);
             }
 
-            $validated = $request->validate([
-                'username' => [
-                    'required',
-                    'string',
-                    'min:5',
-                    'max:255',
-                    'unique:users,username,' . $user->id,
-                    'regex:/^[a-zA-Z0-9_]+$/', // Only letters, numbers, and underscores
-                ],
-                'phone' => [
-                    'required',
-                    'string',
-                    'max:20',
-                    'regex:/^\+?[0-9\s-()]+$/', // Basic phone number format
-                ],
-                'faculty' => [
-                    'required',
-                    'string',
-                    'max:255',
-                    'in:' . implode(',', [
-                        'Faculty of Engineering',
-                        'Faculty of Engineering & Technology',
-                        'Faculty of Artificial Intelligence & Engineering',
-                        'Faculty of Business',
-                        'Faculty of Management',
-                        'Faculty of Computing & Infomatics',
-                        'Faculty of Information Science & Technology',
-                        'Faculty of Creative Multimedia',
-                        'Faculty of Cinematic Arts',
-                        'Faculty of Applied Communication',
-                        'Faculty of Law'
-                    ]),
-                ],
-                'resume' => [
-                    'nullable',
-                    'file',
-                    'mimes:pdf',
-                    'max:2048', // 2MB max
-                ],
-            ], [
-                'username.regex' => 'Username can only contain letters, numbers, and underscores.',
-                'phone.regex' => 'Please enter a valid phone number.',
-                'faculty.in' => 'Please select a valid faculty.',
-                'resume.mimes' => 'Resume must be a PDF file.',
-                'resume.max' => 'Resume must be less than 2MB.',
-            ]);
-
-            DB::beginTransaction();
-
-            try {
-                // Handle resume upload if present
-                if ($request->hasFile('resume')) {
-                    $path = $request->file('resume')->store('resumes', 'public');
-                    if (!$path) {
-                        throw new \Exception('Failed to upload resume.');
-                    }
-                    $user->resume_path = $path;
+            if ($validated['role'] === 'alumni') {
+                // Check if alumni already exists
+                $existingAlumni = Alumni::where('alumniEmail', $validated['email'])->first();
+                if ($existingAlumni) {
+                    Log::warning('ProfileController: Alumni already exists', ['email' => $validated['email']]);
+                    return redirect()->route('events.index');
                 }
 
-                // Update user profile
-                $user->username = $validated['username'];
-                $user->phone = $validated['phone'];
-                $user->faculty = $validated['faculty'];
-                $user->profile_completed = true;
-                $user->save();
+                // Create new alumni
+                $alumni = Alumni::create([
+                    'alumniName' => $validated['name'],
+                    'alumniEmail' => $validated['email'],
+                    'alumniPhone' => $validated['phone'],
+                    'alumniFaculty' => $validated['faculty'],
+                    'alumniResume' => $resumePath
+                ]);
 
-                // Create or update alumni record
-                $alumni = \App\Models\Alumni::updateOrCreate(
-                    ['alumniEmail' => $user->email],
-                    [
-                        'alumniName' => $user->name,
-                        'alumniPhone' => $validated['phone'],
-                        'alumniFaculty' => $validated['faculty'],
-                        'alumniResume' => $user->resume_path,
-                    ]
-                );
+                Log::info('ProfileController: Alumni created successfully', ['id' => $alumni->id]);
+            } else {
+                // Check if lecturer already exists
+                $existingLecturer = Lecturer::where('lecturerEmail', $validated['email'])->first();
+                if ($existingLecturer) {
+                    Log::warning('ProfileController: Lecturer already exists', ['email' => $validated['email']]);
+                    return redirect()->route('events.index');
+                }
 
-                DB::commit();
+                // Create new lecturer
+                $lecturer = Lecturer::create([
+                    'lecturerName' => $validated['name'],
+                    'lecturerEmail' => $validated['email'],
+                    'lecturerPhone' => $validated['phone'],
+                    'lecturerFaculty' => $validated['faculty'],
+                    'lecturerResume' => $resumePath
+                ]);
 
-                return redirect()->route('profile.show')
-                    ->with('success', 'Profile completed successfully!');
-            } catch (\Exception $e) {
-                DB::rollBack();
-                throw $e;
+                Log::info('ProfileController: Lecturer created successfully', ['id' => $lecturer->id]);
             }
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return back()->withErrors($e->errors())->withInput();
+
+            // Set the authenticated user email in session
+            session(['authenticated_user_email' => $validated['email']]);
+            
+            // Clear the socialite data from session
+            session()->forget('socialite_user_data');
+
+            Log::info('ProfileController: Profile completion successful', [
+                'email' => $validated['email'],
+                'role' => $validated['role']
+            ]);
+
+            return redirect()->route('events.index');
+
         } catch (\Exception $e) {
-            \Log::error('Profile completion error: ' . $e->getMessage());
-            return back()->with('error', 'An error occurred while completing your profile. Please try again.');
+            Log::error('ProfileController: Error during profile completion', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return back()->withErrors([
+                'error' => 'An error occurred while saving your profile. Please try again.'
+            ]);
         }
-    }
-
-    public function show(Request $request)
-    {
-        $user = $request->user();
-
-        // Example: Adjust these queries to match your actual relationships
-        $forums = \App\Models\Forum::where('user_id', $user->id)->get(['forumID as id', 'forumTitle as title']);
-        $posts = \App\Models\Post::where('alumniID', $user->id)->get(['postID as id', 'postTitle as title']);
-        $events = \App\Models\Event::where('organiser', $user->email)->get(['id', 'eventName as title']);
-
-        // Determine tag
-        $isLecturer = \App\Models\Lecturer::where('lecturerEmail', $user->email)->exists();
-        $isAlumni = \App\Models\Alumni::where('alumniEmail', $user->email)->exists();
-
-        return Inertia::render('Profile/Profile', [
-            'user' => [
-                'username' => $user->username,
-                'email' => $user->email,
-                'faculty' => $user->faculty,
-                'resume_path' => $user->resume_path,
-                'is_lecturer' => $isLecturer,
-                'is_alumni' => $isAlumni,
-            ],
-            'forums' => $forums,
-            'posts' => $posts,
-            'events' => $events,
-        ]);
     }
 }
