@@ -3,6 +3,7 @@ import EventCreateForm from './Pages/EventCreateForm.vue'
 
 const el = document.getElementById('event-create-app')
 if (el) {
-  const organiser = el.getAttribute('data-organiser')
-  createApp(EventCreateForm, { organiser }).mount(el)
+  const organiserId = el.getAttribute('data-organiser-id')
+  const organiserName = el.getAttribute('data-organiser-name')
+  createApp(EventCreateForm, { organiserId, organiserName }).mount(el)
 }

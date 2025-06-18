@@ -34,26 +34,54 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'eventImage' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'eventName' => 'required|string|max:255',
-            'startDate' => 'required|date|after_or_equal:today',
-            'startTime' => 'required|date_format:H:i|after_or_equal:08:00|before_or_equal:24:00',
-            'endDate' => 'required|date|after_or_equal:startDate|after_or_equal:startDate',
-            'endTime' => 'required|date_format:H:i|after:startTime|before_or_equal:24:00',
+        // Only check for required fields and the three date/time rules
+        $request->validate([
+            'eventName' => 'required',
+            'startDate' => 'required|date',
+            'startTime' => 'required',
+            'endDate' => 'required|date',
+            'endTime' => 'required',
+            'eventVenue' => 'required',
             'eventDesc' => 'required',
-            'eventVenue' => 'required|string|max:255',
-            'capacity' => 'nullable|integer',
-            'organiser' => 'required|string|max:255',
+            'capacity' => 'required',
+            'organiserId' => 'required',
+            'organiserName' => 'required',
         ]);
 
-        // Handle image upload
-        if ($request->hasFile('eventImage')) {
-            $imagePath = $request->file('eventImage')->store('event_images', 'public');
-            $validatedData['eventImage'] = $imagePath;
+        // Date/time logic
+        $today = date('Y-m-d');
+        if ($request->startDate < $today) {
+            return response()->json(['message' => 'Start date must be today or later.'], 422);
+        }
+        if ($request->endDate < $request->startDate) {
+            return response()->json(['message' => 'End date must be after or same as start date.'], 422);
+        }
+        if ($request->startDate === $request->endDate) {
+            if (strtotime($request->endTime) <= strtotime($request->startTime)) {
+                return response()->json(['message' => 'End time must be later than start time if on the same day.'], 422);
+            }
         }
 
-        \App\Models\Event::create($validatedData);
+        // Handle image upload or set default
+        if ($request->hasFile('eventImage')) {
+            $imagePath = $request->file('eventImage')->store('event_images', 'public');
+        } else {
+            $imagePath = 'image/CampusPulseLogo.jpg'; // relative to public/
+        }
+
+        Event::create([
+            'eventName' => $request->eventName,
+            'eventImage' => $imagePath,
+            'startDate' => $request->startDate,
+            'startTime' => $request->startTime,
+            'endDate' => $request->endDate,
+            'endTime' => $request->endTime,
+            'eventVenue' => $request->eventVenue,
+            'eventDesc' => $request->eventDesc,
+            'capacity' => $request->capacity,
+            'organiser' => $request->organiserName,
+            'organiserID' => $request->organiserId,
+        ]);
 
         return response()->json(['success' => true]);
     }
