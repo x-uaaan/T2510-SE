@@ -54,4 +54,9 @@ class User extends Authenticatable
             'profile_completed' => 'boolean',
         ];
     }
+
+    public function alumni()
+    {
+        return $this->hasOne(Alumni::class, 'alumniEmail', 'email');
+    }
 }

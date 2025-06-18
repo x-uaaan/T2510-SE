@@ -11,14 +11,20 @@ class Event extends Model
 
     public function attendees()
     {    return $this->hasMany(Attendee::class);    }
+
+    protected $primaryKey = 'eventID'; // if your PK is eventID, not id
+
     protected $fillable = [
         'eventName',
+        'eventImage',
+        'startDate',
+        'startTime',
+        'endDate',
+        'endTime',
         'eventDesc',
-        'eventDate',
-        'eventTime',
         'eventVenue',
         'capacity',
         'organiser',
-        'image',
+        'organiserID',
     ];
 }
