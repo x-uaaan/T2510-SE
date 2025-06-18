@@ -13,7 +13,6 @@
     <!-- Event Form -->
     <form @submit.prevent="submit" class="event-form flex-1 flex flex-col gap-3 bg-[#232323] rounded-3xl shadow-2xl p-6 max-w-lg w-full border border-[#292929]">
       <input v-model="form.eventName" type="text" placeholder="Event Name" required class="w-full text-3xl font-extrabold bg-transparent text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-400 rounded-xl px-4 py-3 mb-2" />
-      <div v-if="errors.eventName" class="text-yellow-400 text-sm mt-1">{{ errors.eventName[0] }}</div>
       <div class="flex flex-col gap-4">
         <div>
           <label class="block text-white/70 text-sm mb-1">Start</label>
@@ -22,7 +21,6 @@
             <TimePicker v-model="form.startTime" class="w-1/2"/>
           </div>
           <div v-if="startDateError" class="text-yellow-400 text-sm mt-1">{{ startDateError }}</div>
-          <div v-if="startTimeError" class="text-yellow-400 text-sm mt-1">{{ startTimeError }}</div>
         </div>
         <div>
           <label class="block text-white/70 text-sm mb-1">End</label>
@@ -43,7 +41,7 @@
             <option value="20">20</option>
             <option value="50">50</option>
             <option value="100">100</option>
-            <option value="">Unlimited</option>
+            <option value="Unlimited">Unlimited</option>
           </select>
         </div>
       </div>
@@ -59,7 +57,7 @@ import { ref, computed } from 'vue'
 import DatePicker from '@/Components/DatePicker.vue'
 import TimePicker from '@/Components/TimePicker.vue'
 
-const props = defineProps(['organiser'])
+const props = defineProps(['organiserId', 'organiserName'])
 
 const form = ref({
   eventName: '',
@@ -69,20 +67,14 @@ const form = ref({
   endTime: null,
   eventVenue: '',
   eventDesc: '',
-  capacity: "",
-  organiser: props.organiser || '',
+  capacity: '',
+  organiserId: props.organiserId || '',
+  organiserName: props.organiserName || '',
   image: null,
 })
 const imagePreview = ref('')
 const submitting = ref(false)
 const errorMsg = ref('')
-const errors = ref({
-  startDate: '',
-  startTime: '',
-  endDate: '',
-  endTime: '',
-  eventName: '',
-})
 
 const today = new Date().toISOString().slice(0, 10)
 
@@ -100,13 +92,6 @@ const endDateError = computed(() => {
     : ''
 })
 
-const startTimeError = computed(() => {
-  if (!form.value.startTime) return ''
-  return form.value.startTime < '08:00'
-    ? 'Start time must be 8:00 AM or later'
-    : ''
-})
-
 function timeToMinutes(t) {
   if (!t) return 0
   const [h, m] = t.split(':')
@@ -115,25 +100,17 @@ function timeToMinutes(t) {
 
 const endTimeError = computed(() => {
   if (!form.value.endTime) return ''
-  if (form.value.endTime === '24:00' || form.value.endTime === '24:30') {
-    return 'End time cannot be 24:00 or 24:30. Latest allowed is 23:30.'
-  }
-  if (form.value.endTime > '23:30') {
-    return 'End time must be 23:30 or earlier'
-  }
   if (
     form.value.startDate &&
     form.value.endDate &&
     form.value.startDate === form.value.endDate &&
     form.value.startTime &&
     form.value.endTime
-  ) 
-
-  if (form.value.startDate === form.value.endDate) {
+  ) {
     if (form.value.endTime === form.value.startTime) {
       return 'End time cannot be the same as start time if on the same day'
     }
-    if (timeToMinutes(form.value.endTime) < timeToMinutes(form.value.startTime)) {
+    if (timeToMinutes(form.value.endTime) <= timeToMinutes(form.value.startTime)) {
       return 'End time must be later than start time if on the same day'
     }
   }
@@ -148,13 +125,14 @@ const hasEmptyRequiredField = computed(() =>
   !form.value.endTime ||
   !form.value.eventVenue ||
   !form.value.eventDesc ||
-  !form.value.organiser
+  !form.value.capacity ||
+  !form.value.organiserId ||
+  !form.value.organiserName
 )
 
 const hasValidationError = computed(() =>
   startDateError.value ||
   endDateError.value ||
-  startTimeError.value ||
   endTimeError.value ||
   hasEmptyRequiredField.value
 )
@@ -173,10 +151,13 @@ function onImageChange(e) {
 
 async function submit() {
   errorMsg.value = ''
+  submitting.value = true
   try {
     const formData = new FormData()
     formData.append('eventName', form.value.eventName)
-    formData.append('eventImage', form.value.image)
+    if (form.value.image) {
+      formData.append('eventImage', form.value.image)
+    }
     formData.append('startDate', form.value.startDate)
     formData.append('startTime', form.value.startTime)
     formData.append('endDate', form.value.endDate)
@@ -184,7 +165,8 @@ async function submit() {
     formData.append('eventVenue', form.value.eventVenue)
     formData.append('eventDesc', form.value.eventDesc)
     formData.append('capacity', form.value.capacity)
-    formData.append('organiser', form.value.organiser)
+    formData.append('organiserId', form.value.organiserId)
+    formData.append('organiserName', form.value.organiserName)
     const response = await fetch('/events', {
       method: 'POST',
       headers: {
@@ -195,14 +177,10 @@ async function submit() {
     })
     if (!response.ok) {
       const data = await response.json()
-      if (data.errors) {
-        Object.assign(errors.value, data.errors)
-      }
       errorMsg.value = data.message || 'Failed to create event.'
       submitting.value = false
       return
     }
-    submitting.value = true
     // Redirect or show success
     window.location.href = '/events'
   } catch (err) {

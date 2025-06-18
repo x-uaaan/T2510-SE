@@ -25,5 +25,6 @@ class Event extends Model
         'eventVenue',
         'capacity',
         'organiser',
+        'organiserID',
     ];
 }
