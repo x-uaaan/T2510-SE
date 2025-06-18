@@ -1,4 +1,4 @@
-<?php
+SELECT email, profile_completed FROM users WHERE email = 'your_test_user_email';<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

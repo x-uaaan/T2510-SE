@@ -59,7 +59,7 @@ class ForumController extends Controller
 
     public function apiIndex()
     {
-        $forums = Forum::withCount('posts')->get();
+        $forums = Forum::all();
         return response()->json($forums);
     }
 }

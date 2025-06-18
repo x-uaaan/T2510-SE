@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
+use App\Models\Alumni;
+use App\Models\Lecturer;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -26,28 +29,48 @@ class MicrosoftController extends Controller
     {
         try {
             $microsoftUser = Socialite::driver('microsoft')->user();
-            
-            $user = User::updateOrCreate(
-                ['email' => $microsoftUser->getEmail()],
-                [
-                    'name' => $microsoftUser->getName() ?? $microsoftUser->getNickname(),
-                    'microsoft_id' => $microsoftUser->getId(),
-                    'avatar' => $microsoftUser->getAvatar(),
-                    'email_verified_at' => now(),
-                ]
-            );
+            $userEmail = $microsoftUser->getEmail();
+            $userName = $microsoftUser->getName() ?? $microsoftUser->getNickname();
+            $microsoftId = $microsoftUser->getId();
 
-            Auth::login($user, true);
+            Log::info('MicrosoftCallback: Processing user callback for email: ' . $userEmail);
 
-            // Check if profile needs completion
-            if (!$user->profile_completed) {
+            // Check if user exists in any of your dedicated tables
+            $alumni = Alumni::where('alumniEmail', $userEmail)->first();
+            $lecturer = Lecturer::where('lecturerEmail', $userEmail)->first();
+            $admin = Admin::where('AdminEmail', $userEmail)->first();
+
+            if ($alumni || $lecturer || $admin) {
+                // Existing user: Store their identifying email in the session
+                session(['authenticated_user_email' => $userEmail]);
+                
+                Log::info('MicrosoftCallback: Existing user found. Email: ' . $userEmail . '. Redirecting to events.');
+                
+                // Clear any leftover socialite_user_data from session if it exists
+                session()->forget('socialite_user_data');
+
+                return redirect()->route('events.index');
+            } else {
+                // Check if user is already in the process of completing their profile
+                if (session()->has('socialite_user_data')) {
+                    Log::info('MicrosoftCallback: User already has socialite data in session. Redirecting to complete-profile.');
+                    return redirect()->route('complete-profile');
+                }
+
+                // New user: Store Microsoft user data in session for complete-profile page
+                session([
+                    'socialite_user_data' => [
+                        'email' => $userEmail,
+                        'name' => $userName,
+                        'microsoft_id' => $microsoftId,
+                    ]
+                ]);
+                Log::info('MicrosoftCallback: New user detected. Email: ' . $userEmail . '. Redirecting to complete-profile.');
                 return redirect()->route('complete-profile');
             }
-
-            return redirect()->intended('/');
-        } catch (Exception $e) {
-            Log::error('Microsoft callback error: ' . $e->getMessage());
-            return redirect()->route('login')->with('error', 'Unable to authenticate with Microsoft. Please try again.');
+        } catch (\Exception $e) {
+            Log::error('MicrosoftCallback: Error during callback: ' . $e->getMessage());
+            return redirect()->route('home')->with('error', 'Authentication failed. Please try again.');
         }
     }
 }

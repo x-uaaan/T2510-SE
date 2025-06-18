@@ -43,24 +43,6 @@
               </div>
             </div>
           </div>
-
-          <!-- AM/PM Selection -->
-          <div class="time-column">
-            <div class="time-options">
-              <div
-                :class="['time-option', { 'selected': selectedPeriod === 'AM' }]"
-                @click="selectPeriod('AM')"
-              >
-                AM
-              </div>
-              <div
-                :class="['time-option', { 'selected': selectedPeriod === 'PM' }]"
-                @click="selectPeriod('PM')"
-              >
-                PM
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -87,11 +69,10 @@ const emit = defineEmits(['update:modelValue'])
 const isOpen = ref(false)
 const selectedHour = ref(6)
 const selectedMinute = ref(0)
-const selectedPeriod = ref('AM')
 
 // Available options
-const hours = Array.from({ length: 12 }, (_, i) => i + 1)
-const minutes = [0, 15, 30, 45] // Only 00, 15, 30, 45
+const hours = Array.from({ length: 17 }, (_, i) => i+8)
+const minutes = [0, 30]
 
 // Computed display value
 const displayValue = computed(() => {
@@ -114,7 +95,6 @@ const parseTimeValue = (value) => {
   if (hour && minute !== undefined && period) {
     selectedHour.value = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour
     selectedMinute.value = minute
-    selectedPeriod.value = period
   }
 }
 
@@ -142,15 +122,10 @@ const selectMinute = (minute) => {
   updateValue()
 }
 
-const selectPeriod = (period) => {
-  selectedPeriod.value = period
-  updateValue()
-}
-
 const updateValue = () => {
   const formattedHour = selectedHour.value.toString().padStart(2, '0')
   const formattedMinute = selectedMinute.value.toString().padStart(2, '0')
-  const timeString = `${formattedHour}:${formattedMinute} ${selectedPeriod.value}`
+  const timeString = `${formattedHour}:${formattedMinute}`
   emit('update:modelValue', timeString)
 }
 
