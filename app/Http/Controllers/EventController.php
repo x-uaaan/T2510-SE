@@ -12,10 +12,16 @@ class EventController extends Controller
 {
     public function index()
     {
+        // Check authentication in controller
+        $authenticatedUserEmail = session('authenticated_user_email');
+        
+        if (!$authenticatedUserEmail) {
+            return redirect()->route('auth.microsoft');
+        }
+
         // Fetch all events from the database (including those seeded by EventSeeder)
         $events = \App\Models\Event::all();
-
-        // Pass the events as JSON to the Blade view for Vue to consume
+        
         return view('events.index', [
             'events' => $events->toJson()
         ]);
@@ -29,26 +35,27 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+            'eventImage' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'eventName' => 'required|string|max:255',
+            'startDate' => 'required|date|after_or_equal:today',
+            'startTime' => 'required|date_format:H:i|after_or_equal:08:00|before_or_equal:24:00',
+            'endDate' => 'required|date|after_or_equal:startDate|after_or_equal:startDate',
+            'endTime' => 'required|date_format:H:i|after:startTime|before_or_equal:24:00',
             'eventDesc' => 'required',
-            'eventDate' => 'required|date',
-            'eventTime' => 'required',
             'eventVenue' => 'required|string|max:255',
             'capacity' => 'nullable|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'organiser' => 'required|string|max:255',
         ]);
 
         // Handle image upload
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('event_images', 'public');
-            $validatedData['image'] = $imagePath;
+        if ($request->hasFile('eventImage')) {
+            $imagePath = $request->file('eventImage')->store('event_images', 'public');
+            $validatedData['eventImage'] = $imagePath;
         }
 
-        // Set organiser as current user's name or email
-        $validatedData['organiser'] = Auth::user() ? (Auth::user()->name ?? Auth::user()->email) : 'Unknown';
+        \App\Models\Event::create($validatedData);
 
-        Event::create($validatedData);
-        return redirect()->route('events.index')->with('success', 'Event created successfully!');
+        return response()->json(['success' => true]);
     }
 
     public function show(Event $event)

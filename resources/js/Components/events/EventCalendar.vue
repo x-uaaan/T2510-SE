@@ -112,7 +112,7 @@ onMounted(() => {
 <style scoped>
 .calendar-fixed {
   position: fixed;
-  top: 80px;
+  top: 85px;
   right: 70px;
   z-index: 10;
   margin-right: 50px;

@@ -37,15 +37,14 @@ Route::middleware(['web'])->group(function () {
 });
 
 // Protected routes that require authentication using our custom middleware
-Route::middleware(['custom.auth'])->group(function () { // Use our new middleware
-    Route::get('/events', [EventController::class, 'index'])->name('events.index');
-    Route::resource('forum', ForumController::class);
-    Route::resource('posts', PostController::class);
-    // You might also need a route to clear the session for logout
-    Route::post('/logout', function (Request $request) {
-        session()->forget('authenticated_user_email');
-        session()->forget('socialite_user_data');
-        Log::info('User logged out (custom).');
-        return redirect()->route('home')->with('success', 'You have been logged out.');
-    })->name('logout');
-});
+Route::get('events', [EventController::class, 'index'])->name('events.index');
+Route::resource('forum', ForumController::class);
+Route::resource('posts', PostController::class);
+Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+Route::post('/events', [EventController::class, 'store'])->name('events.store');
+
+Route::post('/logout', function (Request $request) {
+    session()->forget('authenticated_user_email');
+    session()->forget('socialite_user_data');
+    return redirect()->route('home')->with('success', 'You have been logged out.');
+})->name('logout');
