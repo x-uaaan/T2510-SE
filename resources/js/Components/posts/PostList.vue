@@ -65,8 +65,10 @@ const showCreateModal = ref(false)
 
 async function refreshPosts() {
   try {
-    const res = await fetch('/api/posts')
-    posts.value = await res.json()
+    const res = await fetch('/posts')
+    let data = await res.json()
+    // Sort by created_at (or your date field) descending
+    posts.value = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
   } catch (e) {
     posts.value = []
   }
@@ -79,9 +81,11 @@ onMounted(async () => {
   try {
     const urlParams = new URLSearchParams(window.location.search);
     const forumId = urlParams.get('forum_id');
-    const url = forumId ? `/api/posts?forum_id=${forumId}` : '/api/posts';
+    const url = forumId ? `/posts?forum_id=${forumId}` : '/posts';
     const res = await fetch(url);
-    posts.value = await res.json();
+    let data = await res.json();
+    // Sort by created_at (or your date field) descending
+    posts.value = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
   } catch (e) {
     posts.value = [];
   }

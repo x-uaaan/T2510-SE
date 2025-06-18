@@ -13,7 +13,9 @@ return new class extends Migration
             $table->string('eventName');
             $table->text('eventDesc');
             $table->date('eventDate');
+            $table->date('endDate')->nullable()->after('eventDate');
             $table->time('eventTime');
+            $table->time('endTime')->nullable()->after('eventTime');
             $table->string('eventVenue');
             $table->integer('capacity')->nullable(); // NULL for unlimited capacity
             $table->string('organiser');

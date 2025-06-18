@@ -39,6 +39,7 @@ import SearchBar from '@/Components/SearchBar.vue'
 import FooterSection from '@/Components/FooterSection.vue'
 import NavBar from '@/Components/NavBar.vue'
 import CreateForumModal from './CreateForumModal.vue'
+import axios from 'axios'
 
 const forums = ref([])
 const showCreateModal = ref(false)
@@ -49,8 +50,8 @@ function goToForum(id) {
 
 async function refreshForums() {
   try {
-    const res = await fetch('/api/forum')
-    forums.value = await res.json()
+    const res = await axios.get('/api/forum')
+    forums.value = res.data
   } catch (e) {
     forums.value = []
   }
@@ -107,9 +108,9 @@ onMounted(refreshForums)
 .search-menu-row {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin: 20px 170px 0 0;
+  justify-content: space-between;
+  gap: 0rem;
+  margin: 0px 170px 0 0;
 }
 .create-btn-margin {
   margin-left: 0.5rem;

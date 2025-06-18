@@ -63,7 +63,8 @@ watch(() => props.modelValue, (val) => {
   dateValue.value = val
 })
 watch(dateValue, (val) => {
-  emit('update:modelValue', val)
+  console.log('DatePicker value:', val)
+  emit('update:modelValue', !val ? null : val)
 })
 
 const today = new Date()

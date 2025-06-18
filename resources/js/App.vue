@@ -30,7 +30,7 @@ import EventCalendar from './Components/events/EventCalendar.vue'
 import NavBar from './Components/NavBar.vue'
 import FooterSection from './Components/FooterSection.vue'
 
-const events = ref([])
+const { events } = defineProps(['events'])
 const selectedEvent = ref(null)
 
 function openDrawer(event) {
@@ -40,12 +40,11 @@ function openDrawer(event) {
   console.log("Drawer Open:", drawerOpen.value);
 }
 
-
-onMounted(async () => {
-  const response = await axios.get('/api/events')
-  console.log(response.data.data)
-  events.value = response.data.data
-})
+// onMounted(async () => {
+//   const response = await axios.get('/api/events')
+//   console.log(response.data.data)
+//   events.value = response.data.data
+// })
 </script>
 
 <style scoped>
