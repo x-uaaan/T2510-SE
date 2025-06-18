@@ -1,22 +1,6 @@
 @extends('layouts.app')
-@vite('resources/css/app.css')
+@vite('resources/js/event-create.js')
 
 @section('content')
-
-<script>
-function previewImage(event) {
-    const reader = new FileReader();
-    reader.onload = function(){
-        const output = document.getElementById('imagePreview');
-        output.src = reader.result;
-    };
-    reader.readAsDataURL(event.target.files[0]);
-}
-</script>
-
-<style>
-    body {
-        background-color: #18191a;
-    }
-</style>
+    <div id="event-create-app" data-organiser="{{ auth()->user()->id }}"></div>
 @endsection

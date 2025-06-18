@@ -23,15 +23,33 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import axios from 'axios'
+
 const isOpen = ref(false)
 const stickyOpen = ref(false)
 const hoveredItem = ref(null)
+const userId = ref(null)
+const userName = ref('User')
+const userRole = ref('')
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('/api/user')
+    userId.value = response.data.id
+    userName.value = response.data.name
+    userRole.value = response.data.role
+  } catch (e) {
+    userName.value = 'User'
+  }
+})
+
 function toggleStickyOpen() { stickyOpen.value = !stickyOpen.value; if (!stickyOpen.value) isOpen.value = false; }
-const navItems = [
+
+const navItems = computed(() => [
   {
-    label: (userId) => `Profile (${userId})`,
-    route: (userId) => `/profile-${userId}`,
+    label: `${userName.value}`,
+    route: `/profile-${userId.value}`,
     icon: `<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" width=\"24\" height=\"24\" color=\"#ffffff\"><circle fill=\"none\" stroke=\"#ffffff\" stroke-miterlimit=\"10\" cx=\"12\" cy=\"7.25\" r=\"5.73\"></circle><path fill=\"none\" stroke=\"#ffffff\" stroke-miterlimit=\"10\" d=\"M1.5,23.48l.37-2.05A10.3,10.3,0,0,1,12,13h0a10.3,10.3,0,0,1,10.13,8.45l.37,2.05\"></path></svg>`
   },
   {
@@ -52,15 +70,22 @@ const navItems = [
   {
     label: 'Log Out',
     route: '/',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 17V18C12 19.6569 10.6569 21 9 21H6C4.34315 21 3 19.6569 3 18V6C3 4.34315 4.34315 3 6 3H9C10.6569 3 12 4.34315 12 6V7M17 8L21 12L17 16M9 12H19" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>`
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 17V18C12 19.6569 10.6569 21 9 21H6C4.34315 21 3 19.6569 3 18V6C3 4.34315 4.34315 3 6 3H9C10.6569 3 12 4.34315 12 6V7M17 8L21 12L17 16M9 12H19" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>`,
+    logout: true
   },
-]
+])
+
 function navigate(route, item) {
-  if (item.label === 'Menu') {
-    toggleStickyOpen();
-    return;
+  if (typeof route === 'function') {
+    route = route()
   }
-  // router push logic
+  window.location.href = route
+}
+
+function logout() {
+  axios.post('/logout').then(() => {
+    window.location.href = '/'
+  })
 }
 </script>
 

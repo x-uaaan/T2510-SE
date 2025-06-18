@@ -25,8 +25,13 @@ const props = defineProps(['events', 'drawerOpen'])
 // Group events by eventDate
 const groupedEvents = computed(() => {
   const groups = {}
-  if (!props.events) return groups
-  props.events.forEach(event => {
+  // Defensive: ensure props.events is an array
+  const eventArray = Array.isArray(props.events)
+    ? props.events
+    : (typeof props.events === 'string'
+        ? JSON.parse(props.events)
+        : []);
+  eventArray.forEach(event => {
     const date = event.eventDate
     if (!groups[date]) groups[date] = []
     groups[date].push(event)
