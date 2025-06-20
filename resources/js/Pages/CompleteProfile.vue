@@ -10,16 +10,16 @@
           <!-- Role -->
           <div class="mb-4 flex items-center justify-center gap-8">
             <label class="flex items-center cursor-pointer">
-              <input type="radio" v-model="form.role" value="alumni" class="hidden" />
-              <span :class="['w-5 h-5 rounded-full border-2 flex items-center justify-center mr-2', form.role === 'alumni' ? 'border-blue-500' : 'border-gray-500']">
-                <span v-if="form.role === 'alumni'" class="w-3 h-3 bg-blue-500 rounded-full block"></span>
+              <input type="radio" v-model="form.userType" value="Alumni" class="hidden" />
+              <span :class="['w-5 h-5 rounded-full border-2 flex items-center justify-center mr-2', form.userType === 'Alumni' ? 'border-blue-500' : 'border-gray-500']">
+                <span v-if="form.userType === 'Alumni'" class="w-3 h-3 bg-blue-500 rounded-full block"></span>
               </span>
               <span class="text-white text-base">Alumni</span>
             </label>
             <label class="flex items-center cursor-pointer">
-              <input type="radio" v-model="form.role" value="lecturer" class="hidden" />
-              <span :class="['w-5 h-5 rounded-full border-2 flex items-center justify-center mr-2', form.role === 'lecturer' ? 'border-blue-500' : 'border-gray-500']">
-                <span v-if="form.role === 'lecturer'" class="w-3 h-3 bg-blue-500 rounded-full block"></span>
+              <input type="radio" v-model="form.userType" value="Lecturer" class="hidden" />
+              <span :class="['w-5 h-5 rounded-full border-2 flex items-center justify-center mr-2', form.userType === 'Lecturer' ? 'border-blue-500' : 'border-gray-500']">
+                <span v-if="form.userType === 'Lecturer'" class="w-3 h-3 bg-blue-500 rounded-full block"></span>
               </span>
               <span class="text-white text-base">Lecturer</span>
             </label>
@@ -154,7 +154,7 @@ const form = useForm({
   faculty: '',
   resume: null,
   resumeName: '',
-  role: '',
+  userType: '',
   email: '',
   name: '',
 })
@@ -192,8 +192,8 @@ function validate() {
   }
 
   // Role validation
-  if (!form.role) {
-    errors.value.role = 'Please select a role'
+  if (!form.userType) {
+    errors.value.userType = 'Please select a role'
   }
 
   // Resume validation (optional)
@@ -207,7 +207,7 @@ function validate() {
 }
 
 const canSubmit = computed(() => {
-  if (!form.role || !form.phone || !form.faculty) {
+  if (!form.userType || !form.phone || !form.faculty) {
     return false
   }
 
@@ -309,7 +309,7 @@ async function submit() {
   formData.append('name', form.name)
   formData.append('phone', form.countryCode + form.phone)
   formData.append('faculty', form.faculty)
-  formData.append('role', form.role)
+  formData.append('userType', form.userType)
   if (form.resume) {
     formData.append('resume', form.resume)
   }

@@ -13,24 +13,38 @@
           </div>
           <!-- Event Image or Placeholder -->
           <div class="event-image-box">
-            <img v-if="event.image" :src="event.image" alt="Event image" class="event-image" />
-            <div v-else class="event-image-placeholder"></div>
+            <img :src="event.image ? event.image : '/image/CampusPulseLogo.jpg'" alt="Event image" class="event-image" />
           </div>
           <!-- Event Title -->
           <div class="event-title">{{ event.eventName }}</div>
-          <!-- Organiser -->
-          <div class="event-organiser-row">
-            <span class="event-organiser">{{ typeof event.organiser === 'object' ? event.organiser.name : event.organiser }}</span>
-          </div>
-          <!-- Meta Info Row -->
+          <!-- Organiser Name as subtitle below event name -->
+          <div class="event-organiser-subtitle">{{ event.organiserName }}</div>
+          <!-- Meta Info Row: Calendar and Dates/Times -->
           <div class="event-meta-row-horizontal-fixed">
             <div class="event-meta-block">
               <span class="icon-svg calendar-center" v-html="calendarSvg"></span>
               <div class="event-date-time-block">
-                <span class="event-date-label">{{ formatDate(event.eventDate) }}</span>
-                <span class="event-meta-time">{{ formatTime(event.eventTime) }}</span>
+                <template v-if="isSameDay(event.startDate, event.endDate)">
+                  <div class="event-date-row">
+                    <span class="event-date-label">{{ formatDate(event.startDate) }}</span>
+                    <span class="event-meta-time">{{ formatTime(event.startTime) }} - {{ formatTime(event.endTime) }}</span>
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="event-date-row">
+                    <span class="event-date-label">{{ formatDate(event.startDate) }}</span>
+                    <span class="event-meta-time">{{ formatTime(event.startTime) }}</span>
+                  </div>
+                  <div class="event-date-row">
+                    <span class="event-date-label">{{ formatDate(event.endDate) }}</span>
+                    <span class="event-meta-time">{{ formatTime(event.endTime) }}</span>
+                  </div>
+                </template>
               </div>
             </div>
+          </div>
+          <!-- Location Row -->
+          <div class="event-meta-row-horizontal-fixed">
             <div class="event-meta-block location-block">
               <span class="icon-svg location-align" v-html="locationSvg"></span>
               <span class="event-location-label">{{ event.eventVenue }}</span>
@@ -45,18 +59,34 @@
           <div class="event-description">
             {{ event.eventDesc || 'No description provided.' }}
           </div>
-          <!-- Register Button -->
-          <div class="register-btn-row">
-            <div class="flex gap-4 items-center">
-              <SecondaryButton class="register-btn-ui rounded-lg">Register</SecondaryButton>
-            </div>
-          </div>
-          <!-- Footer always shown below register button -->
-          <div class="drawer-footer">
-            <a :href="`mailto:support@campuspulse.com`" class="drawer-link">Contact host</a>
-            <a :href="`mailto:support@campuspulse.com`" class="drawer-link">Report event</a>
+        </div>
+        <!-- Register Button -->
+        <div class="register-btn-row">
+          <div class="flex gap-4 items-center">
+            <SecondaryButton
+              class="register-btn-ui rounded-lg"
+              :disabled="isRegistered"
+              @click="!isRegistered && registerForEvent"
+            >
+              {{ isRegistered ? "RSVP'd" : 'One-Click RSVP' }}
+            </SecondaryButton>
           </div>
         </div>
+        <!-- Footer always at bottom -->
+        <div class="drawer-footer">
+          <a :href="`mailto:support@campuspulse.com`" class="drawer-link">Contact host</a>
+          <a :href="`mailto:support@campuspulse.com`" class="drawer-link">Report event</a>
+        </div>
+        <!-- Toast Notification -->
+        <transition name="fade">
+          <div v-if="showToast" class="custom-toast">
+            <span class="toast-icon">&#9432;</span>
+            <div class="toast-content">
+              <div class="toast-title">You're In!</div>
+              <div class="toast-desc">RSVP successful</div>
+            </div>
+          </div>
+        </transition>
       </div>
     </div>
   </transition>
@@ -68,9 +98,12 @@ import SecondaryButton from '@/Components/SecondaryButton.vue'
 const props = defineProps(['event'])
 const emit = defineEmits(['close'])
 const attendees = ref([])
+const isRegistered = ref(false)
+const showToast = ref(false)
 
 function close() { emit('close') }
 function formatDate(date) {
+  if (!date) return ''
   const d = new Date(date)
   return d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
 }
@@ -80,6 +113,12 @@ function formatTime(time) {
   const dateObj = new Date()
   dateObj.setHours(h, m)
   return dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
+}
+function isSameDay(start, end) {
+  if (!start || !end) return false
+  const s = new Date(start)
+  const e = new Date(end)
+  return s.getFullYear() === e.getFullYear() && s.getMonth() === e.getMonth() && s.getDate() === e.getDate()
 }
 // SVGs
 const calendarSvg = `<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" width="24" height="24" color="#ffffff"><defs><style>.cls-6374f8d9b67f094e4896c61a-1{fill:none;stroke:currentColor;stroke-miterlimit:10;}</style></defs><rect class="cls-6374f8d9b67f094e4896c61a-1" x="1.48" y="3.37" width="21.04" height="4.78"></rect><rect class="cls-6374f8d9b67f094e4896c61a-1" x="1.48" y="8.15" width="21.04" height="14.35"></rect><line class="cls-6374f8d9b67f094e4896c61a-1" x1="5.3" y1="12.93" x2="7.22" y2="12.93"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="9.13" y1="12.93" x2="11.04" y2="12.93"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="12.96" y1="12.93" x2="14.87" y2="12.93"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="16.78" y1="12.93" x2="18.7" y2="12.93"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="16.78" y1="17.72" x2="18.7" y2="17.72"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="5.3" y1="17.72" x2="7.22" y2="17.72"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="9.13" y1="17.72" x2="11.04" y2="17.72"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="12.96" y1="17.72" x2="14.87" y2="17.72"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="6.26" y1="0.5" x2="6.26" y2="5.28"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="12" y1="0.5" x2="12" y2="5.28"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="17.74" y1="0.5" x2="17.74" y2="5.28"></line></svg>`
@@ -99,6 +138,7 @@ watch(() => props.event, async (newEvent) => {
       { id: 3, name: 'Carol', avatar: 'https://i.pravatar.cc/150?u=carol' },
       { id: 4, name: 'Dave', avatar: 'https://i.pravatar.cc/150?u=dave' }
     ]
+    checkRegistration()
   }
 }, { immediate: true })
 
@@ -110,6 +150,37 @@ onMounted(() => {
     })
   }
 })
+
+// Registration logic
+async function registerForEvent() {
+  const userId = window?.user?.id || 1 // fallback for demo
+  const eventId = props.event.id
+  try {
+    await fetch('/api/attendees', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId, event_id: eventId })
+    })
+    isRegistered.value = true
+    showToast.value = true
+    setTimeout(() => { showToast.value = false }, 3500)
+  } catch (e) {
+    alert('Registration failed.')
+  }
+}
+
+// Check if user is already registered for this event
+async function checkRegistration() {
+  const userId = window?.user?.id || 1 // fallback for demo
+  const eventId = props.event.id
+  try {
+    const res = await fetch(`/api/attendees/check?user_id=${userId}&event_id=${eventId}`)
+    const data = await res.json()
+    isRegistered.value = !!data.registered
+  } catch (e) {
+    isRegistered.value = false
+  }
+}
 </script>
 
 <style scoped>
@@ -140,8 +211,8 @@ onMounted(() => {
   z-index: 2010;
 }
 .drawer-scroll {
-  flex: 1;
-  overflow-y: scroll;
+  flex: 1 1 auto;
+  overflow-y: auto;
   padding: 0;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
@@ -185,14 +256,13 @@ onMounted(() => {
   padding: 0 24px;
   margin-bottom: 2px;
 }
-.event-organiser-row {
-  padding: 0 24px;
-  margin-bottom: 16px;
-}
-.event-organiser {
-  color: #7ecfff;
+.event-organiser-subtitle {
+  color: #3b82f6;
   font-weight: 500;
-  font-size: 1em;
+  font-size: 0.9em;
+  text-align: left;
+  padding: 0 24px;
+  margin-bottom: 10px;
 }
 .event-meta-row-horizontal-fixed {
   display: flex;
@@ -201,6 +271,7 @@ onMounted(() => {
   gap: 0;
   padding: 0 24px;
   margin-bottom: 16px;
+  font-size: 0.95em;
 }
 .event-meta-block {
   display: flex;
@@ -213,10 +284,17 @@ onMounted(() => {
   justify-content: left;
   text-align: left;
 }
+.event-date-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
 .event-date-time-block {
   display: flex;
   flex-direction: column;
   justify-content: left;
+  gap: 5px;
 }
 .event-meta-time {
   color: #dbd7d7;
@@ -256,7 +334,7 @@ onMounted(() => {
 .register-btn-row {
   display: flex;
   justify-content: center;
-  margin: 30px 0;
+  margin: 20px 0;
 }
 .register-btn-ui {
   width: 380px;
@@ -272,16 +350,17 @@ onMounted(() => {
   transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
 .register-btn-ui:hover {
-  color: #7ecfff !important;
-  border-color: #7ecfff !important;
-  background: transparent !important;
+  border: 0.5px solid #3b82f6 !important;
+  box-shadow: 0 0 0 2px #3b82f688 !important;
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+  color: #3b82f6 !important;
 }
 .rounded-lg {
   border-radius: 1.5rem;
 }
 .drawer-footer {
-  border-top: 1px solid #222;
   padding: 16px 0px;
+  padding-top: 0;
   bottom: 0;
   display: flex;
   flex-direction: row;
@@ -296,7 +375,7 @@ onMounted(() => {
   transition: color 0.2s;
 }
 .drawer-link:hover {
-  color: #7ecfff;
+  color: #3b82f6;
 }
 .event-image-placeholder {
   width: 100%;
@@ -319,6 +398,124 @@ onMounted(() => {
 .drawer-slide-enter-to,
 .drawer-slide-leave-from {
   transform: translateX(0);
+  opacity: 1;
+}
+/* Registration Confirmation Dialog Styles */
+.confirm-dialog-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.confirm-dialog-box {
+  background: #181818;
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 32px 36px 28px 36px;
+  min-width: 420px;
+  box-shadow: 0 2px 24px #000a;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.confirm-dialog-title {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #fff;
+}
+.confirm-dialog-desc {
+  color: #ccc;
+  font-size: 1.1em;
+  margin-bottom: 28px;
+  max-width: 420px;
+}
+.confirm-dialog-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+  align-items: center;
+  width: 100%;
+  justify-content: flex-end;
+}
+.confirm-cancel-btn {
+  background: #181818;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 10px 28px;
+  font-size: 1.1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.confirm-cancel-btn:hover {
+  background: #23242a;
+  color: #fff;
+  border: 1px solid #555;
+}
+.confirm-continue-btn {
+  background: #fff;
+  color: #181818;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 28px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.confirm-continue-btn:hover {
+  background: #3b82f6;
+  color: #fff;
+}
+/* Toast Notification Styles */
+.custom-toast {
+  position: fixed;
+  top: 32px;
+  right: 32px;
+  min-width: 320px;
+  background: #181818;
+  border: 2px solid #3b82f6;
+  border-radius: 14px;
+  color: #b6aaff;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 28px 18px 18px;
+  z-index: 4000;
+  box-shadow: 0 2px 16px #000a;
+}
+.toast-icon {
+  font-size: 2em;
+  color: #3b82f6;
+  margin-right: 8px;
+  margin-top: 2px;
+}
+.toast-content {
+  display: flex;
+  flex-direction: column;
+}
+.toast-title {
+  font-weight: bold;
+  color: #3b82f6;
+  font-size: 1.1em;
+  margin-bottom: 2px;
+}
+.toast-desc {
+  color: #b6aaff;
+  font-size: 1em;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.4s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+.fade-enter-to, .fade-leave-from {
   opacity: 1;
 }
 </style> 

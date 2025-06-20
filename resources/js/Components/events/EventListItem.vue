@@ -1,16 +1,12 @@
 <template>
   <div class="event-card" @click="$emit('click')">
-    <img class="event-avatar" :src="event.avatar || '/images/default-organiser.png'" alt="organiser avatar" />
+    <img class="event-avatar" :src="event.image ? '/' + event.image : '/image/CampusPulseLogo.jpg'" alt="event image" />
     <div class="event-content">
       <div class="event-organiser">
         {{ typeof event.organiser === 'object' ? event.organiser.name : event.organiser }}
       </div>
       <div class="event-title">{{ event.eventName }}</div>
       <div class="event-icons-row">
-        <span class="event-icon-label">
-          <span class="icon-svg" v-html="calendarSvg"></span>
-          <span>{{ formatTime(event.eventTime) }}</span>
-        </span>
         <span class="event-icon-label">
           <span class="icon-svg" v-html="peopleSvg"></span>
           <span>{{ event.capacity ? event.capacity : 'No Limit' }}</span>
@@ -66,11 +62,10 @@ function formatTime(time) {
   }
 }
 .event-avatar {
-  width: 90px;
-  height: 90px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #23242a;
   background: #fff;
 }
 .event-content {

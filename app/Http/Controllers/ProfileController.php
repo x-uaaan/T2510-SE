@@ -9,8 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
-use App\Models\Alumni;
-use App\Models\Lecturer;
+use App\Models\User;
 use App\Models\Admin;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -36,17 +35,17 @@ class ProfileController extends Controller
         
         // Validate the request
         $validated = $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'faculty' => 'required|string|max:255',
-            'role' => 'required|in:alumni,lecturer',
+            'userType' => 'required|in:Alumni,Lecturer',
             'resume' => 'nullable|file|mimes:pdf|max:2048'
         ]);
 
         Log::info('ProfileController: Validation passed', [
             'email' => $validated['email'],
-            'role' => $validated['role']
+            'userType' => $validated['userType']
         ]);
 
         try {
@@ -57,44 +56,27 @@ class ProfileController extends Controller
                 Log::info('ProfileController: Resume uploaded', ['path' => $resumePath]);
             }
 
-            if ($validated['role'] === 'alumni') {
-                // Check if alumni already exists
-                $existingAlumni = Alumni::where('alumniEmail', $validated['email'])->first();
-                if ($existingAlumni) {
-                    Log::warning('ProfileController: Alumni already exists', ['email' => $validated['email']]);
-                    return redirect()->route('events.index');
-                }
+            $socialiteUserData = session('socialite_user_data', []);
 
-                // Create new alumni
-                $alumni = Alumni::create([
-                    'alumniName' => $validated['name'],
-                    'alumniEmail' => $validated['email'],
-                    'alumniPhone' => $validated['phone'],
-                    'alumniFaculty' => $validated['faculty'],
-                    'alumniResume' => $resumePath
-                ]);
+            // Generate a new user ID
+            $lastUser = User::orderBy('userID', 'desc')->first();
+            $lastIdNumber = $lastUser ? (int) substr($lastUser->userID, 4) : 0;
+            $newId = 'usr_' . str_pad($lastIdNumber + 1, 3, '0', STR_PAD_LEFT);
 
-                Log::info('ProfileController: Alumni created successfully', ['id' => $alumni->id]);
-            } else {
-                // Check if lecturer already exists
-                $existingLecturer = Lecturer::where('lecturerEmail', $validated['email'])->first();
-                if ($existingLecturer) {
-                    Log::warning('ProfileController: Lecturer already exists', ['email' => $validated['email']]);
-                    return redirect()->route('events.index');
-                }
+            // Create new user
+            $user = User::create([
+                'userID' => $newId,
+                'username' => $validated['name'],
+                'email' => $validated['email'],
+                'phone' => $validated['phone'],
+                'faculty' => $validated['faculty'],
+                'userType' => $validated['userType'],
+                'resume' => $resumePath,
+                'microsoft_id' => $socialiteUserData['microsoft_id'] ?? null,
+            ]);
 
-                // Create new lecturer
-                $lecturer = Lecturer::create([
-                    'lecturerName' => $validated['name'],
-                    'lecturerEmail' => $validated['email'],
-                    'lecturerPhone' => $validated['phone'],
-                    'lecturerFaculty' => $validated['faculty'],
-                    'lecturerResume' => $resumePath
-                ]);
-
-                Log::info('ProfileController: Lecturer created successfully', ['id' => $lecturer->id]);
-            }
-
+            Log::info('ProfileController: User created successfully', ['id' => $user->userID]);
+            
             // Set the authenticated user email in session
             session(['authenticated_user_email' => $validated['email']]);
             
@@ -103,7 +85,7 @@ class ProfileController extends Controller
 
             Log::info('ProfileController: Profile completion successful', [
                 'email' => $validated['email'],
-                'role' => $validated['role']
+                'userType' => $validated['userType']
             ]);
 
             return redirect()->route('events.index');

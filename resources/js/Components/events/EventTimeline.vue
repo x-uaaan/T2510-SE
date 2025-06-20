@@ -31,8 +31,22 @@ const groupedEvents = computed(() => {
     : (typeof props.events === 'string'
         ? JSON.parse(props.events)
         : []);
-  eventArray.forEach(event => {
-    const date = event.eventDate
+  // Get today's date in YYYY-MM-DD
+  const today = new Date()
+  const yyyy = today.getFullYear()
+  const mm = String(today.getMonth() + 1).padStart(2, '0')
+  const dd = String(today.getDate()).padStart(2, '0')
+  const todayStr = `${yyyy}-${mm}-${dd}`
+  // Filter events: only today or after
+  const filtered = eventArray.filter(ev => ev.startDate >= todayStr)
+  // Sort by startDate and startTime ascending
+  filtered.sort((a, b) => {
+    const dateA = a.startDate + (a.startTime ? 'T' + a.startTime : 'T00:00');
+    const dateB = b.startDate + (b.startTime ? 'T' + b.startTime : 'T00:00');
+    return new Date(dateA) - new Date(dateB);
+  });
+  filtered.forEach(event => {
+    const date = event.startDate
     if (!groups[date]) groups[date] = []
     groups[date].push(event)
   })
@@ -50,19 +64,16 @@ function formatDate(date) {
   background: none;
   border-radius: 16px;
   padding: 32px 0px 0px;
-  margin: 32px auto;
-  margin-top: 0px;
   min-height: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
   transition: margin-right 0.3s, max-width 0.3s;
-  z-index: 10;
+  z-index: 20;
+  width: 100%;
 }
 .timeline-container.drawer-open {
-  margin-right: 300px;
   width: 800px;
-  margin-left: 0px;
 }
 .event-group-row {
   display: flex;
@@ -71,22 +82,27 @@ function formatDate(date) {
   margin-bottom: 32px;
   width: 100%;
 }
+.event-group-row:last-child {
+  margin-bottom: 0px;
+}
 .event-date-label {
   color: #fff;
   font-weight: bold;
   font-size: 1.2em;
   margin-bottom: 10px;
   padding-left: 8px;
+  text-align: left;
 }
 .event-group-box {
   background: none;
   border-radius: 20px;
   padding: 5px 5px;
-  width: 90%;
-  margin: 10px 20px;
+  width: 100%;
+  max-width: 700px;
+  margin: 10px auto;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  align-items: left;
+  align-items: center;
 }
 </style> 

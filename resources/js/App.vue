@@ -1,10 +1,10 @@
 <template>
   <div class="app-layout app-bg-black">
     <NavigationDrawer />
-    <div :class="['main-content', { 'drawer-open': selectedEvent }]">
+    <div :class="['main-content', { 'drawer-open': drawerOpen }]">
       <EventTimeline
         :events="events"
-        :drawer-open="!!selectedEvent"
+        :drawer-open="drawerOpen"
         @event-click="openDrawer"
       />
       <EventCalendar />
@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import EventTimeline from './Components/events/EventTimeline.vue'
 import EventDetailsDrawer from './Components/events/EventDetailsDrawer.vue'
@@ -33,11 +33,10 @@ import FooterSection from './Components/FooterSection.vue'
 const { events } = defineProps(['events'])
 const selectedEvent = ref(null)
 
+const drawerOpen = computed(() => !!selectedEvent.value)
+
 function openDrawer(event) {
   selectedEvent.value = event
-
-  console.log("Updated Selected Event:", selectedEvent.value);
-  console.log("Drawer Open:", drawerOpen.value);
 }
 
 // onMounted(async () => {

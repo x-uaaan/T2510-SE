@@ -45,7 +45,7 @@ export default {
   height: 80px;
   background: black;
   position: relative;
-  z-index: 20;
+  z-index: 10;
   display: block;
   padding: 0;
   margin: 0;

@@ -24,9 +24,22 @@ class ForumController extends Controller
         $validatedData = $request->validate([
             'forumTitle' => 'required|string|max:255',
             'forumDesc' => 'required',
+            'Categories' => 'nullable|string|max:255',
+            'organiserId' => 'required',
+            'organiserName' => 'required|string|max:255',
         ]);
 
-        Forum::create($validatedData);
+        $forum = new Forum();
+        $forum->forumTitle = $validatedData['forumTitle'];
+        $forum->forumDesc = $validatedData['forumDesc'];
+        $forum->Categories = $validatedData['Categories'] ?? null;
+        $forum->organiserID = $validatedData['organiserId'];
+        $forum->organiser = $validatedData['organiserName'];
+        $forum->save();
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json(['message' => 'Forum created successfully.'], 201);
+        }
         return redirect()->route('forum.index')->with('success', 'Forum created successfully!');
     }
 

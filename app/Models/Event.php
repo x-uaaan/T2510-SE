@@ -6,25 +6,33 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    public function admin()
-    {    return $this->belongsTo(Admin::class);    }
+    protected $table = 'events';
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected $primaryKey = 'eventID';
+
+    public function organiser()
+    {
+        return $this->belongsTo(User::class, 'organiserID', 'userID');
+    }
 
     public function attendees()
-    {    return $this->hasMany(Attendee::class);    }
-
-    protected $primaryKey = 'eventID'; // if your PK is eventID, not id
+    {
+        return $this->hasMany(Attendee::class, 'eventID', 'eventID');
+    }
 
     protected $fillable = [
+        'eventID',
         'eventName',
-        'eventImage',
+        'eventDesc',
         'startDate',
         'startTime',
         'endDate',
         'endTime',
-        'eventDesc',
         'eventVenue',
         'capacity',
-        'organiser',
+        'organiserName',
         'organiserID',
+        'image',
     ];
 }

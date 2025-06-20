@@ -13,22 +13,25 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $table = 'users';
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected $primaryKey = 'userID';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'userID',
         'username',
         'email',
         'phone',
         'faculty',
-        'password',
+        'resume',
+        'userType',
         'microsoft_id',
-        'avatar',
-        'resume_path',
-        'profile_completed',
     ];
 
     /**
@@ -50,13 +53,6 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'profile_completed' => 'boolean',
         ];
-    }
-
-    public function alumni()
-    {
-        return $this->hasOne(Alumni::class, 'alumniEmail', 'email');
     }
 }

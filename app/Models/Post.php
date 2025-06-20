@@ -6,17 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
+    protected $table = 'posts';
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $primaryKey = 'postID';
-    public $incrementing = true;
-    protected $keyType = 'int';
 
     protected $fillable = [
+        'postID',
         'postTitle',
         'postDesc',
         'comment',
         'timestamp',
         'forumID',
-        'alumniID'
+        'userID'
     ];
 
     public function forum()
@@ -24,8 +26,8 @@ class Post extends Model
         return $this->belongsTo(Forum::class, 'forumID', 'forumID');
     }
 
-    public function alumni()
+    public function user()
     {
-        return $this->belongsTo(Alumni::class, 'alumniID', 'alumniID');
+        return $this->belongsTo(User::class, 'userID', 'userID');
     }
 }

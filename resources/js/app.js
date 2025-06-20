@@ -1,18 +1,17 @@
-import '../css/app.css';
 import './bootstrap';
+import '../css/app.css';
 
+import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { createApp, h } from 'vue';
-import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import VCalendar from 'v-calendar';
+import 'v-calendar/style.css';
 import Landing from './Pages/Landing.vue'
 import NavBar from './Components/NavBar.vue';
 import HeroSection from './Components/HeroSection.vue';
 import FeaturesSection from './Components/FeaturesSection.vue';
 import FooterSection from './Components/FooterSection.vue';
 import axios from 'axios';
-import VCalendar from 'v-calendar';
-import 'v-calendar/style.css';
 
 axios.defaults.baseURL = '/api';
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

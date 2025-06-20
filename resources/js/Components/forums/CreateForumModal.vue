@@ -44,7 +44,9 @@
 import { ref } from 'vue'
 
 const props = defineProps({
-  show: Boolean
+  show: Boolean,
+  userId: [String, Number],
+  userName: String
 })
 
 const emit = defineEmits(['close', 'created'])
@@ -52,7 +54,9 @@ const emit = defineEmits(['close', 'created'])
 const form = ref({
   forumTitle: '',
   forumDesc: '',
-  Categories: ''
+  Categories: '',
+  organiserId: props.userId || '',
+  organiserName: props.userName || ''
 })
 
 const submitting = ref(false)
@@ -63,13 +67,18 @@ async function submit() {
   errorMsg.value = ''
   
   try {
+    const formData = new FormData()
+    formData.append('forumTitle', form.value.forumTitle)
+    formData.append('forumDesc', form.value.forumDesc)
+    formData.append('Categories', form.value.Categories)
+    formData.append('organiserId', props.userId)
+    formData.append('organiserName', props.userName)
     const response = await fetch('/api/forum', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       },
-      body: JSON.stringify(form.value)
+      body: formData
     })
 
     if (!response.ok) {
@@ -84,7 +93,9 @@ async function submit() {
     form.value = {
       forumTitle: '',
       forumDesc: '',
-      Categories: ''
+      Categories: '',
+      organiserId: props.userId,
+      organiserName: props.userName,
     }
   } catch (err) {
     errorMsg.value = 'An error occurred while creating the forum.'

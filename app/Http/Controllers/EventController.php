@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\User;
 use App\Http\Resources\EventResource;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -34,56 +36,64 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-        // Only check for required fields and the three date/time rules
-        $request->validate([
-            'eventName' => 'required',
-            'startDate' => 'required|date',
-            'startTime' => 'required',
-            'endDate' => 'required|date',
-            'endTime' => 'required',
-            'eventVenue' => 'required',
-            'eventDesc' => 'required',
-            'capacity' => 'required',
-            'organiserId' => 'required',
-            'organiserName' => 'required',
+        // 1. Validate the request data
+        $validatedData = $request->validate([
+            'eventName' => 'required|string|max:255',
+            'eventDesc' => 'required|string',
+            'startDate' => 'nullable|date',
+            'startTime' => 'nullable',
+            'endDate' => 'nullable|date|after_or_equal:startDate',
+            'endTime' => 'nullable',
+            'eventVenue' => 'required|string|max:255',
+            'capacity' => 'nullable|integer|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Date/time logic
-        $today = date('Y-m-d');
-        if ($request->startDate < $today) {
-            return response()->json(['message' => 'Start date must be today or later.'], 422);
-        }
-        if ($request->endDate < $request->startDate) {
-            return response()->json(['message' => 'End date must be after or same as start date.'], 422);
-        }
-        if ($request->startDate === $request->endDate) {
-            if (strtotime($request->endTime) <= strtotime($request->startTime)) {
-                return response()->json(['message' => 'End time must be later than start time if on the same day.'], 422);
-            }
+        // 2. Get organiser from session
+        $userEmail = session('authenticated_user_email');
+        if (!$userEmail) {
+            return redirect()->route('login')->with('error', 'You must be logged in to create an event.');
         }
 
-        // Handle image upload or set default
-        if ($request->hasFile('eventImage')) {
-            $imagePath = $request->file('eventImage')->store('event_images', 'public');
-        } else {
-            $imagePath = 'image/CampusPulseLogo.jpg'; // relative to public/
+        $user = User::where('email', $userEmail)->first();
+        if (!$user) {
+            return back()->withErrors(['error' => 'Authenticated user not found.'])->withInput();
+        }
+        
+        // 3. Handle image upload
+        $imagePath = 'image/CampusPulseLogo.jpg'; // Default image
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('event_images', 'public');
         }
 
-        Event::create([
-            'eventName' => $request->eventName,
-            'eventImage' => $imagePath,
-            'startDate' => $request->startDate,
-            'startTime' => $request->startTime,
-            'endDate' => $request->endDate,
-            'endTime' => $request->endTime,
-            'eventVenue' => $request->eventVenue,
-            'eventDesc' => $request->eventDesc,
-            'capacity' => $request->capacity,
-            'organiser' => $request->organiserName,
-            'organiserID' => $request->organiserId,
-        ]);
+        // 4. Generate new eventID
+        $lastEvent = Event::orderBy('eventID', 'desc')->first();
+        $lastIdNumber = $lastEvent ? (int) substr($lastEvent->eventID, 4) : 0;
+        $newId = 'evt_' . str_pad($lastIdNumber + 1, 3, '0', STR_PAD_LEFT);
+        
+        // 5. Create and save the event
+        try {
+            Event::create([
+                'eventID' => $newId,
+                'eventName' => $validatedData['eventName'],
+                'eventDesc' => $validatedData['eventDesc'],
+                'startDate' => $validatedData['startDate'],
+                'startTime' => $validatedData['startTime'],
+                'endDate' => $validatedData['endDate'],
+                'endTime' => $validatedData['endTime'],
+                'eventVenue' => $validatedData['eventVenue'],
+                'capacity' => $validatedData['capacity'],
+                'organiserName' => $user->username,
+                'organiserID' => $user->userID,
+                'image' => $imagePath,
+            ]);
 
-        return response()->json(['success' => true]);
+            return redirect()->route('events.index')->with('success', 'Event created successfully!');
+
+        } catch (\Exception $e) {
+            Log::error('Event creation failed: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'An unexpected error occurred while creating the event. Please try again.'])->withInput();
+        }
     }
 
     public function show(Event $event)

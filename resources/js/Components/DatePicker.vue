@@ -50,21 +50,24 @@ import { DatePicker as VDatePicker } from 'v-calendar'
 import 'v-calendar/style.css'
 
 const props = defineProps({
-  modelValue: String,
+  modelValue: {
+    type: [Date, String],
+    default: null
+  },
   placeholder: {
     type: String,
     default: 'dd / mm / yyyy'
   }
 })
 const emit = defineEmits(['update:modelValue'])
-const dateValue = ref(props.modelValue)
+const dateValue = ref(props.modelValue ?? null)
 
 watch(() => props.modelValue, (val) => {
-  dateValue.value = val
+  dateValue.value = val ?? null
 })
 watch(dateValue, (val) => {
   console.log('DatePicker value:', val)
-  emit('update:modelValue', !val ? null : val)
+  emit('update:modelValue', val)
 })
 
 const today = new Date()

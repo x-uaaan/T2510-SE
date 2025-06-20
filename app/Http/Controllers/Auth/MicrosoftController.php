@@ -6,9 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
-use App\Models\Alumni;
-use App\Models\Lecturer;
-use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -35,12 +32,10 @@ class MicrosoftController extends Controller
 
             Log::info('MicrosoftCallback: Processing user callback for email: ' . $userEmail);
 
-            // Check if user exists in any of your dedicated tables
-            $alumni = Alumni::where('alumniEmail', $userEmail)->first();
-            $lecturer = Lecturer::where('lecturerEmail', $userEmail)->first();
-            $admin = Admin::where('AdminEmail', $userEmail)->first();
+            // Check if user exists in the users table
+            $user = User::where('email', $userEmail)->first();
 
-            if ($alumni || $lecturer || $admin) {
+            if ($user) {
                 // Existing user: Store their identifying email in the session
                 session(['authenticated_user_email' => $userEmail]);
                 
