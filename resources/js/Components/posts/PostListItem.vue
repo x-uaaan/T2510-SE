@@ -31,7 +31,7 @@ function formatDate(timestamp) {
   padding: 24px 32px;
   margin: 18px 0;
   height: 100px;
-  width: 450px;
+  width: 500px;
   display: flex;
   align-items: center;
   cursor: pointer;

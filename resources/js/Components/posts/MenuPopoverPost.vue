@@ -74,9 +74,28 @@ function handleUpdated() {
   showEditModal.value = false;
 }
 
-function confirmDelete() {
-  showDeleteConfirm.value = false;
-  emit('delete');
+async function confirmDelete() {
+  try {
+    const response = await fetch(`/api/posts/${props.post.postID}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      showDeleteConfirm.value = false;
+      // Redirect to the forum's post list
+      window.location.href = `/posts?forum_id=${props.post.forumID}`;
+    } else {
+      console.error('Failed to delete post');
+      showDeleteConfirm.value = false;
+    }
+  } catch (error) {
+    console.error('An error occurred:', error);
+    showDeleteConfirm.value = false;
+  }
 }
 
 function handleClickOutside(event) {
@@ -114,7 +133,7 @@ onBeforeUnmount(() => {
   position: absolute;
   right: 0;
   top: 110%;
-  min-width: 120px;
+  min-width: 100px;
   background: #18191c;
   color: #fff;
   border-radius: 10px;
@@ -132,7 +151,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1.25rem;
+  padding: 0.5rem 1rem;
   cursor: pointer;
   font-size: 0.95rem;
   transition: background 0.15s;

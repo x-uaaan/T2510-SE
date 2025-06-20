@@ -14,8 +14,15 @@ Route::middleware('api')->get('/ping', function () {
 
 Route::get('/api/events', [EventController::class, 'apiIndex']);
 Route::get('/forum', [ForumController::class, 'apiIndex']);
+Route::get('/forum/{forum}', [ForumController::class, 'apiShow']);
+Route::delete('/forums/{forum}', [ForumController::class, 'apiDestroy']);
+Route::put('/forums/{forum}', [ForumController::class, 'apiUpdate']);
 Route::get('/posts', [PostController::class, 'apiIndex']);
 Route::post('/forum', [ForumController::class, 'store']);
+Route::post('/posts', [PostController::class, 'store']);
+Route::delete('/posts/{post}', [PostController::class, 'apiDestroy']);
+Route::post('/posts/{post}/comments', [PostController::class, 'addComment']);
+Route::post('/posts/{post}', [PostController::class, 'apiUpdate']);
 Route::post('/attendees', [AttendeeController::class, 'store']);
 Route::get('/attendees/check', [AttendeeController::class, 'check']);
 

@@ -6,9 +6,9 @@
         <div class="post-desc">{{ post.postDesc }}</div>
       </div>
       <div class="right-side">
-        <MenuPopoverPost class="menu-popover-margin" />
+        <MenuPopoverPost class="menu-popover-margin" :post="post" />
         <div class="post-meta">
-          By <a :href="`/profile/${post.authorId}`" class="author-link">{{ post.author }}</a>
+          <a :href="`/profile/${post.authorId}`" class="author-link">{{ post.author }}</a>
         </div>
       </div>
     </div>
@@ -21,7 +21,7 @@
       </ul>
     </div>
     </div>
-    <form class="add-comment-row" @submit.prevent>
+    <form class="add-comment-row" @submit.prevent="addComment">
     <input
         v-model="newComment"
         type="text"
@@ -39,17 +39,40 @@ const props = defineProps({
   post: Object
 });
 const newComment = ref('');
+
+async function addComment() {
+  if (!newComment.value.trim()) return;
+
+  try {
+    const response = await fetch(`/api/posts/${props.post.postID}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({ comment: newComment.value }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      props.post.comments = data.comments;
+      newComment.value = '';
+    } else {
+      console.error('Failed to add comment');
+    }
+  } catch (error) {
+    console.error('An error occurred:', error);
+  }
+}
 </script>
 
 <style scoped>
 .post-card-single {
-  background: #232323;
   color: #fff;
   border-radius: 32px;
-  padding: 32px 40px;
   margin-bottom: 32px;
   margin-top: 35px;
-  width: 850px;
+  width: 1000px;
   box-shadow: 0 4px 16px #0002;
   display: flex;
   flex-direction: column;
@@ -76,12 +99,12 @@ const newComment = ref('');
 }
 .post-meta {
   color: #b0b0b0;
-  font-size: 0.8em;
+  font-size: 0.9em;
   white-space: nowrap;
   margin-top: 10px;
 }
 .author-link {
-  color: #b0b0b0;
+  color: #fff;
   text-decoration: none;
   cursor: pointer;
   transition: color 0.2s;
@@ -114,10 +137,6 @@ const newComment = ref('');
   margin-bottom: 15px;
   color: #fff;
   font-size: 0.9em;
-}
-.comment-item:hover {
-  background: #343434;
-  transition: background 0.3s;
 }
 .comment-text {
   color: #fff;

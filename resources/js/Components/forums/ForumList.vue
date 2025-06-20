@@ -28,6 +28,7 @@
       @created="refreshForums"
       :userId="userId"
       :userName="userName"
+      :forum-id="forumId"
     />
     <FooterSection />
   </div>
@@ -47,6 +48,7 @@ const forums = ref([])
 const showCreateModal = ref(false)
 const userId = ref(null)
 const userName = ref('')
+const forumId = ref('')
 
 function goToForum(id) {
   window.location.href = `/posts?forum_id=${id}`
@@ -62,6 +64,8 @@ async function refreshForums() {
 }
 
 onMounted(async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  forumId.value = urlParams.get('forum_id');
   await refreshForums()
   try {
     const res = await axios.get('/api/user')

@@ -2,19 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Attendee extends Model
 {
+    use HasFactory;
+
     protected $table = 'attendees';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $primaryKey = 'attendeesID';
+    public $timestamps = false;
 
     protected $fillable = [
         'attendeesID',
         'eventID',
-        'userID'
+        'userID',
+        'created_at',
     ];
 
     public function event()

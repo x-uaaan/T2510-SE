@@ -63,13 +63,13 @@
         <!-- Register Button -->
         <div class="register-btn-row">
           <div class="flex gap-4 items-center">
-            <SecondaryButton
+            <Button
               class="register-btn-ui rounded-lg"
               :disabled="isRegistered"
               @click="!isRegistered && registerForEvent"
             >
               {{ isRegistered ? "RSVP'd" : 'One-Click RSVP' }}
-            </SecondaryButton>
+            </Button>
           </div>
         </div>
         <!-- Footer always at bottom -->
@@ -100,6 +100,33 @@ const emit = defineEmits(['close'])
 const attendees = ref([])
 const isRegistered = ref(false)
 const showToast = ref(false)
+const currentUser = ref({ id: null, name: null });
+
+watch(
+  () => props.event,
+  async (newEvent) => {
+    if (newEvent && newEvent.eventID) {
+      await fetchCurrentUser();
+      if (currentUser.value.id) {
+        checkRegistration();
+      }
+    }
+  },
+  { immediate: true }
+);
+
+async function fetchCurrentUser() {
+  try {
+    const response = await fetch('/api/user');
+    if (response.ok) {
+      currentUser.value = await response.json();
+    } else {
+      console.error('Failed to fetch user status');
+    }
+  } catch (error) {
+    console.error('Error fetching user status:', error);
+  }
+}
 
 function close() { emit('close') }
 function formatDate(date) {
@@ -127,21 +154,6 @@ const peopleSvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" x
 const virtualSvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.1176 12L22 7.33333V16.6667L16.1176 12ZM16.1176 12V7.33333C16.1176 6.04467 15.0642 5 13.7647 5H4.35294C3.05345 5 2 6.04467 2 7.33333V16.6667C2 17.9553 3.05345 19 4.35294 19H13.7647C15.0642 19 16.1176 17.9553 16.1176 16.6667V12Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>`
 const clockSvg = `<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='12' cy='12' r='10' stroke='white' stroke-width='2'/><path d='M12 6V12L16 14' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>`
 
-// Fetch attendees when event changes
-watch(() => props.event, async (newEvent) => {
-  attendees.value = []
-  if (newEvent && newEvent.id) {
-    // Simulate API call for demo
-    attendees.value = [
-      { id: 1, name: 'Alice', avatar: 'https://i.pravatar.cc/150?u=alice' },
-      { id: 2, name: 'Bob', avatar: 'https://i.pravatar.cc/150?u=bob' },
-      { id: 3, name: 'Carol', avatar: 'https://i.pravatar.cc/150?u=carol' },
-      { id: 4, name: 'Dave', avatar: 'https://i.pravatar.cc/150?u=dave' }
-    ]
-    checkRegistration()
-  }
-}, { immediate: true })
-
 onMounted(() => {
   const scrollEl = document.querySelector('.drawer-scroll')
   if (scrollEl) {
@@ -153,32 +165,47 @@ onMounted(() => {
 
 // Registration logic
 async function registerForEvent() {
-  const userId = window?.user?.id || 1 // fallback for demo
-  const eventId = props.event.id
+  const userId = currentUser.value.id;
+  if (!userId) {
+    alert('Could not get user ID. Please make sure you are logged in.');
+    return;
+  }
+
+  const eventId = props.event.eventID;
+
   try {
-    await fetch('/api/attendees', {
+    const response = await fetch('/api/attendees', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: userId, event_id: eventId })
-    })
-    isRegistered.value = true
-    showToast.value = true
-    setTimeout(() => { showToast.value = false }, 3500)
+      body: JSON.stringify({ userID: userId, eventID: eventId })
+    });
+
+    if (response.ok) {
+        isRegistered.value = true;
+        showToast.value = true;
+        setTimeout(() => { showToast.value = false; }, 3500);
+    } else if (response.status === 409) { // Already registered
+        isRegistered.value = true;
+    } else {
+        alert('Registration failed. Please try again.');
+    }
   } catch (e) {
-    alert('Registration failed.')
+    alert('An error occurred during registration.');
   }
 }
 
 // Check if user is already registered for this event
 async function checkRegistration() {
-  const userId = window?.user?.id || 1 // fallback for demo
-  const eventId = props.event.id
+  const userId = currentUser.value.id;
+  if (!userId) return;
+
+  const eventId = props.event.eventID;
   try {
-    const res = await fetch(`/api/attendees/check?user_id=${userId}&event_id=${eventId}`)
-    const data = await res.json()
-    isRegistered.value = !!data.registered
+    const res = await fetch(`/api/attendees/check?userID=${userId}&eventID=${eventId}`);
+    const data = await res.json();
+    isRegistered.value = !!data.registered;
   } catch (e) {
-    isRegistered.value = false
+    isRegistered.value = false;
   }
 }
 </script>

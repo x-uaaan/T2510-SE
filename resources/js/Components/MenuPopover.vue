@@ -74,9 +74,27 @@ function handleUpdated() {
   showEditModal.value = false;
 }
 
-function confirmDelete() {
-  showDeleteConfirm.value = false;
-  emit('delete');
+async function confirmDelete() {
+  try {
+    const response = await fetch(`/api/forums/${props.forum.forumID}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      showDeleteConfirm.value = false;
+      window.location.href = '/forum'; 
+    } else {
+      console.error('Failed to delete forum');
+      showDeleteConfirm.value = false;
+    }
+  } catch (error) {
+    console.error('An error occurred:', error);
+    showDeleteConfirm.value = false;
+  }
 }
 
 function handleClickOutside(event) {
@@ -132,7 +150,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1.25rem;
+  padding: 0.5rem 1rem;
   cursor: pointer;
   font-size: 0.95rem;
   transition: background 0.15s;

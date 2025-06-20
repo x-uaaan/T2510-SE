@@ -41,12 +41,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const props = defineProps({
-  show: Boolean,
-  userId: [String, Number],
-  userName: String
+  show: Boolean
 })
 
 const emit = defineEmits(['close', 'created'])
@@ -55,47 +53,54 @@ const form = ref({
   forumTitle: '',
   forumDesc: '',
   Categories: '',
-  organiserId: props.userId || '',
-  organiserName: props.userName || ''
+  organiserID: '',
+  organiserName: ''
 })
 
 const submitting = ref(false)
 const errorMsg = ref('')
 
+onMounted(async () => {
+  try {
+    const res = await fetch('/api/user')
+    const data = await res.json()
+    form.value.organiserID = data.id || ''
+    form.value.organiserName = data.name || ''
+  } catch (e) {
+    form.value.organiserID = ''
+    form.value.organiserName = ''
+  }
+})
+
 async function submit() {
   submitting.value = true
   errorMsg.value = ''
-  
   try {
     const formData = new FormData()
     formData.append('forumTitle', form.value.forumTitle)
     formData.append('forumDesc', form.value.forumDesc)
     formData.append('Categories', form.value.Categories)
-    formData.append('organiserId', props.userId)
-    formData.append('organiserName', props.userName)
+    formData.append('organiserID', form.value.organiserID)
+    formData.append('organiserName', form.value.organiserName)
     const response = await fetch('/api/forum', {
       method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-      },
+      headers: {},
       body: formData
     })
-
     if (!response.ok) {
       const data = await response.json()
       errorMsg.value = data.message || 'Failed to create forum.'
       submitting.value = false
       return
     }
-
     emit('created')
     emit('close')
     form.value = {
       forumTitle: '',
       forumDesc: '',
       Categories: '',
-      organiserId: props.userId,
-      organiserName: props.userName,
+      organiserID: form.value.organiserID,
+      organiserName: form.value.organiserName,
     }
   } catch (err) {
     errorMsg.value = 'An error occurred while creating the forum.'

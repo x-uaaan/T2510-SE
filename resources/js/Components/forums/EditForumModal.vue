@@ -78,11 +78,11 @@ async function submit() {
   errorMsg.value = ''
   
   try {
-    const response = await fetch(`/api/forum/${props.forum.forumID}`, {
+    const response = await fetch(`/api/forums/${props.forum.forumID}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        'Accept': 'application/json',
       },
       body: JSON.stringify(form.value)
     })
@@ -96,6 +96,7 @@ async function submit() {
 
     emit('updated')
     emit('close')
+    window.location.reload();
   } catch (err) {
     errorMsg.value = 'An error occurred while updating the forum.'
   } finally {

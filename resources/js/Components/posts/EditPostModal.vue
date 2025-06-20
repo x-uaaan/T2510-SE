@@ -70,11 +70,11 @@ async function submit() {
   errorMsg.value = ''
   
   try {
-    const response = await fetch(`/api/post/${props.post.postID}`, {
-      method: 'PUT',
+    const response = await fetch(`/api/posts/${props.post.postID}`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        'Accept': 'application/json',
       },
       body: JSON.stringify(form.value)
     })
@@ -88,6 +88,7 @@ async function submit() {
 
     emit('updated')
     emit('close')
+    window.location.reload();
   } catch (err) {
     errorMsg.value = 'An error occurred while updating the post.'
   } finally {

@@ -106,9 +106,9 @@ function formatDate(date) {
 function formatTime(time) {
   if (!time) return null;
   // If already in HH:mm:ss, return as is
-  if (/^\d{2}:\d{2}:\d{2}$/.test(time)) return time;
+  if (/^\d{2}:\d{2}$/.test(time)) return time;
   // If in HH:mm, add :00
-  if (/^\d{2}:\d{2}$/.test(time)) return time + ':00';
+  if (/^\d{2}:\d{2}$/.test(time)) return time;
   // If Date object, extract time
   if (typeof time !== 'string') {
     return time.toTimeString().slice(0, 8);
@@ -122,13 +122,12 @@ function submit() {
   form.startTime = formatTime(form.startTime);
   form.endTime = formatTime(form.endTime);
   form.post('/events', {
+    onSuccess: () => {
+      window.location.href = '/events';
+    },
     onError: (errors) => {
       console.error(errors);
     },
-  }).then(() => {
-    if (Object.keys(form.errors).length === 0) {
-      window.location.href = '/events';
-    }
   });
 }
 </script>

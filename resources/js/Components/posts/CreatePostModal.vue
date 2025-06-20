@@ -35,34 +35,56 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const props = defineProps({
-  show: Boolean
+  show: Boolean,
+  forumId: {
+    type: String,
+    required: true,
+  }
 })
 
 const emit = defineEmits(['close', 'created'])
 
 const form = ref({
   postTitle: '',
-  postDesc: ''
+  postDesc: '',
 })
 
 const submitting = ref(false)
 const errorMsg = ref('')
+const userId = ref('')
+
+onMounted(async () => {
+  try {
+    const res = await fetch('/api/user')
+    if (res.ok) {
+        const data = await res.json()
+        userId.value = data.id || ''
+    }
+  } catch (e) {
+    console.error('Failed to fetch user:', e)
+  }
+})
 
 async function submit() {
   submitting.value = true
   errorMsg.value = ''
   
   try {
-    const response = await fetch('/api/post', {
+    const response = await fetch('/api/posts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        'Accept': 'application/json',
       },
-      body: JSON.stringify(form.value)
+      body: JSON.stringify({
+        postTitle: form.value.postTitle,
+        postDesc: form.value.postDesc,
+        forumID: props.forumId,
+        userID: userId.value,
+      })
     })
 
     if (!response.ok) {

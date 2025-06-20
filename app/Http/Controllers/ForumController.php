@@ -21,26 +21,27 @@ class ForumController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'forumTitle' => 'required|string|max:255',
-            'forumDesc' => 'required',
-            'Categories' => 'nullable|string|max:255',
-            'organiserId' => 'required',
-            'organiserName' => 'required|string|max:255',
+            'forumDesc' => 'required|string',
+            'Categories' => 'nullable|string',
+            'organiserID' => 'required|string',
+            'organiserName' => 'required|string',
         ]);
+        // Generate new forumID
+        $lastForum = Forum::orderBy('forumID', 'desc')->first();
+        $lastIdNumber = $lastForum ? (int) substr($lastForum->forumID, 4) : 0;
+        $newId = 'frm_' . str_pad($lastIdNumber + 1, 3, '0', STR_PAD_LEFT);
 
-        $forum = new Forum();
-        $forum->forumTitle = $validatedData['forumTitle'];
-        $forum->forumDesc = $validatedData['forumDesc'];
-        $forum->Categories = $validatedData['Categories'] ?? null;
-        $forum->organiserID = $validatedData['organiserId'];
-        $forum->organiser = $validatedData['organiserName'];
-        $forum->save();
-
-        if ($request->expectsJson() || $request->is('api/*')) {
-            return response()->json(['message' => 'Forum created successfully.'], 201);
-        }
-        return redirect()->route('forum.index')->with('success', 'Forum created successfully!');
+        $forum = Forum::create([
+            'forumID' => $newId,
+            'forumTitle' => $validated['forumTitle'],
+            'forumDesc' => $validated['forumDesc'],
+            'Categories' => $validated['Categories'],
+            'organiserID' => $validated['organiserID'],
+            'organiserName' => $validated['organiserName'],
+        ]);
+        return response()->json(['success' => true, 'forum' => $forum]);
     }
 
     public function show(Forum $forum)
@@ -72,7 +73,31 @@ class ForumController extends Controller
 
     public function apiIndex()
     {
-        $forums = Forum::all();
+        $forums = Forum::withCount('posts')->orderBy('forumID', 'desc')->get();
         return response()->json($forums);
+    }
+
+    public function apiShow(Forum $forum)
+    {
+        return response()->json($forum);
+    }
+
+    public function apiDestroy(Forum $forum)
+    {
+        $forum->delete();
+        return response()->json(['success' => true, 'message' => 'Forum deleted successfully.']);
+    }
+
+    public function apiUpdate(Request $request, Forum $forum)
+    {
+        $validatedData = $request->validate([
+            'forumTitle' => 'required|string|max:255',
+            'forumDesc' => 'required|string',
+            'Categories' => 'nullable|string',
+        ]);
+
+        $forum->update($validatedData);
+
+        return response()->json(['success' => true, 'forum' => $forum]);
     }
 }

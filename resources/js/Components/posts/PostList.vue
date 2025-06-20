@@ -14,6 +14,20 @@
       </button>
       <MenuPopover :forum="forum" @updated="$emit('updated')" />
     </div>
+    <div v-if="forum" class="forum-header">
+      <div class="header-main">
+        <div class="title-row">
+          <h1 class="forum-title">{{ forum.forumTitle }}</h1>
+          <span class="category-tag">{{ forum.Categories }}</span>
+        </div>
+        <div class="desc-row">
+          <p class="forum-desc">{{ forum.forumDesc }}</p>
+          <a :href="`/profile/${forum.organiserID}`" class="organiser-link">
+            {{ forum.organiserName }}
+          </a>
+        </div>
+      </div>
+    </div>
     <div class="post-list-content">
       <div class="post-list-grid">
         <PostListItem
@@ -26,6 +40,7 @@
     </div>
     <CreatePostModal 
       :show="showCreateModal" 
+      :forum-id="forumId"
       @close="showCreateModal = false"
       @created="refreshPosts"
     />
@@ -44,6 +59,8 @@ import MenuPopover from '@/Components/MenuPopover.vue'
 import CreatePostModal from './CreatePostModal.vue'
 
 const posts = ref([])
+const forum = ref(null)
+const forumId = ref('')
 const showNavBar = ref(true)
 let lastScrollY = 0
 
@@ -63,33 +80,35 @@ function handleScroll() {
 
 const showCreateModal = ref(false)
 
-async function refreshPosts() {
-  try {
-    const res = await fetch('/posts')
-    let data = await res.json()
-    // Sort by created_at (or your date field) descending
-    posts.value = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-  } catch (e) {
-    posts.value = []
-  }
-}
-
-onMounted(async () => {
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  forumId.value = urlParams.get('forum_id');
+  fetchForumDetails();
+  refreshPosts();
   showNavBar.value = true
   lastScrollY = window.scrollY
   window.addEventListener('scroll', handleScroll)
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    const forumId = urlParams.get('forum_id');
-    const url = forumId ? `/posts?forum_id=${forumId}` : '/posts';
-    const res = await fetch(url);
-    let data = await res.json();
-    // Sort by created_at (or your date field) descending
-    posts.value = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-  } catch (e) {
-    posts.value = [];
-  }
 })
+
+async function fetchForumDetails() {
+  if (!forumId.value) return;
+  try {
+    const response = await fetch(`/api/forum/${forumId.value}`);
+    forum.value = await response.json();
+  } catch (error) {
+    console.error('Failed to fetch forum details:', error);
+  }
+}
+
+async function refreshPosts() {
+  if (!forumId.value) return;
+  try {
+    const response = await fetch(`/api/posts?forum_id=${forumId.value}`);
+    posts.value = await response.json();
+  } catch (error) {
+    console.error('Failed to refresh posts:', error);
+  }
+}
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll)
@@ -113,27 +132,32 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
-  margin-left: 180px;
-  margin-bottom: 50px;
-  padding-left: 80px;
+  margin: 20px auto 50px 210px;
+  width: 100%;
+  max-width: 1200px;
 }
 .post-list-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  width: 100%;
+  width: 90%;
+  gap: 20px;
 }
 @media (max-width: 1250px) {
-    .post-list-content {
-        margin-left: 70px;
-        align-items: center;
-    }   
-    .post-list-grid {
-        grid-template-columns: 1fr;
-        align-items: center;
-        gap: 5px;
-        max-width: 500px;
-    }
+  .forum-header {
+    margin-left: 100px;
+    margin-right: 100px;
+  }
+  .post-list-content {
+      margin-left: 140px;
+      align-items: center;
+      max-width: 500px;
+  }   
+  .post-list-grid {
+      grid-template-columns: 1fr;
+      align-items: center;
+      gap: 5px;
+      max-width: 500px;
+  }
 }
 .no-posts {
   color: #fff;
@@ -188,5 +212,60 @@ onBeforeUnmount(() => {
 span {
   font-size: 1.1rem;
   color: #727171;
+}
+.forum-header {
+  color: #fff;
+  padding: 10px 0;
+  padding-bottom: 0;
+  margin-left: 260px;
+  margin-right: 210px;
+  max-width: 100%;
+}
+.header-main {
+  width: 100%;
+}
+.title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+.forum-title {
+  font-size: 1.8em;
+  font-weight: bold;
+  margin: 0;
+}
+.desc-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.forum-desc {
+  font-size: 1em;
+  color: #b0b0b0;
+  margin-bottom: 0;
+  margin-right: 20px;
+}
+.forum-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.95em;
+  color: #888;
+}
+.category-tag {
+  background-color: #333;
+  color: #eee;
+  padding: 2px 12px;
+  height: 23px;
+  border-radius: 20px;
+  font-size: 0.8em;
+}
+.organiser-link:hover {
+  color: #3b82f6 !important;
+  text-shadow: 0 0 0 2px #3b82f688 !important;
+  transition: color 0.3s;
 }
 </style> 

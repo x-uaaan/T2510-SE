@@ -76,6 +76,11 @@ const navItems = computed(() => [
 ])
 
 function navigate(route, item) {
+  if (item.logout) {
+    logout();
+    return;
+  }
+  
   if (typeof route === 'function') {
     route = route()
   }

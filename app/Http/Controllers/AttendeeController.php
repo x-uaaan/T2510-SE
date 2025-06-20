@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AttendeeController extends Controller
 {
@@ -29,26 +30,32 @@ class AttendeeController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|string',
-            'event_id' => 'required|string',
+            'userID' => 'required|string',
+            'eventID' => 'required|string',
         ]);
+
+        // Prevent duplicate entries
+        $existing = Attendee::where('userID', $validated['userID'])
+                            ->where('eventID', $validated['eventID'])
+                            ->first();
+
+        if ($existing) {
+            return response()->json(['message' => 'Already registered.'], 409);
+        }
+
         // Generate new attendeesID
-        $lastAttendee = \App\Models\Attendee::orderBy('attendeesID', 'desc')->first();
+        $lastAttendee = Attendee::orderBy('attendeesID', 'desc')->first();
         $lastIdNumber = $lastAttendee ? (int) substr($lastAttendee->attendeesID, 4) : 0;
         $newId = 'att_' . str_pad($lastIdNumber + 1, 3, '0', STR_PAD_LEFT);
-        // Prevent duplicate RSVP
-        $exists = \App\Models\Attendee::where('userID', $validated['user_id'])
-            ->where('eventID', $validated['event_id'])
-            ->exists();
-        if ($exists) {
-            return response()->json(['message' => 'Already registered'], 200);
-        }
-        $attendee = \App\Models\Attendee::create([
+
+        $attendee = Attendee::create([
             'attendeesID' => $newId,
-            'userID' => $validated['user_id'],
-            'eventID' => $validated['event_id'],
+            'userID' => $validated['userID'],
+            'eventID' => $validated['eventID'],
+            'created_at' => now(),
         ]);
-        return response()->json(['success' => true, 'attendee' => $attendee]);
+
+        return response()->json(['success' => true, 'attendee' => $attendee], 201);
     }
 
     /**
@@ -56,12 +63,16 @@ class AttendeeController extends Controller
      */
     public function check(Request $request)
     {
-        $userId = $request->query('user_id');
-        $eventId = $request->query('event_id');
-        $registered = \App\Models\Attendee::where('userID', $userId)
-            ->where('eventID', $eventId)
-            ->exists();
-        return response()->json(['registered' => $registered]);
+        $validated = $request->validate([
+            'userID' => 'required|string|exists:users,userID',
+            'eventID' => 'required|string|exists:events,eventID',
+        ]);
+
+        $isRegistered = Attendee::where('userID', $validated['userID'])
+                                ->where('eventID', $validated['eventID'])
+                                ->exists();
+
+        return response()->json(['registered' => $isRegistered]);
     }
 
     /**
