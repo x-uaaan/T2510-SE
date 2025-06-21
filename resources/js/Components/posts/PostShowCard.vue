@@ -6,7 +6,7 @@
         <div class="post-desc">{{ post.postDesc }}</div>
       </div>
       <div class="right-side">
-        <MenuPopoverPost class="menu-popover-margin" :post="post" />
+        <MenuPopoverPost v-if="canManagePost" class="menu-popover-margin" :post="post" />
         <div class="post-meta">
           <a :href="`/profile/${post.authorId}`" class="author-link">{{ post.author }}</a>
         </div>
@@ -33,12 +33,38 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue';
+import { defineProps, ref, onMounted, computed } from 'vue';
 import MenuPopoverPost from '@/Components/posts/MenuPopoverPost.vue';
 const props = defineProps({
   post: Object
 });
 const newComment = ref('');
+const currentUser = ref(null);
+
+const canManagePost = computed(() => {
+  if (!currentUser.value || !props.post) {
+    return false;
+  }
+  return currentUser.value.role === 'admin' || currentUser.value.id === props.post.authorId;
+});
+
+onMounted(() => {
+  fetchCurrentUser();
+});
+
+async function fetchCurrentUser() {
+  try {
+    const response = await fetch('/api/user');
+    if (response.ok) {
+      currentUser.value = await response.json();
+    } else {
+      currentUser.value = null;
+    }
+  } catch (error) {
+    console.error('Failed to fetch current user:', error);
+    currentUser.value = null;
+  }
+}
 
 async function addComment() {
   if (!newComment.value.trim()) return;

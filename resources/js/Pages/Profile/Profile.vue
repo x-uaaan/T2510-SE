@@ -1,165 +1,257 @@
 <template>
-  <div class="profile-page dark-theme">
+  <div class="profile-layout">
     <NavBar />
     <NavigationDrawer />
-    <div class="profile-container">
+    <main class="content-area">
       <div class="profile-header">
         <div class="profile-info">
-          <h2 class="profile-username">{{ alumni.alumniName }}</h2>
-          <div class="profile-tag">{{ userTag }}</div>
-          <div class="profile-email">{{ alumni.alumniEmail }}</div>
-          <div class="profile-faculty">{{ alumni.alumniFaculty }}</div>
-          <div class="profile-phone">{{ alumni.alumniPhone }}</div>
-          <div v-if="alumni.alumniResume" class="profile-resume">
-            <a :href="alumni.alumniResume" target="_blank">Download Resume</a>
+          <h2 class="profile-username">{{ user.username }}</h2>
+          <a :href="`mailto:${user.email}`" class="profile-email">{{ user.email }}</a>
+          <div class="profile-faculty">{{ user.faculty }}</div>
+          <div v-if="user.resume_url" class="profile-resume">
+            <a :href="user.resume_url" target="_blank" rel="noopener noreferrer">Resume</a>
           </div>
         </div>
-        <button class="edit-btn" @click="goToEdit">EDIT</button>
+        <Link v-if="isMyProfile" :href="route('profile.edit')" class="edit-btn">Edit</Link>
       </div>
       <div class="profile-tabs">
-        <button :class="{active: tab==='forum'}" @click="tab='forum'">Forum</button>
-        <button :class="{active: tab==='post'}" @click="tab='post'">Post</button>
-        <button :class="{active: tab==='event'}" @click="tab='event'">Event</button>
+        <span class="glider" :style="gliderStyle"></span>
+        <button :ref="el => tabButtons.forum = el" :class="{active: tab==='forum'}" @click="tab='forum'">Forum</button>
+        <button :ref="el => tabButtons.post = el" :class="{active: tab==='post'}" @click="tab='post'">Post</button>
+        <button :ref="el => tabButtons.event = el" :class="{active: tab==='event'}" @click="tab='event'">Event</button>
       </div>
-      <div class="profile-content">
+      <div class="tab-content-container">
         <div v-if="tab==='forum'">
-          <ul>
-            <li v-for="forum in forums" :key="forum.forumID">
-              <a :href="`/forums/${forum.forumID}`">{{ forum.forumTitle }}</a>
+          <ul v-if="user.forums && user.forums.length > 0">
+            <li v-for="forum in user.forums" :key="forum.forumID">
+              <Link :href="`/posts?forum_id=${forum.forumID}`">{{ forum.forumTitle }}</Link>
             </li>
           </ul>
+          <p v-else>No forums created yet.</p>
         </div>
         <div v-if="tab==='post'">
-          <ul>
-            <li v-for="post in posts" :key="post.postID">
-              <a :href="`/posts/${post.postID}`">{{ post.postTitle }}</a>
+          <ul v-if="user.posts && user.posts.length > 0">
+            <li v-for="post in user.posts" :key="post.postID">
+              <Link :href="`/posts/${post.postID}`">{{ post.postTitle }}</Link>
             </li>
           </ul>
+          <p v-else>No posts created yet.</p>
         </div>
         <div v-if="tab==='event'">
-          <ul>
-            <li v-for="event in events" :key="event.id">
-              <a :href="`/events/${event.id}`">{{ event.eventName }}</a>
+          <ul v-if="user.events && user.events.length > 0">
+            <li v-for="event in user.events" :key="event.eventID">
+              <button @click="openEventModal(event)" class="event-title-btn">{{ event.eventName }}</button>
             </li>
           </ul>
+          <p v-else>No events created yet.</p>
         </div>
       </div>
-    </div>
-    <FooterSection />
+    </main>
+    <EventDetailsModal
+      v-if="selectedEvent"
+      :show="showEventModal"
+      :event="selectedEvent"
+      :auth-user="authUser"
+      @close="closeEventModal"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import { usePage } from '@inertiajs/vue3'
+import { computed, ref, watch, onMounted, nextTick } from 'vue'
+import { Link, usePage } from '@inertiajs/vue3'
 import NavBar from '@/Components/NavBar.vue'
 import NavigationDrawer from '@/Components/NavigationDrawer.vue'
-import FooterSection from '@/Components/FooterSection.vue'
+import EventDetailsModal from '@/Components/events/EventDetailsModal.vue'
+import { route } from 'ziggy-js'
+
+const props = defineProps({
+  user: Object,
+})
 
 const page = usePage()
-const alumni = ref(page.props.alumni)
-const forums = ref(page.props.forums)
-const posts = ref(page.props.posts)
-const events = ref(page.props.events)
+const authUser = computed(() => page.props.auth.user)
+const isMyProfile = computed(() => authUser.value && authUser.value.userID === props.user.userID)
+
 const tab = ref('forum')
-const userTag = computed(() => 'Alumni')
-function goToEdit() {
-  window.location.href = '/profile/edit'
+const tabButtons = ref({
+  forum: null,
+  post: null,
+  event: null,
+})
+const gliderStyle = ref({})
+const showEventModal = ref(false)
+const selectedEvent = ref(null)
+
+const updateGlider = () => {
+  const activeButton = tabButtons.value[tab.value]
+  if (activeButton) {
+    gliderStyle.value = {
+      left: `${activeButton.offsetLeft}px`,
+      width: `${activeButton.offsetWidth}px`,
+    }
+  }
+}
+
+watch(tab, () => {
+  nextTick(updateGlider);
+});
+
+onMounted(() => {
+  setTimeout(updateGlider, 100);
+});
+
+const openEventModal = (event) => {
+  selectedEvent.value = event
+  showEventModal.value = true
+}
+
+const closeEventModal = () => {
+  showEventModal.value = false
+  setTimeout(() => {
+    selectedEvent.value = null
+  }, 300) // Delay to allow modal to transition out
 }
 </script>
 
 <style scoped>
-.profile-page {
+.profile-layout {
   min-height: 100vh;
-  background: #111;
+  background: #000;
   color: #fff;
-  display: flex;
-  flex-direction: column;
 }
-.profile-container {
-  max-width: 800px;
-  margin: 40px auto 0 auto;
-  background: #181818;
-  border-radius: 12px;
-  padding: 32px 40px 40px 40px;
-  box-shadow: 0 2px 16px #0008;
+.content-area {
+  margin-left: 300px;
+  margin-right: 300px;
+  padding: 20px;
 }
 .profile-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 24px;
+  align-items: flex-end;
+  margin-bottom: 16px;
+  padding: 0 20px;
 }
 .profile-info {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 .profile-username {
-  font-size: 1.6rem;
-  font-weight: 700;
-  margin-bottom: 2px;
-}
-.profile-tag {
-  font-size: 1rem;
-  color: #4fc3f7;
+  font-size: 1.4rem;
   font-weight: 600;
-  margin-bottom: 2px;
 }
-.profile-email, .profile-faculty, .profile-resume {
+.profile-email,
+.profile-faculty,
+.profile-resume a {
   font-size: 1rem;
   color: #bbb;
+  text-decoration: none;
+}
+.profile-email:hover,
+.profile-resume a:hover {
+  color: #29aafc;
 }
 .edit-btn {
-  background: #29aafc;
+  background: #18191a;
   color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 32px;
-  font-weight: 600;
+  border: 1px solid #3d3e46;
+  border-radius: 10px;
+  padding: 6px 20px;
   cursor: pointer;
-  margin-top: 8px;
+  margin-bottom: 8px;
   transition: background 0.2s;
+  text-decoration: none;
+  font-size: 0.9em;
+  display: inline-block;
+  text-align: center;
 }
 .edit-btn:hover {
-  background: #0077c2;
+  background: #23242a;
+  border: 1px solid #3b82f6 !important;
+  box-shadow: 0 0 0 2px #3b82f688 !important;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 .profile-tabs {
-  display: flex;
-  gap: 32px;
-  border-bottom: 1px solid #333;
+  position: relative;
+  display: inline-flex;
+  background-color: #1f2022;
+  border-radius: 10px;
+  padding: 4px;
+  gap: 6px;
   margin-bottom: 18px;
+  margin-left: 20px;
+}
+.glider {
+  position: absolute;
+  height: calc(100% - 8px);
+  top: 4px;
+  background-color: #3A3B3C;
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .profile-tabs button {
-  background: none;
+  position: relative;
+  z-index: 1;
+  background: transparent;
   border: none;
-  color: #bbb;
-  font-size: 1.1rem;
+  color: #a0a0a0;
+  font-size: 0.9em;
   font-weight: 600;
-  padding: 8px 0;
+  padding: 6px 16px;
+  border-radius: 10px;
   cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-bottom 0.2s;
+  outline: none;
+}
+.profile-tabs button:hover {
+  background-color: rgb(45, 46, 49);
 }
 .profile-tabs button.active {
-  color: #29aafc;
-  border-bottom: 2px solid #29aafc;
+  background-color: #3A3B3C;
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
-.profile-content ul {
+.tab-content-container {
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px 20px;
+  margin: 0 20px;
+}
+.tab-content-container ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-.profile-content li {
+.tab-content-container li {
   margin-bottom: 12px;
 }
-.profile-content a {
+.tab-content-container li:last-child {
+  margin-bottom: 0;
+}
+.tab-content-container a {
   color: #fff;
-  text-decoration: underline;
-  font-size: 1.1rem;
+  text-decoration: none;
+  font-size: 1rem;
   transition: color 0.2s;
 }
-.profile-content a:hover {
+.tab-content-container a:hover {
   color: #29aafc;
 }
-</style> 
+.tab-content-container p {
+  color: #888;
+}
+.event-title-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+.event-title-btn:hover {
+  color: #29aafc;
+}
+</style>

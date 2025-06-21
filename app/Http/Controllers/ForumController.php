@@ -46,7 +46,12 @@ class ForumController extends Controller
 
     public function show(Forum $forum)
     {
-        return view('forum.show', compact('forum'));
+        $forum->load(['posts.user', 'user']);
+
+        return Inertia::render('posts/PostShow', [
+            'forum' => $forum,
+            'posts' => $forum->posts,
+        ]);
     }
 
     public function edit(Forum $forum)
@@ -73,7 +78,7 @@ class ForumController extends Controller
 
     public function apiIndex()
     {
-        $forums = Forum::withCount('posts')->orderBy('forumID', 'desc')->get();
+        $forums = Forum::with('organiser')->withCount('posts')->orderBy('forumID', 'desc')->get();
         return response()->json($forums);
     }
 

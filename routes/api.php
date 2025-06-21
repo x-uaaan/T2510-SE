@@ -6,7 +6,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\PostController;
 use App\Models\User;
-use App\Http\Controllers\AttendeeController;
+use Illuminate\Support\Facades\Auth;
 
 Route::middleware('api')->get('/ping', function () {
     return response()->json(['message' => 'pong']);
@@ -23,25 +23,22 @@ Route::post('/posts', [PostController::class, 'store']);
 Route::delete('/posts/{post}', [PostController::class, 'apiDestroy']);
 Route::post('/posts/{post}/comments', [PostController::class, 'addComment']);
 Route::post('/posts/{post}', [PostController::class, 'apiUpdate']);
-Route::post('/attendees', [AttendeeController::class, 'store']);
-Route::get('/attendees/check', [AttendeeController::class, 'check']);
 
-Route::middleware('web')->get('/user', function (Request $request) {
-    $email = session('authenticated_user_email');
-    $user = null;
-    $role = null;
-    $userId = null;
-    $userName = null;
-    if ($email) {
-        if ($user = User::where('email', $email)->first()) {
-            $role = strtolower($user->userType);
-            $userId = $user->userID;
-            $userName = $user->username; 
-        }
+Route::get('/user', function (Request $request) {
+    if (!session()->has('authenticated_user_email')) {
+        return response()->json(['message' => 'Unauthenticated.'], 401);
     }
-    return response()->json([
-        'id' => $userId,
-        'name' => $userName ?? 'User',
-        'role' => $role,
-    ]);
+
+    $email = session('authenticated_user_email');
+    $user = User::where('email', $email)->first();
+
+    if ($user) {
+        return response()->json([
+            'id' => $user->userID,
+            'name' => $user->username,
+            'role' => strtolower($user->userType),
+        ]);
+    }
+    
+    return response()->json(['message' => 'User not found.'], 404);
 }); 

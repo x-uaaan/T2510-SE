@@ -9,20 +9,20 @@ USE `CampusPulse`;
 
 -- USERS TABLE
 CREATE TABLE campuspulse.users (
-    id VARCHAR(255) NOT NULL PRIMARY KEY, -- All IDs are VARCHAR(255)
-    username VARCHAR(255) UNIQUE, -- Will be populated from Microsoft name
+    userID VARCHAR(255) NOT NULL PRIMARY KEY,
+    username VARCHAR(255), -- Will be populated from Microsoft name (allows duplicates)
     email VARCHAR(255) NOT NULL UNIQUE,
     phone VARCHAR(255),
     faculty VARCHAR(255),
     resume VARCHAR(255), -- Path to PDF resume file (optional)
     -- Adding a discriminator column to differentiate user types
     userType ENUM('Alumni', 'Lecturer', 'Admin') NOT NULL,
-    microsoft_id VARCHAR(255), -- Store Microsoft ID for username lookup
+    microsoft_id VARCHAR(255) UNIQUE,
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL
 );
 
-INSERT INTO campuspulse.users (id, username, email, phone, faculty, userType, microsoft_id, created_at, updated_at) VALUES
+INSERT INTO campuspulse.users (userID, username, email, phone, faculty, userType, microsoft_id, created_at, updated_at) VALUES
 ('usr_001', 'Dr. Jane Patel', 'jane.patel@example.com', '1234567890', 'Computer Science', 'Alumni', 'msft_id_001', NOW(), NOW()),
 ('usr_002', 'Mark Stevens', 'mark.stevens@example.com', '1234567891', 'Cybersecurity', 'Alumni', 'msft_id_002', NOW(), NOW()),
 ('usr_003', 'Prof. John Miller', 'john.miller@example.com', '1234567802', 'Education', 'Lecturer', 'msft_id_003', NOW(), NOW()),
@@ -47,7 +47,6 @@ CREATE TABLE campuspulse.events (
     image VARCHAR(255),
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL,
-    FOREIGN KEY (organiserName) REFERENCES users(username) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (organiserID) REFERENCES users(userID) ON DELETE RESTRICT ON UPDATE CASCADE -- Restrict deletion of user if they organised an event
 );
 
@@ -68,7 +67,6 @@ CREATE TABLE campuspulse.forums (
     Categories VARCHAR(255),
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL,
-    FOREIGN KEY (organiserName) REFERENCES users(username) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (organiserID) REFERENCES users(userID) ON DELETE RESTRICT ON UPDATE CASCADE -- Restrict deletion of user if they organised a forum
 );
 

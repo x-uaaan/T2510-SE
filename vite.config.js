@@ -17,4 +17,12 @@ export default defineConfig({
             },
         }),
     ],
+    build: {
+        // Ensure this aligns with Laravel's public path
+        outDir: 'public/build', // This is a common setup for Vite with Laravel
+        emptyOutDir: true,
+        rollupOptions: {
+            input: 'resources/js/app.js',
+        },
+    },
 });

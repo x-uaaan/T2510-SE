@@ -2,64 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
+use App\Models\Event;
+use App\Models\Forum;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the admin dashboard with stats.
      */
-    public function index()
+    public function dashboard()
     {
-        //
-    }
+        $stats = [
+            'events' => Event::count(),
+            'forums' => Forum::count(),
+            'posts' => Post::count(),
+            'users' => User::count(),
+        ];
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        // Real data for the chart - last 6 months
+        $endDate = Carbon::now();
+        $startDate = $endDate->copy()->subMonths(5)->startOfMonth(); // 6 months including current
+        $labels = [];
+        $newSignups = [];
+        $activeUsers = [];
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $usersByMonth = User::whereBetween('created_at', [$startDate, $endDate])
+            ->select(DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'), DB::raw('count(*) as signups'))
+            ->groupBy('month')
+            ->orderBy('month', 'asc')
+            ->get()
+            ->keyBy('month');
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Admin $admin)
-    {
-        //
-    }
+        $cumulativeUsers = User::where('created_at', '<', $startDate)->count();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Admin $admin)
-    {
-        //
-    }
+        for ($date = $startDate->copy(); $date->lessThanOrEqualTo($endDate); $date->addMonth()) {
+            $monthKey = $date->format('Y-m');
+            $labels[] = $date->format('F Y');
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Admin $admin)
-    {
-        //
-    }
+            $monthlySignups = $usersByMonth->get($monthKey)->signups ?? 0;
+            $newSignups[] = $monthlySignups;
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Admin $admin)
-    {
-        //
+            $cumulativeUsers += $monthlySignups;
+            $activeUsers[] = $cumulativeUsers;
+        }
+
+        $chartData = [
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'New Sign-ups',
+                    'data' => $newSignups,
+                    'borderColor' => '#3b82f6',
+                    'backgroundColor' => 'rgba(59, 130, 246, 0.5)',
+                    'tension' => 0.4,
+                ],
+                [
+                    'label' => 'Active Users',
+                    'data' => $activeUsers,
+                    'borderColor' => '#ef4444',
+                    'backgroundColor' => 'rgba(239, 68, 68, 0.5)',
+                    'tension' => 0.4,
+                ]
+            ]
+        ];
+
+        return Inertia::render('Dashboard', [
+            'stats' => $stats,
+            'chartData' => $chartData
+        ]);
     }
 }

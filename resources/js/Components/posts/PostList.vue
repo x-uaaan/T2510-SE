@@ -12,7 +12,7 @@
         </svg>
         <span>Create</span>
       </button>
-      <MenuPopover :forum="forum" @updated="$emit('updated')" />
+      <MenuPopover v-if="canManageForum" :forum="forum" @updated="$emit('updated')" />
     </div>
     <div v-if="forum" class="forum-header">
       <div class="header-main">
@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import NavigationDrawer from '@/Components/NavigationDrawer.vue'
 import PostListItem from './PostListItem.vue'
 import FooterSection from '@/Components/FooterSection.vue'
@@ -63,6 +63,7 @@ const forum = ref(null)
 const forumId = ref('')
 const showNavBar = ref(true)
 let lastScrollY = 0
+const currentUser = ref(null);
 
 function goToPost(id) {
   window.location.href = `/posts/${id}`
@@ -80,15 +81,37 @@ function handleScroll() {
 
 const showCreateModal = ref(false)
 
+const canManageForum = computed(() => {
+  if (!currentUser.value || !forum.value) {
+    return false;
+  }
+  return currentUser.value.role === 'admin' || currentUser.value.id === forum.value.organiserID;
+});
+
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
   forumId.value = urlParams.get('forum_id');
+  fetchCurrentUser();
   fetchForumDetails();
   refreshPosts();
   showNavBar.value = true
   lastScrollY = window.scrollY
   window.addEventListener('scroll', handleScroll)
 })
+
+async function fetchCurrentUser() {
+  try {
+    const response = await fetch('/api/user');
+    if (response.ok) {
+      currentUser.value = await response.json();
+    } else {
+      currentUser.value = null;
+    }
+  } catch (error) {
+    console.error('Failed to fetch current user:', error);
+    currentUser.value = null;
+  }
+}
 
 async function fetchForumDetails() {
   if (!forumId.value) return;

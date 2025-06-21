@@ -4,13 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\Forum;
 use Inertia\Inertia;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('posts/PostList');
+        $forumId = $request->query('forum_id');
+        $forum = null;
+        $query = Post::with('user')->orderBy('timestamp', 'desc');
+
+        if ($forumId) {
+            $query->where('forumID', $forumId);
+            $forum = Forum::find($forumId);
+        }
+
+        return Inertia::render('posts/PostList', [
+            'posts' => $query->get(),
+            'forum' => $forum,
+        ]);
     }
 
     public function create()
@@ -118,7 +131,7 @@ class PostController extends Controller
             $query->where('forumID', $forumId);
         }
         
-        $posts = $query->orderBy('postID', 'desc')->get();
+        $posts = $query->with('user')->orderBy('postID', 'desc')->get();
         return response()->json($posts);
     }
 

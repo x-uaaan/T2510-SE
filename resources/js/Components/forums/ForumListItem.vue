@@ -19,6 +19,7 @@
 
 <script setup>
 import MenuPopover from '@/Components/MenuPopover.vue'
+import { Link } from '@inertiajs/vue3'
 
 const props = defineProps(['forum'])
 const emit = defineEmits(['click', 'updated'])
@@ -92,13 +93,32 @@ const interestSvg = `<svg width='24' height='24' viewBox='0 0 24 24' fill='none'
   width: 24px;
   height: 24px;
 }
+.forum-desc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
 .forum-desc.no-wrap {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 100%;
+  flex-grow: 1;
   text-align: left;
   color: #b0b0b0;
   font-size: 0.9em;
+}
+.author-info {
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+.author-link {
+  color: #4fc3f7;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9em;
+}
+.author-link:hover {
+  text-decoration: underline;
 }
 </style> 

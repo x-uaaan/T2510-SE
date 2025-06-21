@@ -1,6 +1,6 @@
 <template>
   <div class="event-card" @click="$emit('click')">
-    <img class="event-avatar" :src="event.image ? '/' + event.image : '/image/CampusPulseLogo.jpg'" alt="event image" />
+    <img class="event-avatar" :src="event.image ? `/storage/${event.image}` : '/image/CampusPulseLogo.jpg'" alt="event image" />
     <div class="event-content">
       <div class="event-organiser">
         {{ typeof event.organiser === 'object' ? event.organiser.name : event.organiser }}

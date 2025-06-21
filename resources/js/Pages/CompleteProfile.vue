@@ -1,7 +1,7 @@
 <template>
   <BaseLayout>
     <div class="min-h-screen flex items-center justify-center bg-[#18191A]">
-      <form @submit.prevent="submit" class="bg-[#232323] p-6 rounded-2xl shadow-xl w-full max-w-md border border-[#292929] flex flex-col justify-between h-[600px]">
+      <form @submit.prevent="submit" class="bg-[#232323] p-6 rounded-2xl shadow-xl w-full max-w-md border border-[#292929] flex flex-col justify-between h-[500px]">
         <div>
           <img src="/image/CampusPulse.png" alt="Campus Pulse Logo" class="mx-auto mb-2 h-12" />
           <h2 class="text-base font-bold mb-4 text-center text-white">Complete Your Profile</h2>
@@ -24,15 +24,6 @@
               <span class="text-white text-base">Lecturer</span>
             </label>
           </div>
-          <!-- Username -->
-           <!--
-          <div class="mb-4">
-            <label class="block text-gray-300 mb-1 text-sm"><span class="text-red-500">*</span> Username</label>
-            <input v-model="form.username" type="text" class="w-full px-3 py-2 rounded-xl bg-[#18191A] text-white border border-[#353535] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition outline-none text-sm" />
-            <div v-if="errors.username" class="text-red-400 text-xs mt-1">{{ errors.username }}</div>
-            <div v-if="usernameAlert" class="text-yellow-400 text-xs mt-1">{{ usernameAlert }}</div>
-          </div>
-          -->
           <!-- Phone Number -->
           <div class="mb-4">
             <label class="block text-gray-300 mb-1 text-sm"><span class="text-red-500">*</span> Phone Number</label>
@@ -148,7 +139,6 @@ const phoneRules = {
 }
 
 const form = useForm({
-  username: '',
   countryCode: countries[0].dial,
   phone: '',
   faculty: '',
@@ -174,7 +164,6 @@ const resumeSize = computed(() => {
 
 function validate() {
   errors.value = {}
-  
   // Phone validation
   if (!form.phone) {
     errors.value.phone = 'Phone number is required'
@@ -185,24 +174,20 @@ function validate() {
       errors.value.phone = `Phone number must be ${rule.min}${rule.min !== rule.max ? '-' + rule.max : ''} digits for this country`
     }
   }
-
   // Faculty validation
   if (!form.faculty) {
     errors.value.faculty = 'Faculty is required'
   }
-
   // Role validation
   if (!form.userType) {
     errors.value.userType = 'Please select a role'
   }
-
   // Resume validation (optional)
   if (form.resume) {
     if (form.resume.size > 2 * 1024 * 1024) {
       errors.value.resume = 'Resume must be 2MB or less'
     }
   }
-
   return Object.keys(errors.value).length === 0
 }
 
@@ -210,14 +195,12 @@ const canSubmit = computed(() => {
   if (!form.userType || !form.phone || !form.faculty) {
     return false
   }
-
   // Phone check
   const rule = phoneRules[form.countryCode]
   const digits = form.phone.replace(/\D/g, '').length
   if (digits < rule.min || digits > rule.max) {
     return false
   }
-
   return true
 })
 
@@ -294,7 +277,6 @@ onMounted(() => {
 
 async function submit() {
   if (!validate()) {
-    // Show validation errors
     Object.keys(errors.value).forEach(key => {
       toast.error(errors.value[key], {
         position: toast.POSITION.TOP_RIGHT,
@@ -303,7 +285,6 @@ async function submit() {
     })
     return
   }
-
   const formData = new FormData()
   formData.append('email', form.email)
   formData.append('name', form.name)
@@ -313,7 +294,6 @@ async function submit() {
   if (form.resume) {
     formData.append('resume', form.resume)
   }
-
   try {
     await router.post('/complete-profile', formData, {
       onSuccess: () => {
@@ -321,7 +301,6 @@ async function submit() {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 3000,
         })
-        // Use router.visit instead of window.location for proper Inertia handling
         router.visit('/events')
       },
       onError: (errors) => {

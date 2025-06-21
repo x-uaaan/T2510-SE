@@ -14,9 +14,117 @@ use App\Models\Admin;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProfileController extends Controller
 {
+    public function show(Request $request)
+    {
+        $email = session('authenticated_user_email');
+
+        if (!$email) {
+            return redirect()->route('auth.microsoft');
+        }
+
+        $user = User::where('email', $email)
+            ->with(['forums', 'posts', 'events'])
+            ->first();
+
+        if (!$user) {
+            // If user not found, maybe clear session and redirect
+            session()->forget('authenticated_user_email');
+            return redirect()->route('auth.microsoft');
+        }
+
+        // The resume path is stored relative to the 'storage/app/public' folder.
+        // We need to create a public URL for it.
+        if ($user->resume) {
+            $user->resume_url = Storage::url($user->resume);
+        } else {
+            $user->resume_url = null;
+        }
+
+        foreach ($user->events as $event) {
+            if ($event->image) {
+                $event->image_url = Storage::url($event->image);
+            } else {
+                $event->image_url = null;
+            }
+        }
+
+        return Inertia::render('Profile/Profile', [
+            'user' => $user,
+            'auth' => [
+                'user' => $user,
+            ],
+        ]);
+    }
+
+    public function edit(Request $request)
+    {
+        $email = session('authenticated_user_email');
+        $user = User::where('email', $email)->firstOrFail();
+
+        return Inertia::render('Profile/UpdateProfileForm', [
+            'user' => $user,
+        ]);
+    }
+
+    public function update(Request $request): RedirectResponse
+    {
+        $email = session('authenticated_user_email');
+        $user = User::where('email', $email)->firstOrFail();
+
+        $validated = $request->validate([
+            'phone' => 'required|string|max:20',
+            'faculty' => 'required|string|max:255',
+            'resume' => 'nullable|file|mimes:pdf|max:2048',
+            'remove_resume' => 'nullable|boolean',
+        ]);
+
+        $user->phone = $validated['phone'];
+        $user->faculty = $validated['faculty'];
+
+        if ($request->boolean('remove_resume') && $user->resume) {
+            Storage::disk('public')->delete($user->resume);
+            $user->resume = null;
+        } elseif ($request->hasFile('resume')) {
+            if ($user->resume) {
+                Storage::disk('public')->delete($user->resume);
+            }
+            $file = $request->file('resume');
+            $username = Str::slug($user->username);
+            $filename = $username . '_resume.' . $file->getClientOriginalExtension();
+            $resumePath = $file->storeAs('resumes', $filename, 'public');
+            $user->resume = $resumePath;
+        }
+
+        $user->save();
+
+        return Redirect::route('profile.show');
+    }
+
+    public function showPublic(User $user)
+    {
+        $user->load(['forums', 'posts', 'events']);
+
+        if ($user->resume) {
+            $user->resume_url = Storage::url($user->resume);
+        } else {
+            $user->resume_url = null;
+        }
+
+        $authEmail = session('authenticated_user_email');
+        $authUser = $authEmail ? User::where('email', $authEmail)->first() : null;
+
+        return Inertia::render('Profile/Profile', [
+            'user' => $user,
+            'auth' => [
+                'user' => $authUser,
+            ],
+        ]);
+    }
+
     public function showCompleteProfileForm()
     {
         $socialiteUserData = session('socialite_user_data');
@@ -45,6 +153,7 @@ class ProfileController extends Controller
 
         Log::info('ProfileController: Validation passed', [
             'email' => $validated['email'],
+            'name' => $validated['name'],
             'userType' => $validated['userType']
         ]);
 
@@ -52,7 +161,10 @@ class ProfileController extends Controller
             // Handle resume upload if present
             $resumePath = null;
             if ($request->hasFile('resume')) {
-                $resumePath = $request->file('resume')->store('resumes', 'public');
+                $file = $request->file('resume');
+                $username = Str::slug($validated['name']);
+                $filename = $username . '_resume.' . $file->getClientOriginalExtension();
+                $resumePath = $file->storeAs('resumes', $filename, 'public');
                 Log::info('ProfileController: Resume uploaded', ['path' => $resumePath]);
             }
 

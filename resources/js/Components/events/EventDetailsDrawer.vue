@@ -13,7 +13,7 @@
           </div>
           <!-- Event Image or Placeholder -->
           <div class="event-image-box">
-            <img :src="event.image ? event.image : '/image/CampusPulseLogo.jpg'" alt="Event image" class="event-image" />
+            <img :src="event.image ? `/storage/${event.image}` : '/image/CampusPulseLogo.png'" alt="Event image" class="event-image" />
           </div>
           <!-- Event Title -->
           <div class="event-title">{{ event.eventName }}</div>
@@ -61,15 +61,9 @@
           </div>
         </div>
         <!-- Register Button -->
-        <div class="register-btn-row">
+        <div class="register-btn-row relative">
           <div class="flex gap-4 items-center">
-            <Button
-              class="register-btn-ui rounded-lg"
-              :disabled="isRegistered"
-              @click="!isRegistered && registerForEvent"
-            >
-              {{ isRegistered ? "RSVP'd" : 'One-Click RSVP' }}
-            </Button>
+            <Button @click="handleRsvpClick">One-Click RSVP</Button>
           </div>
         </div>
         <!-- Footer always at bottom -->
@@ -77,55 +71,24 @@
           <a :href="`mailto:support@campuspulse.com`" class="drawer-link">Contact host</a>
           <a :href="`mailto:support@campuspulse.com`" class="drawer-link">Report event</a>
         </div>
-        <!-- Toast Notification -->
-        <transition name="fade">
-          <div v-if="showToast" class="custom-toast">
-            <span class="toast-icon">&#9432;</span>
-            <div class="toast-content">
-              <div class="toast-title">You're In!</div>
-              <div class="toast-desc">RSVP successful</div>
-            </div>
-          </div>
-        </transition>
       </div>
     </div>
   </transition>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
-import SecondaryButton from '@/Components/SecondaryButton.vue'
+import { onMounted, ref } from 'vue'
+
 const props = defineProps(['event'])
 const emit = defineEmits(['close'])
-const attendees = ref([])
-const isRegistered = ref(false)
-const showToast = ref(false)
-const currentUser = ref({ id: null, name: null });
 
-watch(
-  () => props.event,
-  async (newEvent) => {
-    if (newEvent && newEvent.eventID) {
-      await fetchCurrentUser();
-      if (currentUser.value.id) {
-        checkRegistration();
-      }
-    }
-  },
-  { immediate: true }
-);
+const showPopover = ref(false)
 
-async function fetchCurrentUser() {
-  try {
-    const response = await fetch('/api/user');
-    if (response.ok) {
-      currentUser.value = await response.json();
-    } else {
-      console.error('Failed to fetch user status');
-    }
-  } catch (error) {
-    console.error('Error fetching user status:', error);
-  }
+const handleRsvpClick = () => {
+  showPopover.value = true
+  setTimeout(() => {
+    showPopover.value = false
+  }, 2000)
 }
 
 function close() { emit('close') }
@@ -158,56 +121,10 @@ onMounted(() => {
   const scrollEl = document.querySelector('.drawer-scroll')
   if (scrollEl) {
     scrollEl.addEventListener('scroll', () => {
-      showFooter.value = scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 2
+      // Logic for showFooter was here, can be removed if not needed elsewhere
     })
   }
 })
-
-// Registration logic
-async function registerForEvent() {
-  const userId = currentUser.value.id;
-  if (!userId) {
-    alert('Could not get user ID. Please make sure you are logged in.');
-    return;
-  }
-
-  const eventId = props.event.eventID;
-
-  try {
-    const response = await fetch('/api/attendees', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userID: userId, eventID: eventId })
-    });
-
-    if (response.ok) {
-        isRegistered.value = true;
-        showToast.value = true;
-        setTimeout(() => { showToast.value = false; }, 3500);
-    } else if (response.status === 409) { // Already registered
-        isRegistered.value = true;
-    } else {
-        alert('Registration failed. Please try again.');
-    }
-  } catch (e) {
-    alert('An error occurred during registration.');
-  }
-}
-
-// Check if user is already registered for this event
-async function checkRegistration() {
-  const userId = currentUser.value.id;
-  if (!userId) return;
-
-  const eventId = props.event.eventID;
-  try {
-    const res = await fetch(`/api/attendees/check?userID=${userId}&eventID=${eventId}`);
-    const data = await res.json();
-    isRegistered.value = !!data.registered;
-  } catch (e) {
-    isRegistered.value = false;
-  }
-}
 </script>
 
 <style scoped>
@@ -358,25 +275,30 @@ async function checkRegistration() {
   text-align: justify;
   width: 365px;
 }
+.relative {
+  position: relative;
+}
 .register-btn-row {
   display: flex;
   justify-content: center;
   margin: 20px 0;
 }
-.register-btn-ui {
+/*.register-btn-ui */
+.register-btn-row button{
   width: 380px;
   height: 50px;
   display: block;
   margin: 0;
   padding: 10px auto;
   border: 1px solid #d2cfcf;
+  border-radius: 1.5rem;
   background: transparent;
   color: #ede9e9;
   font-weight: bold;
   font-size: 1.1em;
   transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
-.register-btn-ui:hover {
+.register-btn-row button:hover {
   border: 0.5px solid #3b82f6 !important;
   box-shadow: 0 0 0 2px #3b82f688 !important;
   transition: background 0.3s, color 0.3s, border-color 0.3s;
@@ -425,124 +347,6 @@ async function checkRegistration() {
 .drawer-slide-enter-to,
 .drawer-slide-leave-from {
   transform: translateX(0);
-  opacity: 1;
-}
-/* Registration Confirmation Dialog Styles */
-.confirm-dialog-backdrop {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.7);
-  z-index: 3000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.confirm-dialog-box {
-  background: #181818;
-  border: 1px solid #333;
-  border-radius: 16px;
-  padding: 32px 36px 28px 36px;
-  min-width: 420px;
-  box-shadow: 0 2px 24px #000a;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.confirm-dialog-title {
-  font-size: 1.5em;
-  font-weight: bold;
-  margin-bottom: 12px;
-  color: #fff;
-}
-.confirm-dialog-desc {
-  color: #ccc;
-  font-size: 1.1em;
-  margin-bottom: 28px;
-  max-width: 420px;
-}
-.confirm-dialog-actions {
-  display: flex;
-  flex-direction: row;
-  gap: 18px;
-  align-items: center;
-  width: 100%;
-  justify-content: flex-end;
-}
-.confirm-cancel-btn {
-  background: #181818;
-  color: #fff;
-  border: 1px solid #333;
-  border-radius: 10px;
-  padding: 10px 28px;
-  font-size: 1.1em;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s, border 0.2s;
-}
-.confirm-cancel-btn:hover {
-  background: #23242a;
-  color: #fff;
-  border: 1px solid #555;
-}
-.confirm-continue-btn {
-  background: #fff;
-  color: #181818;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 28px;
-  font-size: 1.1em;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-.confirm-continue-btn:hover {
-  background: #3b82f6;
-  color: #fff;
-}
-/* Toast Notification Styles */
-.custom-toast {
-  position: fixed;
-  top: 32px;
-  right: 32px;
-  min-width: 320px;
-  background: #181818;
-  border: 2px solid #3b82f6;
-  border-radius: 14px;
-  color: #b6aaff;
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 18px 28px 18px 18px;
-  z-index: 4000;
-  box-shadow: 0 2px 16px #000a;
-}
-.toast-icon {
-  font-size: 2em;
-  color: #3b82f6;
-  margin-right: 8px;
-  margin-top: 2px;
-}
-.toast-content {
-  display: flex;
-  flex-direction: column;
-}
-.toast-title {
-  font-weight: bold;
-  color: #3b82f6;
-  font-size: 1.1em;
-  margin-bottom: 2px;
-}
-.toast-desc {
-  color: #b6aaff;
-  font-size: 1em;
-}
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.4s;
-}
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
-}
-.fade-enter-to, .fade-leave-from {
   opacity: 1;
 }
 </style> 

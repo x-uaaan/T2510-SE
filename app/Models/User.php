@@ -55,4 +55,24 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
         ];
     }
+
+    public function forums()
+    {
+        return $this->hasMany(Forum::class, 'organiserID', 'userID');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'userID', 'userID');
+    }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class, 'organiserID', 'userID');
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->attributes['username'];
+    }
 }
