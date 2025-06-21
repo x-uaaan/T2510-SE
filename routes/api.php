@@ -5,8 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\PostController;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AttendeeController;
 
 Route::middleware('api')->get('/ping', function () {
     return response()->json(['message' => 'pong']);
@@ -24,21 +23,13 @@ Route::delete('/posts/{post}', [PostController::class, 'apiDestroy']);
 Route::post('/posts/{post}/comments', [PostController::class, 'addComment']);
 Route::post('/posts/{post}', [PostController::class, 'apiUpdate']);
 
-Route::get('/user', function (Request $request) {
-    if (!session()->has('authenticated_user_email')) {
-        return response()->json(['message' => 'Unauthenticated.'], 401);
-    }
+Route::middleware('auth:web')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+});
 
-    $email = session('authenticated_user_email');
-    $user = User::where('email', $email)->first();
-
-    if ($user) {
-        return response()->json([
-            'id' => $user->userID,
-            'name' => $user->username,
-            'role' => strtolower($user->userType),
-        ]);
-    }
-    
-    return response()->json(['message' => 'User not found.'], 404);
-}); 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/events/{event}/attend', [AttendeeController::class, 'store']);
+    Route::get('/events/{event}/check-attendance', [AttendeeController::class, 'checkAttendance']);
+});

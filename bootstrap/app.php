@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
 
-        //
+        $middleware->redirectGuestsTo(fn () => route('auth.microsoft'));
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

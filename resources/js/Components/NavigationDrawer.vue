@@ -35,11 +35,23 @@ const userRole = ref('')
 
 onMounted(async () => {
   try {
-    const response = await axios.get('/api/user')
-    userId.value = response.data.id
-    userName.value = response.data.name
-    userRole.value = response.data.role
+    // Get CSRF token from meta tag
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    
+    const response = await axios.get('/api/user', {
+      headers: {
+        'X-CSRF-TOKEN': token,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    console.log('User data:', response.data) // Debug log
+    // Use the correct property names from your User model
+    userId.value = response.data.userID
+    userName.value = response.data.username || response.data.name || 'User'
+    userRole.value = response.data.userType || response.data.role || ''
   } catch (e) {
+    console.error('Error fetching user:', e)
     userName.value = 'User'
   }
 })
@@ -65,7 +77,7 @@ const navItems = computed(() => {
     },
   ];
 
-  if (userRole.value === 'admin') {
+  if (userRole.value === 'Admin') {
     items.push({
       label: 'Dashboard',
       route: '/dashboard',

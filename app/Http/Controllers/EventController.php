@@ -16,10 +16,8 @@ class EventController extends Controller
 {
     public function index()
     {
-        // Check authentication in controller
-        $authenticatedUserEmail = session('authenticated_user_email');
-        
-        if (!$authenticatedUserEmail) {
+        // Use Laravel's built-in authentication system
+        if (!Auth::check()) {
             return redirect()->route('auth.microsoft');
         }
 
@@ -51,13 +49,12 @@ class EventController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // 2. Get organiser from session
-        $userEmail = session('authenticated_user_email');
-        if (!$userEmail) {
-            return redirect()->route('login')->with('error', 'You must be logged in to create an event.');
+        // 2. Get organiser from Laravel's authentication system
+        if (!Auth::check()) {
+            return redirect()->route('auth.microsoft')->with('error', 'You must be logged in to create an event.');
         }
 
-        $user = User::where('email', $userEmail)->first();
+        $user = Auth::user();
         if (!$user) {
             return back()->withErrors(['error' => 'Authenticated user not found.'])->withInput();
         }

@@ -15,26 +15,24 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
     public function show(Request $request)
     {
-        $email = session('authenticated_user_email');
-
-        if (!$email) {
+        // Use Laravel's built-in authentication system
+        if (!Auth::check()) {
             return redirect()->route('auth.microsoft');
         }
 
-        $user = User::where('email', $email)
-            ->with(['forums', 'posts', 'events'])
-            ->first();
-
+        /** @var User $user */
+        $user = Auth::user();
         if (!$user) {
-            // If user not found, maybe clear session and redirect
-            session()->forget('authenticated_user_email');
             return redirect()->route('auth.microsoft');
         }
+
+        $user->load(['forums', 'posts', 'events']);
 
         // The resume path is stored relative to the 'storage/app/public' folder.
         // We need to create a public URL for it.
@@ -62,8 +60,12 @@ class ProfileController extends Controller
 
     public function edit(Request $request)
     {
-        $email = session('authenticated_user_email');
-        $user = User::where('email', $email)->firstOrFail();
+        if (!Auth::check()) {
+            return redirect()->route('auth.microsoft');
+        }
+
+        /** @var User $user */
+        $user = Auth::user();
 
         return Inertia::render('Profile/UpdateProfileForm', [
             'user' => $user,
@@ -72,8 +74,12 @@ class ProfileController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
-        $email = session('authenticated_user_email');
-        $user = User::where('email', $email)->firstOrFail();
+        if (!Auth::check()) {
+            return redirect()->route('auth.microsoft');
+        }
+
+        /** @var User $user */
+        $user = Auth::user();
 
         $validated = $request->validate([
             'phone' => 'required|string|max:20',
@@ -114,8 +120,7 @@ class ProfileController extends Controller
             $user->resume_url = null;
         }
 
-        $authEmail = session('authenticated_user_email');
-        $authUser = $authEmail ? User::where('email', $authEmail)->first() : null;
+        $authUser = Auth::check() ? Auth::user() : null;
 
         return Inertia::render('Profile/Profile', [
             'user' => $user,
@@ -189,8 +194,11 @@ class ProfileController extends Controller
 
             Log::info('ProfileController: User created successfully', ['id' => $user->userID]);
             
-            // Set the authenticated user email in session
-            session(['authenticated_user_email' => $validated['email']]);
+            // Use Laravel's authentication system to log in the new user
+            Auth::login($user);
+            
+            // Regenerate session for security
+            $request->session()->regenerate();
             
             // Clear the socialite data from session
             session()->forget('socialite_user_data');

@@ -3,7 +3,6 @@
     <div v-if="event" class="drawer-backdrop" @click.self="close">
       <div class="drawer">
         <div class="drawer-scroll">
-          <!-- Close Button Top Left -->
           <div class="drawer-topbar">
             <button class="close-btn" @click="close" title="Close">
               <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20">
@@ -11,15 +10,11 @@
               </svg>
             </button>
           </div>
-          <!-- Event Image or Placeholder -->
           <div class="event-image-box">
             <img :src="event.image ? `/storage/${event.image}` : '/image/CampusPulseLogo.png'" alt="Event image" class="event-image" />
           </div>
-          <!-- Event Title -->
           <div class="event-title">{{ event.eventName }}</div>
-          <!-- Organiser Name as subtitle below event name -->
           <div class="event-organiser-subtitle">{{ event.organiserName }}</div>
-          <!-- Meta Info Row: Calendar and Dates/Times -->
           <div class="event-meta-row-horizontal-fixed">
             <div class="event-meta-block">
               <span class="icon-svg calendar-center" v-html="calendarSvg"></span>
@@ -43,7 +38,6 @@
               </div>
             </div>
           </div>
-          <!-- Location Row -->
           <div class="event-meta-row-horizontal-fixed">
             <div class="event-meta-block location-block">
               <span class="icon-svg location-align" v-html="locationSvg"></span>
@@ -54,19 +48,23 @@
               </div>
             </div>
           </div>
-          <!-- About Event -->
           <div class="event-section-title">About Event</div>
           <div class="event-description">
             {{ event.eventDesc || 'No description provided.' }}
           </div>
         </div>
-        <!-- Register Button -->
         <div class="register-btn-row relative">
           <div class="flex gap-4 items-center">
-            <Button @click="handleRsvpClick">One-Click RSVP</Button>
+            <button
+              @click="attendEvent"
+              :disabled="isAttending || isCheckingAttendance"
+              :class="{ 'button-disabled': isAttending || isCheckingAttendance }"
+            >
+              {{ isCheckingAttendance ? 'Checking...' : (isAttending ? 'Attending' : 'One-Click RSVP') }}
+            </button>
           </div>
+          <p v-if="message" class="rsvp-message">{{ message }}</p>
         </div>
-        <!-- Footer always at bottom -->
         <div class="drawer-footer">
           <a :href="`mailto:support@campuspulse.com`" class="drawer-link">Contact host</a>
           <a :href="`mailto:support@campuspulse.com`" class="drawer-link">Report event</a>
@@ -77,19 +75,60 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
+import axios from 'axios' // Import axios
 
 const props = defineProps(['event'])
 const emit = defineEmits(['close'])
 
-const showPopover = ref(false)
+const isAttending = ref(false)
+const isCheckingAttendance = ref(true) // New state for initial check
+const message = ref('')
 
-const handleRsvpClick = () => {
-  showPopover.value = true
-  setTimeout(() => {
-    showPopover.value = false
-  }, 2000)
+const attendEvent = async () => {
+  if (!props.event || !props.event.id || isAttending.value) {
+    return // Don't proceed if no event or already attending
+  }
+
+  isAttending.value = true // Temporarily disable button
+  message.value = 'Registering your attendance...'
+
+  try {
+    const response = await axios.post(`/api/events/${props.event.id}/attend`)
+    message.value = response.data.message || 'Successfully registered as an attendee.'
+    // No need to re-enable isAttending, as it should remain true after success
+  } catch (error) {
+    isAttending.value = false // Re-enable button on error
+    if (error.response && error.response.data && error.response.data.message) {
+      message.value = error.response.data.message
+    } else {
+      message.value = 'An error occurred. Please try again.'
+    }
+    console.error('RSVP error:', error);
+  }
 }
+
+// Function to check if the user is already attending
+const checkIfAttending = async (eventId) => {
+  if (!eventId) {
+    isCheckingAttendance.value = false;
+    return;
+  }
+  isCheckingAttendance.value = true;
+  try {
+    // Make a GET request to check attendance status
+    const response = await axios.get(`/api/events/${eventId}/check-attendance`);
+    isAttending.value = response.data.isAttending;
+    message.value = response.data.message || '';
+  } catch (error) {
+    console.error('Error checking attendance:', error);
+    isAttending.value = false; // Assume not attending on error
+    message.value = 'Could not verify attendance status.';
+  } finally {
+    isCheckingAttendance.value = false;
+  }
+};
+
 
 function close() { emit('close') }
 function formatDate(date) {
@@ -110,7 +149,7 @@ function isSameDay(start, end) {
   const e = new Date(end)
   return s.getFullYear() === e.getFullYear() && s.getMonth() === e.getMonth() && s.getDate() === e.getDate()
 }
-// SVGs
+// SVGs (same as before)
 const calendarSvg = `<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" width="24" height="24" color="#ffffff"><defs><style>.cls-6374f8d9b67f094e4896c61a-1{fill:none;stroke:currentColor;stroke-miterlimit:10;}</style></defs><rect class="cls-6374f8d9b67f094e4896c61a-1" x="1.48" y="3.37" width="21.04" height="4.78"></rect><rect class="cls-6374f8d9b67f094e4896c61a-1" x="1.48" y="8.15" width="21.04" height="14.35"></rect><line class="cls-6374f8d9b67f094e4896c61a-1" x1="5.3" y1="12.93" x2="7.22" y2="12.93"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="9.13" y1="12.93" x2="11.04" y2="12.93"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="12.96" y1="12.93" x2="14.87" y2="12.93"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="16.78" y1="12.93" x2="18.7" y2="12.93"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="16.78" y1="17.72" x2="18.7" y2="17.72"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="5.3" y1="17.72" x2="7.22" y2="17.72"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="9.13" y1="17.72" x2="11.04" y2="17.72"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="12.96" y1="17.72" x2="14.87" y2="17.72"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="6.26" y1="0.5" x2="6.26" y2="5.28"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="12" y1="0.5" x2="12" y2="5.28"></line><line class="cls-6374f8d9b67f094e4896c61a-1" x1="17.74" y1="0.5" x2="17.74" y2="5.28"></line></svg>`
 const locationSvg = `<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" width="24" height="24" color="#ffffff"><defs><style>.cls-6374f8d9b67f094e4896c649-1{fill:none;stroke:currentColor;stroke-miterlimit:10;}</style></defs><path class="cls-6374f8d9b67f094e4896c649-1" d="M19.64,9.14C19.64,15.82,12,22.5,12,22.5S4.36,15.82,4.36,9.14a7.64,7.64,0,0,1,15.28,0Z"></path><circle class="cls-6374f8d9b67f094e4896c649-1" cx="12" cy="9.14" r="2.86"></circle></svg>`
 const peopleSvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 21V17C2 15.8954 2.89543 15 4 15H14C15.1046 15 16 15.8954 16 17V21M16 3C16.8604 3.2203 17.623 3.7207 18.1676 4.42231C18.7122 5.12392 19.0078 5.98683 19.0078 6.875C19.0078 7.76317 18.7122 8.62608 18.1676 9.32769C17.623 10.0293 16.8604 10.5297 16 10.75M19 15H20C21.1046 15 22 15.8954 22 17V21M13 7C13 9.20914 11.2091 11 9 11C6.79086 11 5 9.20914 5 7C5 4.79086 6.79086 3 9 3C11.2091 3 13 4.79086 13 7Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>`
@@ -124,10 +163,28 @@ onMounted(() => {
       // Logic for showFooter was here, can be removed if not needed elsewhere
     })
   }
+  // Initial check when component mounts and event prop is available
+  if (props.event && props.event.id) {
+    checkIfAttending(props.event.id);
+  }
 })
+
+// Watch for changes in the event prop to re-run attendance check if the event changes
+watch(() => props.event, (newEvent) => {
+  if (newEvent && newEvent.id) {
+    checkIfAttending(newEvent.id);
+  } else {
+    isAttending.value = false;
+    isCheckingAttendance.value = false;
+    message.value = '';
+  }
+}, { immediate: true }); // immediate: true runs the watcher on initial render
+
+
 </script>
 
 <style scoped>
+/* Your existing styles */
 .drawer-backdrop {
   position: fixed;
   top: 0;
@@ -280,11 +337,12 @@ onMounted(() => {
 }
 .register-btn-row {
   display: flex;
+  flex-direction: column; /* Changed to column to stack button and message */
   justify-content: center;
+  align-items: center; /* Center items horizontally */
   margin: 20px 0;
 }
-/*.register-btn-ui */
-.register-btn-row button{
+.register-btn-row button {
   width: 380px;
   height: 50px;
   display: block;
@@ -298,11 +356,18 @@ onMounted(() => {
   font-size: 1.1em;
   transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
-.register-btn-row button:hover {
+.register-btn-row button:hover:not(:disabled) {
   border: 0.5px solid #3b82f6 !important;
   box-shadow: 0 0 0 2px #3b82f688 !important;
   transition: background 0.3s, color 0.3s, border-color 0.3s;
   color: #3b82f6 !important;
+}
+.register-btn-row button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-color: #333; /* Slightly darker background when disabled */
+  border-color: #555;
+  color: #bbb;
 }
 .rounded-lg {
   border-radius: 1.5rem;
@@ -349,4 +414,10 @@ onMounted(() => {
   transform: translateX(0);
   opacity: 1;
 }
-</style> 
+
+.rsvp-message {
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #fff; /* Adjust color as needed for visibility */
+}
+</style>x``

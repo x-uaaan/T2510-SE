@@ -13,15 +13,16 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SearchController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    Log::info('Root route accessed. Checking custom auth state.');
-    // Check for our custom authentication session variable
-    if (session()->has('authenticated_user_email')) {
-        Log::info('Root route: authenticated_user_email found in session. Redirecting to events.');
+    Log::info('Root route accessed. Checking auth state.');
+    // Check if user is authenticated using Laravel's built-in auth system
+    if (Auth::check()) {
+        Log::info('Root route: User is authenticated. UserID: ' . Auth::id() . '. Redirecting to events.');
         return redirect()->route('events.index');
     }
-    Log::info('Root route: User not authenticated (custom check). Showing landing page.');
+    Log::info('Root route: User not authenticated. Showing landing page.');
     return Inertia::render('Landing');
 })->name('home');
 
@@ -44,23 +45,41 @@ Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.e
 Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::get('/profile/{user}', [ProfileController::class, 'showPublic'])->name('profile.public.show');
 
-// Protected routes that require authentication using our custom middleware
-Route::get('events', [EventController::class, 'index'])->name('events.index');
-Route::resource('forum', ForumController::class);
-Route::resource('posts', PostController::class);
-Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
-Route::post('/events', [EventController::class, 'store'])->name('events.store');
-Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
-Route::patch('/events/{event}', [EventController::class, 'update'])->name('events.update');
+// Protected routes that require authentication
+Route::middleware(['auth', 'web'])->group(function () {
+    Route::get('events', [EventController::class, 'index'])->name('events.index');
+    Route::resource('forum', ForumController::class);
+    Route::resource('posts', PostController::class);
+    Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+    Route::post('/events', [EventController::class, 'store'])->name('events.store');
+    Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
+    Route::patch('/events/{event}', [EventController::class, 'update'])->name('events.update');
+});
 
 Route::post('/logout', function (Request $request) {
-    session()->forget('authenticated_user_email');
-    session()->forget('socialite_user_data');
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
     return redirect()->route('home')->with('success', 'You have been logged out.');
 })->name('logout');
 
 Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
 Route::get('/searchpage/{keyword}', [SearchController::class, 'search'])->name('search.show');
+
+// Temporary debug route - remove after testing
+Route::get('/debug-auth', function () {
+    return response()->json([
+        'authenticated' => Auth::check(),
+        'user_id' => Auth::id(),
+        'user' => Auth::user(),
+        'session_data' => session()->all(),
+        'guard' => Auth::getDefaultDriver(),
+    ]);
+})->name('debug.auth');
+
+Route::get('/test', function () {
+    return response()->json(['message' => 'Laravel is working!', 'timestamp' => now()]);
+});
 
 require __DIR__.'/auth.php';
