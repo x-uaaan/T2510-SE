@@ -1,0 +1,13 @@
+node_modules
+.git
+.env
+api/vendor
+api/storage/logs
+api/storage/framework/cache
+api/storage/framework/sessions
+api/storage/framework/testing
+api/storage/framework/views
+api/bootstrap/cache
+*.log
+.DS_Store
+Thumbs.db 
