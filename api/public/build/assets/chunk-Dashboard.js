@@ -1,4 +1,4 @@
-var Dn=Object.defineProperty;var On=(i,t,e)=>t in i?Dn(i,t,{enumerable:!0,configurable:!0,writable:!0,value:e}):i[t]=e;var D=(i,t,e)=>On(i,typeof t!="symbol"?t+"":t,e);import{A as Cn}from"./AppLayout.js";import{y as Fs,z as zs,A as Ge,B as Pn,k as Tn,l as An,C as Ln,D as In,E as Ze,G as Fn,H as Rs,c as zn,o as Es,u as Bs,f as Rn,d as We,g as En,w as Bn,a as O,t as ce,F as Hn}from"./app2.js";import"./NavigationDrawer.js";/*!
+var Dn=Object.defineProperty;var On=(i,t,e)=>t in i?Dn(i,t,{enumerable:!0,configurable:!0,writable:!0,value:e}):i[t]=e;var D=(i,t,e)=>On(i,typeof t!="symbol"?t+"":t,e);import{A as Cn}from"./chunk-AppLayout.js";import{y as Fs,z as zs,A as Ge,B as Pn,k as Tn,l as An,C as Ln,D as In,E as Ze,G as Fn,H as Rs,c as zn,o as Es,u as Bs,f as Rn,d as We,g as En,w as Bn,a as O,t as ce,F as Hn}from"./app2.js";import"./chunk-NavigationDrawer.js";/*!
  * @kurkle/color v0.3.4
  * https://github.com/kurkle/color#readme
  * (c) 2024 Jukka Kurkela

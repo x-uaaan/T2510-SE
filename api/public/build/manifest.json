@@ -1,242 +1,242 @@
 {
-  "_AppLayout.js": {
-    "file": "assets/AppLayout.js",
+  "_BaseLayout.css": {
+    "file": "assets/css/BaseLayout.css",
+    "src": "_BaseLayout.css"
+  },
+  "_SearchBar.css": {
+    "file": "assets/css/SearchBar.css",
+    "src": "_SearchBar.css"
+  },
+  "_TimePicker.css": {
+    "file": "assets/css/TimePicker.css",
+    "src": "_TimePicker.css"
+  },
+  "_chunk-AppLayout.js": {
+    "file": "assets/chunk-AppLayout.js",
     "name": "AppLayout",
     "imports": [
-      "_NavigationDrawer.js",
+      "_chunk-NavigationDrawer.js",
       "api/resources/js/app.js"
     ]
   },
-  "_ApplicationLogo.js": {
-    "file": "assets/ApplicationLogo.js",
+  "_chunk-ApplicationLogo.js": {
+    "file": "assets/chunk-ApplicationLogo.js",
     "name": "ApplicationLogo",
     "imports": [
       "api/resources/js/app.js"
     ]
   },
-  "_BaseLayout.css": {
-    "file": "assets/BaseLayout.css",
-    "src": "_BaseLayout.css"
-  },
-  "_BaseLayout.js": {
-    "file": "assets/BaseLayout.js",
+  "_chunk-BaseLayout.js": {
+    "file": "assets/chunk-BaseLayout.js",
     "name": "BaseLayout",
     "imports": [
       "api/resources/js/app.js"
     ],
     "css": [
-      "assets/BaseLayout.css"
+      "assets/css/BaseLayout.css"
     ]
   },
-  "_GuestLayout.js": {
-    "file": "assets/GuestLayout.js",
+  "_chunk-GuestLayout.js": {
+    "file": "assets/chunk-GuestLayout.js",
     "name": "GuestLayout",
     "imports": [
-      "_ApplicationLogo.js",
+      "_chunk-ApplicationLogo.js",
       "api/resources/js/app.js"
     ]
   },
-  "_Modal.js": {
-    "file": "assets/Modal.js",
+  "_chunk-Modal.js": {
+    "file": "assets/chunk-Modal.js",
     "name": "Modal",
     "imports": [
       "api/resources/js/app.js"
     ]
   },
-  "_NavigationDrawer.js": {
-    "file": "assets/NavigationDrawer.js",
+  "_chunk-NavigationDrawer.js": {
+    "file": "assets/chunk-NavigationDrawer.js",
     "name": "NavigationDrawer",
     "imports": [
       "api/resources/js/app.js"
     ]
   },
-  "_PrimaryButton.js": {
-    "file": "assets/PrimaryButton.js",
+  "_chunk-PrimaryButton.js": {
+    "file": "assets/chunk-PrimaryButton.js",
     "name": "PrimaryButton",
     "imports": [
       "api/resources/js/app.js"
     ]
   },
-  "_SearchBar.css": {
-    "file": "assets/SearchBar.css",
-    "src": "_SearchBar.css"
-  },
-  "_SearchBar.js": {
-    "file": "assets/SearchBar.js",
+  "_chunk-SearchBar.js": {
+    "file": "assets/chunk-SearchBar.js",
     "name": "SearchBar",
     "imports": [
       "api/resources/js/app.js"
     ],
     "css": [
-      "assets/SearchBar.css"
+      "assets/css/SearchBar.css"
     ]
   },
-  "_TextInput.js": {
-    "file": "assets/TextInput.js",
+  "_chunk-TextInput.js": {
+    "file": "assets/chunk-TextInput.js",
     "name": "TextInput",
     "imports": [
       "api/resources/js/app.js"
     ]
   },
-  "_TimePicker.css": {
-    "file": "assets/TimePicker.css",
-    "src": "_TimePicker.css"
-  },
-  "_TimePicker.js": {
-    "file": "assets/TimePicker.js",
+  "_chunk-TimePicker.js": {
+    "file": "assets/chunk-TimePicker.js",
     "name": "TimePicker",
     "imports": [
       "api/resources/js/app.js"
     ],
     "css": [
-      "assets/TimePicker.css"
+      "assets/css/TimePicker.css"
     ]
   },
   "api/resources/css/app.css": {
-    "file": "assets/app.css",
+    "file": "assets/css/app.css",
     "src": "api/resources/css/app.css",
     "isEntry": true
   },
   "api/resources/js/Pages/About.vue": {
-    "file": "assets/About.js",
+    "file": "assets/chunk-About.js",
     "name": "About",
     "src": "api/resources/js/Pages/About.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_AppLayout.js",
+      "_chunk-AppLayout.js",
       "api/resources/js/app.js",
-      "_NavigationDrawer.js"
+      "_chunk-NavigationDrawer.js"
     ]
   },
   "api/resources/js/Pages/Auth/ConfirmPassword.vue": {
-    "file": "assets/ConfirmPassword.js",
+    "file": "assets/chunk-ConfirmPassword.js",
     "name": "ConfirmPassword",
     "src": "api/resources/js/Pages/Auth/ConfirmPassword.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_GuestLayout.js",
-      "_TextInput.js",
-      "_PrimaryButton.js",
-      "_ApplicationLogo.js"
+      "_chunk-GuestLayout.js",
+      "_chunk-TextInput.js",
+      "_chunk-PrimaryButton.js",
+      "_chunk-ApplicationLogo.js"
     ]
   },
   "api/resources/js/Pages/Auth/ForgotPassword.vue": {
-    "file": "assets/ForgotPassword.js",
+    "file": "assets/chunk-ForgotPassword.js",
     "name": "ForgotPassword",
     "src": "api/resources/js/Pages/Auth/ForgotPassword.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_GuestLayout.js",
-      "_TextInput.js",
-      "_PrimaryButton.js",
-      "_ApplicationLogo.js"
+      "_chunk-GuestLayout.js",
+      "_chunk-TextInput.js",
+      "_chunk-PrimaryButton.js",
+      "_chunk-ApplicationLogo.js"
     ]
   },
   "api/resources/js/Pages/Auth/Login.vue": {
-    "file": "assets/Login.js",
+    "file": "assets/chunk-Login.js",
     "name": "Login",
     "src": "api/resources/js/Pages/Auth/Login.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_GuestLayout.js",
-      "_TextInput.js",
-      "_PrimaryButton.js",
-      "_ApplicationLogo.js"
+      "_chunk-GuestLayout.js",
+      "_chunk-TextInput.js",
+      "_chunk-PrimaryButton.js",
+      "_chunk-ApplicationLogo.js"
     ]
   },
   "api/resources/js/Pages/Auth/Register.vue": {
-    "file": "assets/Register.js",
+    "file": "assets/chunk-Register.js",
     "name": "Register",
     "src": "api/resources/js/Pages/Auth/Register.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_GuestLayout.js",
-      "_TextInput.js",
-      "_PrimaryButton.js",
-      "_ApplicationLogo.js"
+      "_chunk-GuestLayout.js",
+      "_chunk-TextInput.js",
+      "_chunk-PrimaryButton.js",
+      "_chunk-ApplicationLogo.js"
     ]
   },
   "api/resources/js/Pages/Auth/ResetPassword.vue": {
-    "file": "assets/ResetPassword.js",
+    "file": "assets/chunk-ResetPassword.js",
     "name": "ResetPassword",
     "src": "api/resources/js/Pages/Auth/ResetPassword.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_GuestLayout.js",
-      "_TextInput.js",
-      "_PrimaryButton.js",
-      "_ApplicationLogo.js"
+      "_chunk-GuestLayout.js",
+      "_chunk-TextInput.js",
+      "_chunk-PrimaryButton.js",
+      "_chunk-ApplicationLogo.js"
     ]
   },
   "api/resources/js/Pages/Auth/VerifyEmail.vue": {
-    "file": "assets/VerifyEmail.js",
+    "file": "assets/chunk-VerifyEmail.js",
     "name": "VerifyEmail",
     "src": "api/resources/js/Pages/Auth/VerifyEmail.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_GuestLayout.js",
-      "_PrimaryButton.js",
-      "_ApplicationLogo.js"
+      "_chunk-GuestLayout.js",
+      "_chunk-PrimaryButton.js",
+      "_chunk-ApplicationLogo.js"
     ]
   },
   "api/resources/js/Pages/CompleteProfile.vue": {
-    "file": "assets/CompleteProfile.js",
+    "file": "assets/chunk-CompleteProfile.js",
     "name": "CompleteProfile",
     "src": "api/resources/js/Pages/CompleteProfile.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_BaseLayout.js"
+      "_chunk-BaseLayout.js"
     ],
     "css": [
-      "assets/CompleteProfile.css"
+      "assets/css/CompleteProfile.css"
     ]
   },
   "api/resources/js/Pages/Dashboard.vue": {
-    "file": "assets/Dashboard.js",
+    "file": "assets/chunk-Dashboard.js",
     "name": "Dashboard",
     "src": "api/resources/js/Pages/Dashboard.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_AppLayout.js",
+      "_chunk-AppLayout.js",
       "api/resources/js/app.js",
-      "_NavigationDrawer.js"
+      "_chunk-NavigationDrawer.js"
     ]
   },
   "api/resources/js/Pages/EventCreateForm.vue": {
-    "file": "assets/EventCreateForm.js",
+    "file": "assets/chunk-EventCreateForm.js",
     "name": "EventCreateForm",
     "src": "api/resources/js/Pages/EventCreateForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_TimePicker.js"
+      "_chunk-TimePicker.js"
     ],
     "css": [
-      "assets/EventCreateForm.css"
+      "assets/css/EventCreateForm.css"
     ]
   },
   "api/resources/js/Pages/EventEditForm.vue": {
-    "file": "assets/EventEditForm.js",
+    "file": "assets/chunk-EventEditForm.js",
     "name": "EventEditForm",
     "src": "api/resources/js/Pages/EventEditForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_TimePicker.js"
+      "_chunk-TimePicker.js"
     ],
     "css": [
-      "assets/EventEditForm.css"
+      "assets/css/EventEditForm.css"
     ]
   },
   "api/resources/js/Pages/Landing.vue": {
-    "file": "assets/Landing.js",
+    "file": "assets/chunk-Landing.js",
     "name": "Landing",
     "src": "api/resources/js/Pages/Landing.vue",
     "isDynamicEntry": true,
@@ -245,97 +245,97 @@
     ]
   },
   "api/resources/js/Pages/Profile/Edit.vue": {
-    "file": "assets/Edit.js",
+    "file": "assets/chunk-Edit.js",
     "name": "Edit",
     "src": "api/resources/js/Pages/Profile/Edit.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_ApplicationLogo.js",
+      "_chunk-ApplicationLogo.js",
       "api/resources/js/app.js",
       "api/resources/js/Pages/Profile/Partials/DeleteUserForm.vue",
       "api/resources/js/Pages/Profile/Partials/UpdatePasswordForm.vue",
       "api/resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.vue",
-      "_TextInput.js",
-      "_Modal.js",
-      "_PrimaryButton.js"
+      "_chunk-TextInput.js",
+      "_chunk-Modal.js",
+      "_chunk-PrimaryButton.js"
     ]
   },
   "api/resources/js/Pages/Profile/Partials/DeleteUserForm.vue": {
-    "file": "assets/DeleteUserForm.js",
+    "file": "assets/chunk-DeleteUserForm.js",
     "name": "DeleteUserForm",
     "src": "api/resources/js/Pages/Profile/Partials/DeleteUserForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_TextInput.js",
-      "_Modal.js"
+      "_chunk-TextInput.js",
+      "_chunk-Modal.js"
     ]
   },
   "api/resources/js/Pages/Profile/Partials/UpdatePasswordForm.vue": {
-    "file": "assets/UpdatePasswordForm.js",
+    "file": "assets/chunk-UpdatePasswordForm.js",
     "name": "UpdatePasswordForm",
     "src": "api/resources/js/Pages/Profile/Partials/UpdatePasswordForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_TextInput.js",
-      "_PrimaryButton.js"
+      "_chunk-TextInput.js",
+      "_chunk-PrimaryButton.js"
     ]
   },
   "api/resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.vue": {
-    "file": "assets/UpdateProfileInformationForm.js",
+    "file": "assets/chunk-UpdateProfileInformationForm.js",
     "name": "UpdateProfileInformationForm",
     "src": "api/resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_TextInput.js",
-      "_PrimaryButton.js"
+      "_chunk-TextInput.js",
+      "_chunk-PrimaryButton.js"
     ]
   },
   "api/resources/js/Pages/Profile/Profile.vue": {
-    "file": "assets/Profile.js",
+    "file": "assets/chunk-Profile.js",
     "name": "Profile",
     "src": "api/resources/js/Pages/Profile/Profile.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_NavigationDrawer.js",
-      "_Modal.js"
+      "_chunk-NavigationDrawer.js",
+      "_chunk-Modal.js"
     ],
     "css": [
-      "assets/Profile.css"
+      "assets/css/Profile.css"
     ]
   },
   "api/resources/js/Pages/Profile/UpdateProfileForm.vue": {
-    "file": "assets/UpdateProfileForm.js",
+    "file": "assets/chunk-UpdateProfileForm.js",
     "name": "UpdateProfileForm",
     "src": "api/resources/js/Pages/Profile/UpdateProfileForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_BaseLayout.js"
+      "_chunk-BaseLayout.js"
     ],
     "css": [
-      "assets/UpdateProfileForm.css"
+      "assets/css/UpdateProfileForm.css"
     ]
   },
   "api/resources/js/Pages/SearchPage.vue": {
-    "file": "assets/SearchPage.js",
+    "file": "assets/chunk-SearchPage.js",
     "name": "SearchPage",
     "src": "api/resources/js/Pages/SearchPage.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_NavigationDrawer.js",
-      "_SearchBar.js"
+      "_chunk-NavigationDrawer.js",
+      "_chunk-SearchBar.js"
     ],
     "css": [
-      "assets/SearchPage.css"
+      "assets/css/SearchPage.css"
     ]
   },
   "api/resources/js/Pages/Welcome.vue": {
-    "file": "assets/Welcome.js",
+    "file": "assets/chunk-Welcome.js",
     "name": "Welcome",
     "src": "api/resources/js/Pages/Welcome.vue",
     "isDynamicEntry": true,
@@ -344,30 +344,30 @@
     ]
   },
   "api/resources/js/Pages/posts/PostList.vue": {
-    "file": "assets/PostList.js",
+    "file": "assets/chunk-PostList.js",
     "name": "PostList",
     "src": "api/resources/js/Pages/posts/PostList.vue",
     "isDynamicEntry": true,
     "imports": [
       "api/resources/js/app.js",
-      "_NavigationDrawer.js",
-      "_SearchBar.js"
+      "_chunk-NavigationDrawer.js",
+      "_chunk-SearchBar.js"
     ],
     "css": [
-      "assets/PostList.css"
+      "assets/css/PostList.css"
     ]
   },
   "api/resources/js/Pages/posts/PostShow.vue": {
-    "file": "assets/PostShow.js",
+    "file": "assets/chunk-PostShow.js",
     "name": "PostShow",
     "src": "api/resources/js/Pages/posts/PostShow.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_NavigationDrawer.js",
+      "_chunk-NavigationDrawer.js",
       "api/resources/js/app.js"
     ],
     "css": [
-      "assets/PostShow.css"
+      "assets/css/PostShow.css"
     ]
   },
   "api/resources/js/app.js": {
@@ -400,7 +400,7 @@
       "api/resources/js/Pages/posts/PostShow.vue"
     ],
     "css": [
-      "assets/app2.css"
+      "assets/css/app2.css"
     ]
   }
 }
