@@ -7,6 +7,12 @@ export default defineConfig({
     build: {
         outDir: 'api/public/build',
         emptyOutDir: true,
+        manifest: true,
+        rollupOptions: {
+            output: {
+                manualChunks: undefined
+            }
+        }
     },
     plugins: [
         laravel({
@@ -15,6 +21,7 @@ export default defineConfig({
                 'api/resources/js/app.js',
             ],
             refresh: true,
+            buildDirectory: 'build',
         }),
         vue({
             template: {
@@ -29,5 +36,9 @@ export default defineConfig({
         alias: {
             '@': '/api/resources/js',
         },
+    },
+    server: {
+        host: '0.0.0.0',
+        port: 5173,
     },
 });

@@ -4,6 +4,8 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
+        "build:prod": "vite build --mode production",
+        "vercel-build": "vite build --mode production && node -e \"console.log('Build completed'); const fs = require('fs'); if (fs.existsSync('api/public/build/.vite/manifest.json')) { fs.copyFileSync('api/public/build/.vite/manifest.json', 'api/public/build/manifest.json'); console.log('Manifest copied'); }\"",
         "preview": "vite preview"
     },
     "devDependencies": {
