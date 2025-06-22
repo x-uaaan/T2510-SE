@@ -1,11 +1,19 @@
+// vite.config.js
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
+    build: {
+        outDir: 'api/public/build',
+        emptyOutDir: true,
+    },
     plugins: [
         laravel({
-            input: ['api/resources/js/app.js', 'api/resources/js/event-create.js'],
+            input: [
+                'api/resources/css/app.css',
+                'api/resources/js/app.js',
+            ],
             refresh: true,
         }),
         vue({
@@ -22,5 +30,4 @@ export default defineConfig({
             '@': '/api/resources/js',
         },
     },
-
 });
