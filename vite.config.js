@@ -22,14 +22,5 @@ export default defineConfig({
             '@': '/api/resources/js',
         },
     },
-    build: {
-        // CRITICAL CHANGE HERE: Output directly to api/public
-        outDir: 'api/public', // Changed from 'api/public/build'
-        emptyOutDir: true, // This will clear 'api/public' before build, be careful if you have other files there
-        rollupOptions: {
-            input: 'api/resources/js/app.js',
-        },
-        // Optionally, define assetsDir to ensure files go into a subfolder like 'assets'
-        assetsDir: 'assets', // This means files will be in api/public/assets
-    },
+
 });
