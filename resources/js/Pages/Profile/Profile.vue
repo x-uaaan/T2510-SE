@@ -16,7 +16,7 @@
       </div>
       <div class="profile-tabs">
         <span class="glider" :style="gliderStyle"></span>
-        <button v-if="user.userType === 'Lecturer' || user.userType === 'Admin'" :ref="el => tabButtons.event = el" :class="{active: tab==='event'}" @click="tab='event'">Events</button>
+        <button v-if="user.userType !== 'Alumni'" :ref="el => tabButtons.event = el" :class="{active: tab==='event'}" @click="tab='event'">Events</button>
         <button :ref="el => tabButtons.forum = el" :class="{active: tab==='forum'}" @click="tab='forum'">Forums</button>
         <button :ref="el => tabButtons.post = el" :class="{active: tab==='post'}" @click="tab='post'">Posts</button>
       </div>
@@ -80,7 +80,7 @@ const isMyProfile = computed(() => authUser.value && authUser.value.userID === p
 
 // Set default tab to 'event' if user can create events, otherwise 'forum'
 const defaultTab = computed(() => {
-  if (props.user.userType === 'Lecturer' || props.user.userType === 'Admin') {
+  if (props.user.userType !== 'Alumni') {
     return 'event'
   }
   return 'forum'

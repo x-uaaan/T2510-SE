@@ -14,7 +14,7 @@
             <img :src="event.image ? `/storage/${event.image}` : '/image/CampusPulseLogo.png'" alt="Event image" class="event-image" />
           </div>
           <div class="event-title">{{ event.eventName }}</div>
-          <div class="event-organiser-subtitle">{{ event.organiserName }}</div>
+          <a :href="`/profile/${event.organiserID}`" class="event-organiser-subtitle organiser-link">{{ event.organiserName }}</a>
           <div class="event-meta-row-horizontal-fixed">
             <div class="event-meta-block">
               <span class="icon-svg calendar-center" v-html="calendarSvg"></span>
@@ -60,7 +60,7 @@
               :disabled="isAttending || isCheckingAttendance"
               :class="{ 'button-disabled': isAttending || isCheckingAttendance }"
             >
-              {{ isCheckingAttendance ? 'RSVP' : (isAttending ? "RSVP'd" : 'RSVP') }}
+              {{ isCheckingAttendance ? 'RSVP' : (isAttending ? "RSVP'd" : 'One-Click RSVP') }}
             </button>
           </div>
         </div>
@@ -274,6 +274,12 @@ watch(() => props.event, (newEvent) => {
   text-align: left;
   padding: 0 24px;
   margin-bottom: 10px;
+  text-decoration: none;
+}
+.organiser-link:hover {
+  color: #3b82f6 !important;
+  text-shadow: 0 0 0 2px #3b82f688 !important;
+  transition: color 0.3s;
 }
 .event-meta-row-horizontal-fixed {
   display: flex;

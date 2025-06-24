@@ -2008,3 +2008,179 @@ Stack trace:
 [2025-06-24 13:12:52] local.INFO: MicrosoftCallback: Existing user found. UserID: usr_008, Email: loksuan.tan@gmail.com  
 [2025-06-24 13:12:52] local.INFO: MicrosoftCallback: User successfully authenticated. UserID: usr_008  
 [2025-06-24 13:12:52] local.INFO: MicrosoftCallback: Redirecting authenticated user to events page.  
+[2025-06-24 13:14:47] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 13:14:47] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 13:14:47] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 13:14:47] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 17:37:18] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 17:37:18] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 17:37:32] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C528_BAY.2.U.a8141335-8c08-35e9-61be-39bc8eda2ac2","state":"ruiCqgXknug95vALMudkmWJWLTMXSHdmbaGmp22o"}  
+[2025-06-24 17:37:32] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 17:37:34] local.INFO: MicrosoftCallback: Processing user callback for email: loksuan.tan@gmail.com  
+[2025-06-24 17:37:34] local.INFO: MicrosoftCallback: Existing user found. UserID: usr_008, Email: loksuan.tan@gmail.com  
+[2025-06-24 17:37:34] local.INFO: MicrosoftCallback: User successfully authenticated. UserID: usr_008  
+[2025-06-24 17:37:34] local.INFO: MicrosoftCallback: Redirecting authenticated user to events page.  
+[2025-06-24 17:38:37] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 17:38:37] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 17:38:50] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 17:38:50] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 18:13:34] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C528_SN1.2.U.0f7b73b3-9255-7db5-2688-707e0454ddeb","state":"Tu5LpuPielusg7YGqsCdcea7a4KqqxfYpjEmqdw9"}  
+[2025-06-24 18:13:34] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 18:13:35] local.INFO: MicrosoftCallback: Processing user callback for email: loksuan.tan@gmail.com  
+[2025-06-24 18:13:35] local.INFO: MicrosoftCallback: Existing user found. UserID: usr_008, Email: loksuan.tan@gmail.com  
+[2025-06-24 18:13:35] local.INFO: MicrosoftCallback: User successfully authenticated. UserID: usr_008  
+[2025-06-24 18:13:35] local.INFO: MicrosoftCallback: Redirecting authenticated user to events page.  
+[2025-06-24 18:25:54] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 18:25:54] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 18:25:54] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 18:25:54] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 18:26:10] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C528_BL2.2.U.c53f47fa-fd22-516b-ca93-8482109c1215","state":"v4L8FRWYxk2OB2EJZdBxP6tpBXl8H5M9elrUQ7Ae"}  
+[2025-06-24 18:26:10] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 18:26:11] local.INFO: MicrosoftCallback: Processing user callback for email: loksuan.tan@gmail.com  
+[2025-06-24 18:26:11] local.INFO: MicrosoftCallback: Existing user found. UserID: usr_008, Email: loksuan.tan@gmail.com  
+[2025-06-24 18:26:11] local.INFO: MicrosoftCallback: User successfully authenticated. UserID: usr_008  
+[2025-06-24 18:26:11] local.INFO: MicrosoftCallback: Redirecting authenticated user to events page.  
+[2025-06-24 18:26:46] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 18:26:46] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 18:27:13] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C530_BL2.2.U.08b10572-5c2a-19d6-3014-a04165e3f3f1","state":"8Ib4kd1SYGPvL6B1sMfPBbPsTpT7VdHrvl9Y3JwY"}  
+[2025-06-24 18:27:13] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 18:27:14] local.INFO: MicrosoftCallback: Processing user callback for email: xuanchristine04@gmail.com  
+[2025-06-24 18:27:14] local.INFO: MicrosoftCallback: New user detected. Email: xuanchristine04@gmail.com. Redirecting to complete-profile.  
+[2025-06-24 18:28:19] local.INFO: ProfileController: Starting profile completion process  
+[2025-06-24 18:28:20] local.INFO: ProfileController: Validation passed {"email":"xuanchristine04@gmail.com","name":"Christine X","userType":"Alumni"} 
+[2025-06-24 18:28:20] local.INFO: ProfileController: User created successfully {"id":"usr_009"} 
+[2025-06-24 18:28:20] local.INFO: ProfileController: Profile completion successful {"email":"xuanchristine04@gmail.com","userType":"Alumni"} 
+[2025-06-24 18:30:52] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 18:30:52] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 18:30:52] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 18:30:52] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 18:40:52] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 18:40:52] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 18:40:55] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 18:40:55] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 18:40:59] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 18:40:59] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 18:41:07] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C530_SN1.2.U.1c93f2fb-6f39-ddf1-0dfd-461ed7a73234","state":"LOiN27yJ3vAW8wiKGGXsLopOAJqt6W3vepl9RRo9"}  
+[2025-06-24 18:41:07] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 18:41:09] local.INFO: MicrosoftCallback: Processing user callback for email: xuanchristine04@gmail.com  
+[2025-06-24 18:41:09] local.INFO: MicrosoftCallback: New user detected. Email: xuanchristine04@gmail.com. Redirecting to complete-profile.  
+[2025-06-24 18:42:09] local.INFO: ProfileController: Starting profile completion process  
+[2025-06-24 18:42:09] local.INFO: ProfileController: Validation passed {"email":"xuanchristine04@gmail.com","name":"Christine X","userType":"Lecturer"} 
+[2025-06-24 18:42:09] local.INFO: ProfileController: User created successfully {"id":"usr_009"} 
+[2025-06-24 18:42:09] local.INFO: ProfileController: Profile completion successful {"email":"xuanchristine04@gmail.com","userType":"Lecturer"} 
+[2025-06-24 18:43:16] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 18:43:16] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 18:43:31] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C530_BL2.2.U.174259b5-ca08-7b35-9000-86f31fd5d2fd","state":"ljrwRQnebS09XtWPmKGQpUyAueY73emwRWcaOp42"}  
+[2025-06-24 18:43:31] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 18:43:31] local.INFO: MicrosoftCallback: Processing user callback for email: xuanchristine04@gmail.com  
+[2025-06-24 18:43:31] local.INFO: MicrosoftCallback: New user detected. Email: xuanchristine04@gmail.com. Redirecting to complete-profile.  
+[2025-06-24 18:43:58] local.INFO: ProfileController: Starting profile completion process  
+[2025-06-24 18:43:58] local.INFO: ProfileController: Validation passed {"email":"xuanchristine04@gmail.com","name":"Christine X","userType":"Alumni"} 
+[2025-06-24 18:43:58] local.INFO: ProfileController: User created successfully {"id":"usr_009"} 
+[2025-06-24 18:43:58] local.INFO: ProfileController: Profile completion successful {"email":"xuanchristine04@gmail.com","userType":"Alumni"} 
+[2025-06-24 18:56:09] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C530_BAY.2.U.6c8eb430-23fb-2d9c-8b51-c7da02a054c1","state":"ljrwRQnebS09XtWPmKGQpUyAueY73emwRWcaOp42"}  
+[2025-06-24 18:56:09] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 18:56:09] local.ERROR: MicrosoftCallback: Error during callback:   
+[2025-06-24 18:56:09] local.ERROR: MicrosoftCallback: Stack trace: #0 C:\Users\acer\T2510-SE\app\Http\Controllers\Auth\MicrosoftController.php(46): SocialiteProviders\Manager\OAuth2\AbstractProvider->user()
+#1 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Routing\ControllerDispatcher.php(46): App\Http\Controllers\Auth\MicrosoftController->handleMicrosoftCallback()
+#2 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Routing\Route.php(265): Illuminate\Routing\ControllerDispatcher->dispatch()
+#3 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Routing\Route.php(211): Illuminate\Routing\Route->runController()
+#4 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Routing\Router.php(808): Illuminate\Routing\Route->run()
+#5 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(169): Illuminate\Routing\Router->Illuminate\Routing\{closure}()
+#6 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets.php(32): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#7 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets->handle()
+#8 C:\Users\acer\T2510-SE\vendor\inertiajs\inertia-laravel\src\Middleware.php(100): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#9 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Inertia\Middleware->handle()
+#10 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Routing\Middleware\SubstituteBindings.php(50): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#11 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Routing\Middleware\SubstituteBindings->handle()
+#12 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken.php(87): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#13 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Foundation\Http\Middleware\VerifyCsrfToken->handle()
+#14 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\View\Middleware\ShareErrorsFromSession.php(48): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#15 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\View\Middleware\ShareErrorsFromSession->handle()
+#16 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Session\Middleware\StartSession.php(120): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#17 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Session\Middleware\StartSession.php(63): Illuminate\Session\Middleware\StartSession->handleStatefulRequest()
+#18 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Session\Middleware\StartSession->handle()
+#19 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse.php(36): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#20 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse->handle()
+#21 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Cookie\Middleware\EncryptCookies.php(74): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#22 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Cookie\Middleware\EncryptCookies->handle()
+#23 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(126): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#24 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Routing\Router.php(807): Illuminate\Pipeline\Pipeline->then()
+#25 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Routing\Router.php(786): Illuminate\Routing\Router->runRouteWithinStack()
+#26 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Routing\Router.php(750): Illuminate\Routing\Router->runRoute()
+#27 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Routing\Router.php(739): Illuminate\Routing\Router->dispatchToRoute()
+#28 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(200): Illuminate\Routing\Router->dispatch()
+#29 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(169): Illuminate\Foundation\Http\Kernel->Illuminate\Foundation\Http\{closure}()
+#30 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#31 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle()
+#32 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull->handle()
+#33 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php(21): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#34 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TrimStrings.php(51): Illuminate\Foundation\Http\Middleware\TransformsRequest->handle()
+#35 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Foundation\Http\Middleware\TrimStrings->handle()
+#36 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#37 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Http\Middleware\ValidatePostSize->handle()
+#38 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance.php(109): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#39 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance->handle()
+#40 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Http\Middleware\HandleCors.php(48): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#41 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Http\Middleware\HandleCors->handle()
+#42 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Http\Middleware\TrustProxies.php(58): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#43 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Http\Middleware\TrustProxies->handle()
+#44 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks.php(22): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#45 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks->handle()
+#46 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePathEncoding.php(26): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#47 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(208): Illuminate\Http\Middleware\ValidatePathEncoding->handle()
+#48 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php(126): Illuminate\Pipeline\Pipeline->Illuminate\Pipeline\{closure}()
+#49 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(175): Illuminate\Pipeline\Pipeline->then()
+#50 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter()
+#51 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(1219): Illuminate\Foundation\Http\Kernel->handle()
+#52 C:\Users\acer\T2510-SE\public\index.php(20): Illuminate\Foundation\Application->handleRequest()
+#53 C:\Users\acer\T2510-SE\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(23): require_once('...')
+#54 {main}  
+[2025-06-24 18:56:10] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 18:56:10] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 18:57:56] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C530_SN1.2.U.26f2bbaa-be29-54c3-ffa7-18334bfe1b98","state":"g3GlYkeO8IvfVz9rbskjezphqLm9TwMgRbsPD0Kk"}  
+[2025-06-24 18:57:56] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 18:57:58] local.INFO: MicrosoftCallback: Processing user callback for email: xuanchristine04@gmail.com  
+[2025-06-24 18:57:58] local.INFO: MicrosoftCallback: Existing user found. UserID: usr_009, Email: xuanchristine04@gmail.com  
+[2025-06-24 18:57:58] local.INFO: MicrosoftCallback: User successfully authenticated. UserID: usr_009  
+[2025-06-24 18:57:58] local.INFO: MicrosoftCallback: Redirecting authenticated user to events page.  
+[2025-06-24 18:59:26] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C528_SN1.2.U.92cdfe4c-50df-f5ab-fc19-bd45767ecc2a","state":"8cSjXNPFOvFgVlnfXpDHglrqIzQmxet1WBShHHxT"}  
+[2025-06-24 18:59:26] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 18:59:27] local.INFO: MicrosoftCallback: Processing user callback for email: loksuan.tan@gmail.com  
+[2025-06-24 18:59:27] local.INFO: MicrosoftCallback: Existing user found. UserID: usr_008, Email: loksuan.tan@gmail.com  
+[2025-06-24 18:59:27] local.INFO: MicrosoftCallback: User successfully authenticated. UserID: usr_008  
+[2025-06-24 18:59:27] local.INFO: MicrosoftCallback: Redirecting authenticated user to events page.  
+[2025-06-24 19:01:42] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C528_BL2.2.U.f6367eb2-0c69-5364-4fa7-4ce6056237bc","state":"DvTLLqiuy1HAQSKQd7dAvDn9rvqs8oe6Cwr0QXSi"}  
+[2025-06-24 19:01:42] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 19:01:43] local.INFO: MicrosoftCallback: Processing user callback for email: loksuan.tan@gmail.com  
+[2025-06-24 19:01:43] local.INFO: MicrosoftCallback: New user detected. Email: loksuan.tan@gmail.com. Redirecting to complete-profile.  
+[2025-06-24 19:02:11] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 19:02:11] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 19:03:40] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C528_BL2.2.U.efd9ddbd-c692-52bc-4c6d-b2f4ebb659c0","state":"XIRe3Qt5eHxdvB761MbrjeMiUvftD0X4sksZM9Fu"}  
+[2025-06-24 19:03:40] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 19:03:41] local.INFO: MicrosoftCallback: Processing user callback for email: loksuan.tan@gmail.com  
+[2025-06-24 19:03:41] local.INFO: MicrosoftCallback: New user detected. Email: loksuan.tan@gmail.com. Redirecting to complete-profile.  
+[2025-06-24 19:04:23] local.INFO: ProfileController: Starting profile completion process  
+[2025-06-24 19:04:23] local.INFO: ProfileController: Validation passed {"email":"loksuan.tan@gmail.com","name":"Christine Tan","userType":"Alumni"} 
+[2025-06-24 19:04:23] local.INFO: ProfileController: User created successfully {"id":"usr_010"} 
+[2025-06-24 19:04:23] local.INFO: ProfileController: Profile completion successful {"email":"loksuan.tan@gmail.com","userType":"Alumni"} 
+[2025-06-24 19:30:06] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 19:30:06] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 19:30:06] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 19:30:06] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 20:00:11] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 20:00:11] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 20:00:17] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C530_BL2.2.U.ca31d885-4953-52d5-871b-05be96aa650a","state":"ZMKAgZ8lqJTV9KsRNxnevABsXaGDFerHnG6xqRIj"}  
+[2025-06-24 20:00:17] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 20:00:19] local.INFO: MicrosoftCallback: Processing user callback for email: xuanchristine04@gmail.com  
+[2025-06-24 20:00:19] local.INFO: MicrosoftCallback: Existing user found. UserID: usr_009, Email: xuanchristine04@gmail.com  
+[2025-06-24 20:00:19] local.INFO: MicrosoftCallback: User successfully authenticated. UserID: usr_009  
+[2025-06-24 20:00:19] local.INFO: MicrosoftCallback: Redirecting authenticated user to events page.  
+[2025-06-24 20:03:42] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-24 20:03:42] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 20:04:29] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C528_SN1.2.U.c2a46e85-3ce4-031b-f157-c2aa82dfca63","state":"A83IjjmZ00MuNXXzf5BXlaG91pLXbNFYMP00ZS9x"}  
+[2025-06-24 20:04:29] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 20:04:30] local.INFO: MicrosoftCallback: Processing user callback for email: loksuan.tan@gmail.com  
+[2025-06-24 20:04:30] local.INFO: MicrosoftCallback: Existing user found. UserID: usr_010, Email: loksuan.tan@gmail.com  
+[2025-06-24 20:04:30] local.INFO: MicrosoftCallback: User successfully authenticated. UserID: usr_010  
+[2025-06-24 20:04:30] local.INFO: MicrosoftCallback: Redirecting authenticated user to events page.  

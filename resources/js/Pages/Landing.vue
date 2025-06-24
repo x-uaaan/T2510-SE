@@ -129,21 +129,18 @@
             <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 border border-gray-700 shadow-2xl">
               <div class="space-y-4">
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 bg-blue-500 rounded-full"></div>
                   <div>
                     <div class="text-white font-medium">Alumni Network</div>
                     <div class="text-gray-400 text-sm">Professional discussions</div>
                   </div>
                 </div>
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 bg-blue-500 rounded-full"></div>
                   <div>
                     <div class="text-white font-medium">Student Life</div>
                     <div class="text-gray-400 text-sm">Campus memories & stories</div>
                   </div>
                 </div>
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 bg-blue-500 rounded-full"></div>
                   <div>
                     <div class="text-white font-medium">Career Advice</div>
                     <div class="text-gray-400 text-sm">Professional guidance</div>
