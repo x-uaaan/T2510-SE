@@ -69,13 +69,15 @@
                 </ul>
             </div>
             <div v-else class="text-center py-8">
-              <p class="text-gray-400 text-lg">No attendees registered yet</p>
-              <p class="text-gray-500 text-sm mt-2">Be the first to register for this event!</p>
+              <p class="text-gray-500 text-l">No attendees registered yet</p>
             </div>
           </div>
         </div>
 
         <div class="mt-4 flex justify-end items-center gap-2">
+          <button v-if="canEdit" @click="showDeleteModal = true" class="modal-btn delete-btn">
+            Delete
+          </button>
           <a v-if="canEdit" :href="`/events/${event.eventID}/edit`" class="modal-btn">
               Edit
           </a>
@@ -84,12 +86,25 @@
           </button>
         </div>
     </div>
+    <!-- Delete Confirmation Modal -->
+    <Modal :show="showDeleteModal" @close="closeDeleteModal" max-width="sm" class="delete-modal">
+      <div class="p-6 bg-[#232323] rounded-2xl text-center">
+        <h2 class="text-lg font-bold mb-2">Delete Event?</h2>
+        <p class="mb-0 text-gray-300">Are you sure you want to delete this event?</p>
+        <p class="mb-4 text-gray-300">This action cannot be undone.</p>
+        <div class="flex justify-center gap-4 mt-4">
+          <button @click="deleteEvent" class="delete-btn modal-btn px-6 py-2 font-semibold">Delete</button>
+          <button @click="closeDeleteModal" class="modal-btn px-6 py-2 font-semibold">Cancel</button>
+        </div>
+      </div>
+    </Modal>
   </Modal>
 </template>
 
 <script setup>
 import Modal from '@/Components/Modal.vue'
 import { computed, ref, watch, onMounted, nextTick } from 'vue'
+import axios from 'axios'
 
 const props = defineProps({
   show: Boolean,
@@ -100,7 +115,7 @@ const props = defineProps({
   authUser: Object,
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'deleted'])
 
 const tab = ref('details')
 const tabButtons = ref({
@@ -108,6 +123,8 @@ const tabButtons = ref({
   attendees: null,
 })
 const gliderStyle = ref({})
+const showDeleteModal = ref(false)
+const showToast = ref(false)
 
 const canEdit = computed(() => {
     return props.authUser && props.authUser.userID === props.event.organiserID;
@@ -133,6 +150,22 @@ onMounted(() => {
 
 const closeModal = () => {
   emit('close')
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+}
+
+const deleteEvent = async () => {
+  try {
+    await axios.delete(`/events/${props.event.eventID}`, { baseURL: '/api' })
+    showToast.value = true
+    setTimeout(() => {
+      window.location.href = '/profile'
+    }, 1800)
+  } catch (e) {
+    alert('Failed to delete event. Please try again.')
+  }
 }
 
 const formatDate = (dateString) => {
@@ -243,5 +276,27 @@ const getInitials = (name) => {
 }
 .attendee-name:hover {
   color: #3b82f6;
+}
+.delete-btn {
+  color: #fff;
+  border: 1px solid #e6004d6e;
+  background: #e6004d1c;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.delete-btn:hover {
+  background: #e6004c44;
+  border-color: #ff1a5b;
+  box-shadow: 0 0 0 3px #ff1a5b55;
+}
+.delete-modal {
+  position: fixed !important;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+  background: none !important; /* Let the Modal's overlay show */
 }
 </style> 

@@ -12,6 +12,8 @@ import HeroSection from './Components/HeroSection.vue';
 import FeaturesSection from './Components/FeaturesSection.vue';
 import FooterSection from './Components/FooterSection.vue';
 import axios from 'axios';
+import { ZiggyVue } from 'ziggy-js';
+import { Ziggy } from './ziggy';
 
 axios.defaults.baseURL = '/api';
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -29,6 +31,7 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(VCalendar, {})
+            .use(ZiggyVue, Ziggy);
 
         app.component('NavBar', NavBar);
         app.component('HeroSection', HeroSection);

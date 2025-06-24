@@ -8,8 +8,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9.828M7 7h.01" /></svg>
         </label>
         <input type="file" id="image" accept="image/*" class="hidden" @change="onImageChange" />
-        <button v-if="imagePreview" @click="removeImage" class="absolute top-4 right-4 bg-white/90 rounded-full p-2 cursor-pointer shadow-lg hover:bg-red-100 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        <button v-if="imagePreview" @click="removeImage" class="remove-image-btn absolute top-4 right-4 cursor-pointer transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
     </div>
@@ -57,8 +57,7 @@
         </div>
         <div v-if="form.errors.capacity" class="text-red-400 text-sm mt-1">{{ form.errors.capacity }}</div>
       </div>
-
-      <button type="submit" :disabled="form.processing" class="mt-2 w-full py-4 rounded-2xl bg-gradient-to-r from-purple-500 to-blue-500 text-white font-extrabold text-xl shadow-lg hover:from-purple-600 hover:to-blue-600 transition disabled:opacity-60 disabled:cursor-not-allowed">Update Event</button>
+      <button type="submit" :disabled="form.processing" class="submit-btn mt-2 w-full py-4 rounded-2xl bg-gradient-to-r from-purple-500 to-blue-500 text-white font-extrabold text-xl shadow-lg hover:from-purple-600 hover:to-blue-600 transition disabled:opacity-60 disabled:cursor-not-allowed">Update Event</button>
       <div v-if="form.hasErrors" class="text-red-400 text-center font-semibold mt-2">There are errors in the form. Please check the fields.</div>
     </form>
   </div>
@@ -91,6 +90,8 @@ const form = useForm({
   image: null,
   remove_image: false,
 })
+
+const showToast = ref(false)
 
 function onImageChange(e) {
   const file = e.target.files[0]
@@ -133,11 +134,7 @@ function submit() {
   form.startTime = formatTime(form.startTime);
   form.endTime = formatTime(form.endTime);
 
-  form.post(route('events.update', { event: props.event.eventID }), {
-    onError: (errors) => {
-      console.error(errors);
-    },
-  });
+  form.patch(`/events/${props.event.eventID}`)
 }
 </script>
 
@@ -179,7 +176,7 @@ input::placeholder,
 textarea::placeholder {
   color: #bbb !important;
 }
-button{
+.submit-btn{
   width: auto;
   background: #18191a;
   color: #fff;
@@ -191,7 +188,7 @@ button{
   cursor: pointer;
   outline: none;
 }
-button:hover{
+.submit-btn:hover{
   background: #232323;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }

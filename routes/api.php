@@ -22,6 +22,7 @@ Route::post('/posts', [PostController::class, 'store']);
 Route::delete('/posts/{post}', [PostController::class, 'apiDestroy']);
 Route::post('/posts/{post}/comments', [PostController::class, 'addComment']);
 Route::post('/posts/{post}', [PostController::class, 'apiUpdate']);
+Route::delete('/events/{event}', [EventController::class, 'destroy']);
 
 /*
 Route::middleware('auth:web')->group(function () {

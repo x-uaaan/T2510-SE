@@ -130,7 +130,14 @@ function submit() {
   form.endDate = formatDate(form.endDate);
   form.startTime = formatTime(form.startTime);
   form.endTime = formatTime(form.endTime);
-  form.post('/events');
+  form.post('/events', {
+    onSuccess: () => {
+      showToast.value = true
+      setTimeout(() => {
+        window.location.href = '/events'
+      }, 1800)
+    }
+  })
 }
 </script>
 
@@ -188,4 +195,4 @@ button:hover{
   background: #222222;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
-</style> 
+</style>

@@ -75,14 +75,16 @@
         </div>
       </form>
     </div>
+    <div v-if="showToast" class="toast">Profile updated successfully!</div>
   </BaseLayout>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useForm, router } from '@inertiajs/vue3'
-import { toast } from 'vue3-toastify'
-import 'vue3-toastify/dist/index.css'
+const showToast = ref(false)
+//import { toast } from 'vue3-toastify'
+//import 'vue3-toastify/dist/index.css'
 import BaseLayout from '@/Layouts/BaseLayout.vue'
 
 const props = defineProps({
@@ -239,12 +241,6 @@ function onPhoneKeyPress(e) {
 
 function submit() {
   if (!validate()) {
-    Object.values(errors.value).forEach(error => {
-      toast.error(error, {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-      })
-    })
     return
   }
 
@@ -253,18 +249,15 @@ function submit() {
     phone: data.countryCode + data.phone
   })).post(route('profile.update'), {
     onSuccess: () => {
-      toast.success('Profile updated successfully!', {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-      });
-      router.get(route('profile.show'))
+      showToast.value = true
+      setTimeout(() => showToast.value = false, 2500)
     },
     onError: (pageErrors) => {
       Object.values(pageErrors).forEach(error => {
-        toast.error(error, {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-        })
+        // toast.error(error, {
+        //   position: toast.POSITION.TOP_RIGHT,
+        //   autoClose: 3000,
+        // })
       })
     }
   });
@@ -282,5 +275,25 @@ select {
   -moz-appearance: none;
   appearance: none;
   background-image: none !important;
+}
+.toast {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 12px 32px;
+  border-radius: 16px;
+  font-size: 1em;
+  z-index: 9999;
+  box-shadow: 0 2px 8px #0005;
+  animation: fadeInOut 2.5s;
+}
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
 }
 </style> 

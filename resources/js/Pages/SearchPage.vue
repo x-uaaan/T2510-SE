@@ -4,7 +4,7 @@
     <NavigationDrawer />
     <div class="search-page-content">
       <div class="top-bar">
-        <SearchBar />
+        <SearchBar v-model="searchQuery" />
       </div>
       <div class="search-tabs">
         <span class="glider" :style="gliderStyle"></span>
@@ -67,6 +67,7 @@ const props = defineProps({
   users: Array,
 });
 
+const searchQuery = ref(props.keyword || '');
 const tab = ref('forum');
 const tabButtons = ref({
   forum: null,
@@ -159,14 +160,16 @@ onMounted(() => {
 }
 .search-results ul {
   list-style: none;
-  padding: 0;
-}
-.search-results li {
   border: 1px solid #333;
   padding: 0.8rem;
   padding-left: 1rem;
   border-radius: 8px;
-  margin-bottom: 1rem;
+}
+.search-results li {
+  margin-bottom: 0.5rem;
+}
+.search-results li:last-child {
+  margin-bottom: 0;
 }
 .search-results a {
   color: #fff;

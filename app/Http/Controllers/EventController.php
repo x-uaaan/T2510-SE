@@ -11,6 +11,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class EventController extends Controller
 {
@@ -65,12 +66,22 @@ class EventController extends Controller
         $newId = 'evt_' . str_pad($lastIdNumber + 1, 3, '0', STR_PAD_LEFT);
 
         // 3. Handle image upload (after eventID is generated)
-        $imagePath = 'image/CampusPulseLogo.jpg'; // Default image
+        $imagePath = "event_images/{$newId}.jpg"; // Path to save in DB
+
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $ext = $file->getClientOriginalExtension();
-            $filename = $newId . '.' . $ext;
+            $filename = "{$newId}.{$ext}";
             $imagePath = $file->storeAs('event_images', $filename, 'public');
+        } else {
+            // Copy the default image to the event_images directory with the event ID as the filename
+            $defaultImage = public_path('image/CampusPulseLogo.jpg');
+            $destination = public_path("storage/event_images/{$newId}.jpg");
+            if (!File::exists(dirname($destination))) {
+                File::makeDirectory(dirname($destination), 0755, true);
+            }
+            File::copy($defaultImage, $destination);
+            // $imagePath is already set to event_images/{$newId}.jpg
         }
 
         // 5. Create and save the event
@@ -154,13 +165,15 @@ class EventController extends Controller
 
         $event->update($validated);
 
-        return redirect()->route('events.index')->with('success', 'Event updated successfully!');
+        return Inertia::location(route('profile.show'));
     }
 
     public function destroy(Event $event)
     {
+        // Delete attendees if not cascading
+        $event->attendees()->delete();
         $event->delete();
-        return redirect()->route('events.index')->with('success', 'Event deleted successfully!');
+        return response()->json(['success' => true]);
     }
 
     public function apiIndex()

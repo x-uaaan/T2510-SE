@@ -12,11 +12,15 @@
       :placeholder="placeholder"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
+      @keydown.enter="handleSearch"
     />
   </div>
 </template>
 
 <script setup>
+import { router } from '@inertiajs/vue3'
+import { route } from 'ziggy-js'
+
 defineProps({
   modelValue: {
     type: String,
@@ -29,6 +33,19 @@ defineProps({
 });
 
 defineEmits(['update:modelValue']);
+
+function handleSearch(event) {
+  const keyword = event.target.value.trim()
+  if (keyword) {
+    try {
+      router.get(route('search.show', { keyword }))
+    } catch (e) {
+      console.error('Ziggy route error:', e)
+      // Fallback to direct URL construction
+      window.location.href = `/searchpage/${encodeURIComponent(keyword)}`
+    }
+  }
+}
 </script>
 
 <style scoped>

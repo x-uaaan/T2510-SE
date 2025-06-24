@@ -58,6 +58,7 @@ Route::middleware(['auth', 'web'])->group(function () {
     Route::post('/events/{event}/attend', [AttendeeController::class, 'store']);
     Route::get('/events/{event}/check-attendance', [AttendeeController::class, 'checkAttendance']);
     Route::get('/events/{event}/attendees', [AttendeeController::class, 'getAttendees']);
+    Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
 });
 
 Route::post('/logout', function (Request $request) {

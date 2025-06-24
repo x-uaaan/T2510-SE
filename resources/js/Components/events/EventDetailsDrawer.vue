@@ -66,7 +66,7 @@
         </div>
         <div v-if="showToast" class="toast">RSVP successfully</div>
         <div class="drawer-footer">
-          <a :href="`mailto:support@campuspulse.com`" class="drawer-link">Contact host</a>
+          <a :href="`mailto:${event.organiserEmail}`" class="drawer-link">Contact host</a>
           <a :href="`mailto:support@campuspulse.com`" class="drawer-link">Report event</a>
         </div>
       </div>
@@ -423,25 +423,5 @@ watch(() => props.event, (newEvent) => {
 .drawer-slide-leave-from {
   transform: translateX(0);
   opacity: 1;
-}
-.toast {
-  position: fixed;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #333;
-  color: #fff;
-  padding: 12px 32px;
-  border-radius: 16px;
-  font-size: 1em;
-  z-index: 9999;
-  box-shadow: 0 2px 8px #0005;
-  animation: fadeInOut 2.5s;
-}
-@keyframes fadeInOut {
-  0% { opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { opacity: 0; }
 }
 </style>

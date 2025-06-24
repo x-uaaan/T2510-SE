@@ -16,34 +16,37 @@
       </div>
       <div class="profile-tabs">
         <span class="glider" :style="gliderStyle"></span>
-        <button :ref="el => tabButtons.forum = el" :class="{active: tab==='forum'}" @click="tab='forum'">Forum</button>
-        <button :ref="el => tabButtons.post = el" :class="{active: tab==='post'}" @click="tab='post'">Post</button>
-        <button v-if="user.userType === 'Lecturer' || user.userType === 'Admin'" :ref="el => tabButtons.event = el" :class="{active: tab==='event'}" @click="tab='event'">Event</button>
+        <button v-if="user.userType === 'Lecturer' || user.userType === 'Admin'" :ref="el => tabButtons.event = el" :class="{active: tab==='event'}" @click="tab='event'">Events</button>
+        <button :ref="el => tabButtons.forum = el" :class="{active: tab==='forum'}" @click="tab='forum'">Forums</button>
+        <button :ref="el => tabButtons.post = el" :class="{active: tab==='post'}" @click="tab='post'">Posts</button>
       </div>
       <div class="tab-content-container">
+        <div v-if="tab==='event'">
+          <ul v-if="sortedEvents && sortedEvents.length > 0">
+            <li v-for="event in sortedEvents" :key="event.eventID">
+              <button @click="openEventModal(event)" class="event-title-btn">{{ event.eventName }}</button>
+              <span class="item-date">{{ formatDate(event.created_at || event.startDate) }}</span>
+            </li>
+          </ul>
+          <p v-else>No events created yet.</p>
+        </div>
         <div v-if="tab==='forum'">
-          <ul v-if="user.forums && user.forums.length > 0">
-            <li v-for="forum in user.forums" :key="forum.forumID">
+          <ul v-if="sortedForums && sortedForums.length > 0">
+            <li v-for="forum in sortedForums" :key="forum.forumID">
               <Link :href="`/posts?forum_id=${forum.forumID}`">{{ forum.forumTitle }}</Link>
+              <span class="item-date">{{ formatDate(forum.created_at) }}</span>
             </li>
           </ul>
           <p v-else>No forums created yet.</p>
         </div>
         <div v-if="tab==='post'">
-          <ul v-if="user.posts && user.posts.length > 0">
-            <li v-for="post in user.posts" :key="post.postID">
+          <ul v-if="sortedPosts && sortedPosts.length > 0">
+            <li v-for="post in sortedPosts" :key="post.postID">
               <Link :href="`/posts/${post.postID}`">{{ post.postTitle }}</Link>
+              <span class="item-date">{{ formatDate(post.created_at) }}</span>
             </li>
           </ul>
           <p v-else>No posts created yet.</p>
-        </div>
-        <div v-if="tab==='event'">
-          <ul v-if="user.events && user.events.length > 0">
-            <li v-for="event in user.events" :key="event.eventID">
-              <button @click="openEventModal(event)" class="event-title-btn">{{ event.eventName }}</button>
-            </li>
-          </ul>
-          <p v-else>No events created yet.</p>
         </div>
       </div>
     </main>
@@ -73,7 +76,15 @@ const page = usePage()
 const authUser = computed(() => page.props.auth.user)
 const isMyProfile = computed(() => authUser.value && authUser.value.userID === props.user.userID)
 
-const tab = ref('forum')
+// Set default tab to 'event' if user can create events, otherwise 'forum'
+const defaultTab = computed(() => {
+  if (props.user.userType === 'Lecturer' || props.user.userType === 'Admin') {
+    return 'event'
+  }
+  return 'forum'
+})
+
+const tab = ref(defaultTab.value)
 const tabButtons = ref({
   forum: null,
   post: null,
@@ -82,6 +93,44 @@ const tabButtons = ref({
 const gliderStyle = ref({})
 const showEventModal = ref(false)
 const selectedEvent = ref(null)
+
+// Computed properties for sorted content (newest first)
+const sortedEvents = computed(() => {
+  if (!props.user.events) return []
+  return [...props.user.events].sort((a, b) => {
+    const dateA = new Date(a.created_at || a.startDate)
+    const dateB = new Date(b.created_at || b.startDate)
+    return dateB - dateA
+  })
+})
+
+const sortedForums = computed(() => {
+  if (!props.user.forums) return []
+  return [...props.user.forums].sort((a, b) => {
+    const dateA = new Date(a.created_at)
+    const dateB = new Date(b.created_at)
+    return dateB - dateA
+  })
+})
+
+const sortedPosts = computed(() => {
+  if (!props.user.posts) return []
+  return [...props.user.posts].sort((a, b) => {
+    const dateA = new Date(a.created_at)
+    const dateB = new Date(b.created_at)
+    return dateB - dateA
+  })
+})
+
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  })
+}
 
 const updateGlider = () => {
   const activeButton = tabButtons.value[tab.value]
@@ -98,6 +147,7 @@ watch(tab, () => {
 });
 
 onMounted(() => {
+  tab.value = defaultTab.value
   setTimeout(updateGlider, 100);
 });
 
@@ -228,6 +278,9 @@ const closeEventModal = () => {
 }
 .tab-content-container li {
   margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .tab-content-container li:last-child {
   margin-bottom: 0;
@@ -237,6 +290,7 @@ const closeEventModal = () => {
   text-decoration: none;
   font-size: 1rem;
   transition: color 0.2s;
+  flex: 1;
 }
 .tab-content-container a:hover {
   color: #29aafc;
@@ -253,8 +307,15 @@ const closeEventModal = () => {
   text-align: left;
   font-size: 1rem;
   transition: color 0.2s;
+  flex: 1;
 }
 .event-title-btn:hover {
   color: #29aafc;
+}
+.item-date {
+  color: #888;
+  font-size: 0.85rem;
+  margin-left: 10px;
+  white-space: nowrap;
 }
 </style>
