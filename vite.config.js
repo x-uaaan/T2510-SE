@@ -1,27 +1,12 @@
-// vite.config.js
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
-    build: {
-        outDir: 'api/public/build',
-        emptyOutDir: true,
-        manifest: true,
-        rollupOptions: {
-            output: {
-                manualChunks: undefined
-            }
-        }
-    },
     plugins: [
         laravel({
-            input: [
-                'api/resources/css/app.css',
-                'api/resources/js/app.js',
-            ],
+            input: ['resources/js/app.js', 'resources/js/event-create.js'],
             refresh: true,
-            buildDirectory: 'build',
         }),
         vue({
             template: {
@@ -32,13 +17,12 @@ export default defineConfig({
             },
         }),
     ],
-    resolve: {
-        alias: {
-            '@': '/api/resources/js',
+    build: {
+        // Ensure this aligns with Laravel's public path
+        outDir: 'public/build', // This is a common setup for Vite with Laravel
+        emptyOutDir: true,
+        rollupOptions: {
+            input: 'resources/js/app.js',
         },
-    },
-    server: {
-        host: '0.0.0.0',
-        port: 5173,
     },
 });
