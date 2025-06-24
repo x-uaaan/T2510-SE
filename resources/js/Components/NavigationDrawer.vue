@@ -101,7 +101,7 @@ function navigate(route, item) {
 }
 
 function logout() {
-  axios.post('/logout').then(() => {
+  axios.post('/logout', {}, { baseURL: '' }).then(() => {
     window.location.href = '/'
   })
 }

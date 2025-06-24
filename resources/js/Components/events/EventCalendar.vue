@@ -2,13 +2,13 @@
   <div class="calendar-fixed" @click="handleCalendarClick">
     <div class="search-menu-row">
       <SearchBar />
-      <a href="/events/create">
-        <button class="menu-btn create-btn" @click="showCreateModal = true">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 4V20M4 12H20" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
-        <span>Create</span>
-      </button>
+      <a href="/events/create" v-if="userType === 'Lecturer' || userType === 'Admin'">
+        <button class="menu-btn create-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 4V20M4 12H20" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <span>Create</span>
+        </button>
       </a>
     </div>
     <VDatePicker
@@ -38,6 +38,19 @@
 import { ref, onMounted } from 'vue'
 import 'v-calendar/style.css'
 import SearchBar from '@/Components/SearchBar.vue'
+import axios from 'axios'
+
+const userType = ref('')
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('/user', { withCredentials: true });
+    userType.value = response.data.userType;
+  } catch (error) {
+    console.error('Error fetching user type:', error);
+  }
+  window.addEventListener('scroll', handleScroll)
+})
 
 const searchQuery = ref('')
 const showLogo = ref(true)
@@ -56,10 +69,6 @@ function handleScroll() {
   }
   lastScrollY = currentY
 }
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-})
 
 // Get today's date and set as default month
 const today = new Date()

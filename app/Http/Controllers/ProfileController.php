@@ -208,7 +208,7 @@ class ProfileController extends Controller
                 'userType' => $validated['userType']
             ]);
 
-            return redirect()->route('events.index');
+            return Inertia::location(route('events.index'));
 
         } catch (\Exception $e) {
             Log::error('ProfileController: Error during profile completion', [

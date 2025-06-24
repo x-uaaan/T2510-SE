@@ -18,7 +18,7 @@
         <span class="glider" :style="gliderStyle"></span>
         <button :ref="el => tabButtons.forum = el" :class="{active: tab==='forum'}" @click="tab='forum'">Forum</button>
         <button :ref="el => tabButtons.post = el" :class="{active: tab==='post'}" @click="tab='post'">Post</button>
-        <button :ref="el => tabButtons.event = el" :class="{active: tab==='event'}" @click="tab='event'">Event</button>
+        <button v-if="user.userType === 'Lecturer' || user.userType === 'Admin'" :ref="el => tabButtons.event = el" :class="{active: tab==='event'}" @click="tab='event'">Event</button>
       </div>
       <div class="tab-content-container">
         <div v-if="tab==='forum'">

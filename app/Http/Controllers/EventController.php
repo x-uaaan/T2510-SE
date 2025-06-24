@@ -90,7 +90,7 @@ class EventController extends Controller
                 'image' => $imagePath,
             ]);
 
-            return redirect()->route('events.index')->with('success', 'Event created successfully!');
+            return Inertia::location(route('events.index'));
 
         } catch (\Exception $e) {
             Log::error('Event creation failed: ' . $e->getMessage());
