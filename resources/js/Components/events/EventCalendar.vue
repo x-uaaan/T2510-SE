@@ -1,7 +1,7 @@
 <template>
   <div class="calendar-fixed" @click="handleCalendarClick">
     <div class="search-menu-row">
-      <SearchBar />
+      <SearchBar :class="{ 'search-bar-full-width': userType !== 'Lecturer' && userType !== 'Admin' }" />
       <a href="/events/create" v-if="userType === 'Lecturer' || userType === 'Admin'">
         <button class="menu-btn create-btn">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -13,6 +13,7 @@
     </div>
     <VDatePicker
       ref="calendarRef"
+      :key="calendarKey"
       is-dark
       :min-view="'month'"
       :max-view="'month'"
@@ -35,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import 'v-calendar/style.css'
 import SearchBar from '@/Components/SearchBar.vue'
 import axios from 'axios'
@@ -79,42 +80,130 @@ const defaultMonth = {
 
 const displayedDate = ref(defaultMonth)
 const calendarRef = ref(null)
+const calendarKey = ref(0)
 
-const attributes = [
+const attributes = ref([
   {
     key: 'today',
     highlight: {
       color: 'blue',
       fillMode: 'solid'
     },
-    dates: today
+    dates: new Date() // This will always be today's date
   }
-]
+])
+
+function attachTitleClickListener(retryCount = 0) {
+  console.log('Attaching title click listener, retry:', retryCount)
+  
+  const titleElement = document.querySelector('.vc-title')
+  console.log('Title element found for listener attachment:', titleElement)
+  
+  if (titleElement) {
+    console.log('Adding click listener to title element')
+    titleElement.style.cursor = 'pointer'
+    titleElement.addEventListener('click', (e) => {
+      console.log('Title click handler triggered')
+      e.preventDefault()
+      e.stopPropagation()
+      goToDefaultMonth()
+    })
+  } else if (retryCount < 10) {
+    // Retry up to 10 times with increasing delays
+    const delay = 100 + (retryCount * 100) // 100ms, 200ms, 300ms, etc.
+    console.log(`Title element not found, retrying in ${delay}ms...`)
+    setTimeout(() => {
+      attachTitleClickListener(retryCount + 1)
+    }, delay)
+  } else {
+    console.log('Max retries reached, title element not found')
+  }
+}
 
 function goToDefaultMonth() {
-  displayedDate.value = { ...defaultMonth }
+  console.log('goToDefaultMonth called')
+  // Always get the current date when function is called
+  const currentDate = new Date()
+  const currentMonth = {
+    month: currentDate.getMonth() + 1,
+    year: currentDate.getFullYear()
+  }
+  console.log('Current month calculated:', currentMonth)
+  console.log('Previous displayed date:', displayedDate.value)
+  
+  // Update the today highlight to current date
+  attributes.value = [
+    {
+      key: 'today',
+      highlight: {
+        color: 'blue',
+        fillMode: 'solid'
+      },
+      dates: new Date() // Always current date
+    }
+  ]
+  
+  // Force reactivity by creating a completely new object
+  displayedDate.value = { ...currentMonth }
+  
+  console.log('New displayed date:', displayedDate.value)
+  console.log('Updated attributes for today:', attributes.value)
+  
+  // Force the calendar to update using multiple approaches
+  nextTick(() => {
+    if (calendarRef.value) {
+      // Try to force the calendar to move to the new date
+      calendarRef.value.move(currentMonth)
+      console.log('Calendar move called with:', currentMonth)
+    }
+    
+    // Also force re-render by updating the key
+    calendarKey.value++
+    console.log('Calendar key updated to:', calendarKey.value)
+    
+    // Re-attach the title click listener after re-render with longer delay
+    setTimeout(() => {
+      attachTitleClickListener(0)
+    }, 500) // Increased delay to 500ms
+  })
 }
 
 function handleCalendarClick(event) {
+  console.log('Calendar clicked:', event.target)
+  console.log('Clicked element classes:', event.target.className)
   // Check if the clicked element is the title or inside the title
-  if (event.target.closest('.vc-title')) {
+  const titleElement = event.target.closest('.vc-title')
+  console.log('Title element found:', titleElement)
+  if (titleElement) {
+    console.log('Title clicked! Preventing default and calling goToDefaultMonth')
+    event.preventDefault()
+    event.stopPropagation()
     goToDefaultMonth()
   }
 }
 
 // Alternative: Try direct title click handler
 onMounted(() => {
+  console.log('Component mounted, setting up title click handlers')
+  
+  // Initial attachment
+  attachTitleClickListener()
+  
+  // Also add a mutation observer to handle dynamic title changes
+  const observer = new MutationObserver(() => {
+    console.log('Mutation observed, checking for title element')
+    attachTitleClickListener()
+  })
+  
+  // Observe changes in the calendar container
   setTimeout(() => {
-    const titleElement = document.querySelector('.vc-title')
-    if (titleElement) {
-      titleElement.style.cursor = 'pointer'
-      titleElement.addEventListener('click', (e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        goToDefaultMonth()
-      })
+    const calendarContainer = document.querySelector('.vc-container')
+    console.log('Calendar container found:', calendarContainer)
+    if (calendarContainer) {
+      observer.observe(calendarContainer, { childList: true, subtree: true })
+      console.log('Mutation observer set up')
     }
-  }, 200)
+  }, 500)
 })
 </script>
 
@@ -147,6 +236,10 @@ onMounted(() => {
 
 .search-bar {
   width: 150px;
+}
+
+.search-bar-full-width {
+  width: 270px !important;
 }
 
 .create-btn-margin {

@@ -1,7 +1,7 @@
 <template>
   <footer class="footer-section">
     <div class="footer-content">
-      <a href="@/views/app.blade.php">© 2025 Campus Pulse. All rights reserved.</a>
+      <a href="/">© 2025 Campus Pulse. All rights reserved.</a>
       <a href="mailto:support@campuspulse.com">Contact Us</a>
       <a href="mailto:support@campuspulse.com">Feedback</a>
     </div>

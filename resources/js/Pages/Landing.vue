@@ -25,7 +25,7 @@
       </section>
 
       <!-- Features Section -->
-      <section ref="featuresRef" :class="['transition-section', { visible: featuresVisible }]" id="features" class="py-24 px-4 bg-black">
+      <section ref="featuresRef" :class="['transition-section', { visible: featuresVisible }]" id="features" class="py-24 px-4 mb-24 bg-black">
         <div class="max-w-6xl mx-auto">
           <div class="text-center mb-16">
             <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Why Choose Campus Pulse?</h2>
@@ -33,17 +33,6 @@
           </div>
           
           <div class="grid md:grid-cols-3 gap-8">
-            <!-- Forum Card -->
-            <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105">
-              <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
-                </svg>
-              </div>
-              <h3 class="text-2xl font-bold text-white mb-4">Vibrant Forums</h3>
-              <p class="text-gray-400 mb-6">Join lively discussions, share experiences, and seek advice in our dedicated alumni forums.</p>
-            </div>
-
             <!-- Events Card -->
             <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105">
               <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6">
@@ -53,6 +42,16 @@
               </div>
               <h3 class="text-2xl font-bold text-white mb-4">Alumni Events</h3>
               <p class="text-gray-400 mb-6">Stay updated with upcoming alumni events, reunions, and activities. Register and connect with fellow alumni.</p>
+            </div>
+            <!-- Forum Card -->
+            <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105">
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-4">Vibrant Forums</h3>
+              <p class="text-gray-400 mb-6">Join lively discussions, share experiences, and seek advice in our dedicated alumni forums.</p>
             </div>
 
             <!-- Network Card -->
@@ -70,7 +69,7 @@
       </section>
 
       <!-- Event Section -->
-      <section ref="eventRef" :class="['transition-section', { visible: eventVisible }]" id="events" class="py-24 px-4 bg-black">
+      <section ref="eventRef" :class="['transition-section', { visible: eventVisible }]" id="events" class="py-24 px-4 mb-24 bg-black">
         <div class="max-w-6xl mx-auto flex flex-col lg:flex-row-reverse items-center gap-16">
           <div class="flex-1 space-y-8">
             <div class="inline-block bg-gradient-to-r from-blue-500/20 to-blue-600/20 px-4 py-2 rounded-full border border-blue-500/30">
@@ -80,7 +79,7 @@
               Stay Connected Through 
               <span class="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Alumni Events</span>
             </h2>
-            <p class="text-xl text-gray-400 leading-relaxed">
+            <p class="text-gray-400 leading-relaxed">
               From reunions to networking events, workshops to social gatherings - stay updated with all the exciting activities happening in your alumni community. Register for events and make the most of your university network.
             </p>
           </div>
@@ -112,7 +111,7 @@
       </section>
       
       <!-- Forum Section -->
-      <section ref="forumRef" :class="['transition-section', { visible: forumVisible }]" id="forum" class="py-24 px-4 bg-black">
+      <section ref="forumRef" :class="['transition-section', { visible: forumVisible }]" id="forum" class="py-24 px-4 mb-24 bg-black">
         <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16">
           <div class="flex-1 space-y-8">
             <div class="inline-block bg-gradient-to-r from-blue-500/20 to-blue-600/20 px-4 py-2 rounded-full border border-blue-500/30">
@@ -122,7 +121,7 @@
               Join the Conversation in Our 
               <span class="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Vibrant Forums</span>
             </h2>
-            <p class="text-xl text-gray-400 leading-relaxed">
+            <p class="text-gray-400 leading-relaxed">
               Whether you want to reconnect with old friends, network with professionals, or start a new topic, Campus Pulse forums are the place to be. Share experiences, seek advice, and build lasting connections.
             </p>
           </div>
