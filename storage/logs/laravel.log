@@ -2002,3 +2002,9 @@ Stack trace:
 [2025-06-24 13:06:35] local.INFO: Root route: User not authenticated. Showing landing page.  
 [2025-06-24 13:06:35] local.INFO: Root route accessed. Checking auth state.  
 [2025-06-24 13:06:35] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-24 13:12:51] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C528_SN1.2.U.12c50f72-c1e8-719d-a4ce-4359fe5196b5","state":"IFcxDqSS2A0RVM2UXOozr7ddcMdi16mopkUbXZ4y"}  
+[2025-06-24 13:12:51] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-24 13:12:51] local.INFO: MicrosoftCallback: Processing user callback for email: loksuan.tan@gmail.com  
+[2025-06-24 13:12:52] local.INFO: MicrosoftCallback: Existing user found. UserID: usr_008, Email: loksuan.tan@gmail.com  
+[2025-06-24 13:12:52] local.INFO: MicrosoftCallback: User successfully authenticated. UserID: usr_008  
+[2025-06-24 13:12:52] local.INFO: MicrosoftCallback: Redirecting authenticated user to events page.  

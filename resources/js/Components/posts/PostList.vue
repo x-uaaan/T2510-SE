@@ -18,7 +18,7 @@
       <div class="header-main">
         <div class="title-row">
           <h1 class="forum-title">{{ forum.forumTitle }}</h1>
-          <span class="category-tag">{{ forum.Categories }}</span>
+          <span v-if="forum.Categories && forum.Categories.trim()" class="category-tag">{{ forum.Categories }}</span>
         </div>
         <div class="desc-row">
           <p class="forum-desc">{{ forum.forumDesc }}</p>
