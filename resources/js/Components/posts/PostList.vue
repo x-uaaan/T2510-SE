@@ -1,5 +1,5 @@
 <template>
-  <div class="post-list-bg">
+  <div class="post-list-bg" min-h-screen>
     <transition name="fade-slide-navbar">
       <NavBar v-if="showNavBar" />
     </transition>
@@ -44,8 +44,8 @@
       @close="showCreateModal = false"
       @created="refreshPosts"
     />
-    <FooterSection />
   </div>
+  <FooterSection />
 </template>
 
 <script setup>

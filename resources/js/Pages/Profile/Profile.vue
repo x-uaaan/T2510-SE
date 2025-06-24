@@ -2,7 +2,7 @@
   <div class="profile-layout">
     <NavBar />
     <NavigationDrawer />
-    <main class="content-area">
+    <main class="content-area" min-h-screen>
       <div class="profile-header">
         <div class="profile-info">
           <h2 class="profile-username">{{ user.username }}</h2>
@@ -58,6 +58,7 @@
       @close="closeEventModal"
     />
   </div>
+  <FooterSection />
 </template>
 
 <script setup>
@@ -66,6 +67,7 @@ import { Link, usePage } from '@inertiajs/vue3'
 import NavBar from '@/Components/NavBar.vue'
 import NavigationDrawer from '@/Components/NavigationDrawer.vue'
 import EventDetailsModal from '@/Components/events/EventDetailsModal.vue'
+import FooterSection from '@/Components/FooterSection.vue'
 import { route } from 'ziggy-js'
 
 const props = defineProps({

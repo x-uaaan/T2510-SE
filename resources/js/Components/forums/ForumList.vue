@@ -1,5 +1,5 @@
 <template>
-  <div class="forum-list-bg">
+  <div class="forum-list-bg" min-h-screen>
     <NavBar />
     <NavigationDrawer />
     <div class="search-menu-row">
@@ -30,8 +30,8 @@
       :userName="userName"
       :forum-id="forumId"
     />
-    <FooterSection />
   </div>
+  <FooterSection />
 </template>
 
 <script setup>
