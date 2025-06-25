@@ -2184,3 +2184,15 @@ Stack trace:
 [2025-06-24 20:04:30] local.INFO: MicrosoftCallback: Existing user found. UserID: usr_010, Email: loksuan.tan@gmail.com  
 [2025-06-24 20:04:30] local.INFO: MicrosoftCallback: User successfully authenticated. UserID: usr_010  
 [2025-06-24 20:04:30] local.INFO: MicrosoftCallback: Redirecting authenticated user to events page.  
+[2025-06-25 02:05:42] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-25 02:05:42] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-25 02:05:44] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-25 02:05:44] local.INFO: Root route: User not authenticated. Showing landing page.  
+[2025-06-25 02:05:47] local.INFO: MicrosoftCallback: Received callback with parameters: {"code":"M.C530_BAY.2.U.6071b330-9a94-387c-a19c-644706c4de19","state":"KIN7F1NDaaoGPfz04ZkRQr0MR5furtZPeWTrgl61"}  
+[2025-06-25 02:05:47] local.INFO: MicrosoftCallback: Attempting to get user from Microsoft...  
+[2025-06-25 02:05:49] local.INFO: MicrosoftCallback: Processing user callback for email: xuanchristine04@gmail.com  
+[2025-06-25 02:05:50] local.INFO: MicrosoftCallback: Existing user found. UserID: usr_009, Email: xuanchristine04@gmail.com  
+[2025-06-25 02:05:50] local.INFO: MicrosoftCallback: User successfully authenticated. UserID: usr_009  
+[2025-06-25 02:05:50] local.INFO: MicrosoftCallback: Redirecting authenticated user to events page.  
+[2025-06-25 04:16:00] local.INFO: Root route accessed. Checking auth state.  
+[2025-06-25 04:16:00] local.INFO: Root route: User not authenticated. Showing landing page.  

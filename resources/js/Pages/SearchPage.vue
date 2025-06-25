@@ -1,5 +1,5 @@
 <template>
-  <div class="search-page-bg">
+  <div class="search-page-bg h-screen">
     <NavBar />
     <NavigationDrawer />
     <div class="search-page-content">
@@ -8,12 +8,20 @@
       </div>
       <div class="search-tabs">
         <span class="glider" :style="gliderStyle"></span>
+        <button :ref="el => tabButtons.event = el" :class="{ active: tab === 'event' }" @click="tab = 'event'">Event</button>
         <button :ref="el => tabButtons.forum = el" :class="{ active: tab === 'forum' }" @click="tab = 'forum'">Forum</button>
         <button :ref="el => tabButtons.post = el" :class="{ active: tab === 'post' }" @click="tab = 'post'">Post</button>
-        <button :ref="el => tabButtons.event = el" :class="{ active: tab === 'event' }" @click="tab = 'event'">Event</button>
         <button :ref="el => tabButtons.user = el" :class="{ active: tab === 'user' }" @click="tab = 'user'">User</button>
       </div>
       <div class="search-results">
+        <div v-if="tab === 'event'">
+          <ul v-if="events.length">
+            <li v-for="event in events" :key="event.eventID">
+              <button @click="openEventModal(event)" class="event-title-btn">{{ event.eventName }}</button>
+            </li>
+          </ul>
+          <p v-else class="no-results">No events found.</p>
+        </div>
         <div v-if="tab === 'forum'">
           <ul v-if="forums.length">
             <li v-for="forum in forums" :key="forum.forumID">
@@ -30,14 +38,6 @@
           </ul>
           <p v-else class="no-results">No posts found.</p>
         </div>
-        <div v-if="tab === 'event'">
-          <ul v-if="events.length">
-            <li v-for="event in events" :key="event.eventID">
-              {{ event.eventName }}
-            </li>
-          </ul>
-          <p v-else class="no-results">No events found.</p>
-        </div>
         <div v-if="tab === 'user'">
           <ul v-if="users.length">
             <li v-for="user in users" :key="user.userID">
@@ -48,16 +48,28 @@
         </div>
       </div>
     </div>
-    <FooterSection />
+    
+    <!-- Event Details Modal -->
+    <EventDetailsModal
+      v-if="selectedEvent"
+      :show="showEventModal"
+      :event="selectedEvent"
+      :auth-user="authUser"
+      @close="closeEventModal"
+    />
+    
   </div>
+  <FooterSection />
 </template>
 
 <script setup>
-import { ref, watch, onMounted, nextTick } from 'vue';
+import { ref, watch, onMounted, nextTick, computed } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 import NavBar from '@/Components/NavBar.vue';
 import NavigationDrawer from '@/Components/NavigationDrawer.vue';
 import FooterSection from '@/Components/FooterSection.vue';
 import SearchBar from '@/Components/SearchBar.vue';
+import EventDetailsModal from '@/Components/events/EventDetailsModal.vue';
 
 const props = defineProps({
   keyword: String,
@@ -67,15 +79,22 @@ const props = defineProps({
   users: Array,
 });
 
+const page = usePage();
+const authUser = computed(() => page.props.auth.user);
+
 const searchQuery = ref(props.keyword || '');
-const tab = ref('forum');
+const tab = ref('event');
 const tabButtons = ref({
+  event: null,
   forum: null,
   post: null,
-  event: null,
   user: null,
 });
 const gliderStyle = ref({});
+
+// Event modal state
+const showEventModal = ref(false);
+const selectedEvent = ref(null);
 
 const updateGlider = () => {
   const activeButton = tabButtons.value[tab.value];
@@ -85,6 +104,18 @@ const updateGlider = () => {
       width: `${activeButton.offsetWidth}px`,
     };
   }
+};
+
+const openEventModal = (event) => {
+  selectedEvent.value = event;
+  showEventModal.value = true;
+};
+
+const closeEventModal = () => {
+  showEventModal.value = false;
+  setTimeout(() => {
+    selectedEvent.value = null;
+  }, 300);
 };
 
 watch(tab, () => {
@@ -182,6 +213,20 @@ onMounted(() => {
 }
 .search-results p {
   color: #aaa;
+}
+.event-title-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+}
+.event-title-btn:hover {
+  color: #3b82f6;
 }
 .no-results {
   border: 1px solid #333;

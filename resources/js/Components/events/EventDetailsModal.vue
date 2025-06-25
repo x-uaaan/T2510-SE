@@ -1,8 +1,8 @@
 <template>
   <Modal :show="show" @close="closeModal" max-width="xl">
     <div class="p-8 pb-6 bg-[#2d2d2d] text-white rounded-2xl shadow-xl modal-content">
-        <div class="mb-4" v-if="event.image_url">
-            <img :src="event.image_url" :alt="event.eventName" class="w-full h-auto max-h-52 object-cover rounded-lg">
+        <div class="mb-4">
+            <img :src="event.image_url || '/image/CampusPulseLogo.png'" :alt="event.eventName" class="w-full h-auto max-h-52 object-cover rounded-lg">
         </div>
         
         <div class="flex justify-between items-start mb-0">
@@ -12,14 +12,14 @@
         <!-- Event Description -->
         <p class="text-gray-300 mb-4 whitespace-pre-wrap">{{ event.eventDesc }}</p>
 
-        <!-- Event Tabs -->
+        <!-- Event Tabs - Details always visible, Attendees only for organiser -->
         <div class="event-tabs">
           <span class="glider" :style="gliderStyle"></span>
           <button :ref="el => tabButtons.details = el" :class="{active: tab==='details'}" @click="tab='details'">Details</button>
-          <button :ref="el => tabButtons.attendees = el" :class="{active: tab==='attendees'}" @click="tab='attendees'">Attendees</button>
+          <button v-if="canEdit" :ref="el => tabButtons.attendees = el" :class="{active: tab==='attendees'}" @click="tab='attendees'">Attendees</button>
         </div>
 
-        <!-- Tab Content -->
+        <!-- Tab Content - Details always visible, Attendees only for organiser -->
         <div class="tab-content-container">
           <!-- Details Tab -->
           <div v-if="tab==='details'">
@@ -51,8 +51,8 @@
             </div>
           </div>
 
-          <!-- Attendees Tab -->
-          <div v-if="tab==='attendees'">
+          <!-- Attendees Tab - Only for event organiser -->
+          <div v-if="tab==='attendees' && canEdit">
             <div v-if="event.attendees && event.attendees.length > 0">
               <h3 class="font-semibold mb-2 text-gray-400">Event Attendees</h3>
                 <ul class="space-y-3">
